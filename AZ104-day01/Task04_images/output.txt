@@ -1,0 +1,1094 @@
+einfochips@PUNELPT0728:~$ az vm create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name linux-vm-01 \
+>   --image Ubuntu2404 \
+>   --admin-username azureuser \
+>   --ssh-key-values ~/.ssh/azure-vm-key.pub \
+>   --size Standard_B2s
+{
+  "fqdns": "",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/linux-vm-01",
+  "location": "southeastasia",
+  "macAddress": "60-45-BD-1F-E3-8D",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "4.194.184.3",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "zones": ""
+}
+einfochips@PUNELPT0728:~$ az vm create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vm-windows-01 \
+>   --image Win2022Datacenter \
+>   --admin-username azureuser \
+>   --admin-password 'P@ssw0rd123!' \  
+
+unrecognized arguments:  
+
+Examples from AI knowledge base:
+az vm create --name MyVm --resource-group MyResourceGroup --image RedHat:RHEL:7-RAW:7.4.2018010506
+Create a default RedHat VM with automatic SSH authentication using an image URN.
+
+az vm create --name MyVm --resource-group rg1 --image debian --assign-identity /subscriptions/99999999-1bf0-4dda-aec3-cb9272f09590/resourcegroups/myRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myID
+Create a debian VM with a user assigned identity.
+
+az vm list
+List all VMs.
+
+https://docs.microsoft.com/en-US/cli/azure/vm#az_vm_create
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$   --size Standard_B2s \
+>   --location southeastasia \
+>   --public-ip-sku Standard
+--size: command not found
+einfochips@PUNELPT0728:~$ az vm create   --resource-group sa1_test_eic_SudarshanDarade   --name vm-windows-01   --image Win2022Datacenter   --admin-username azureuser   --admin-password 'P@ssw0rd123!'  --public-ip-sku Standard
+Failed to retrieve image alias doc 'https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/arm-compute/quickstart-templates/aliases.json'. Error: 'ConnectionError'. Use local copy instead.
+{
+  "fqdns": "",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-windows-01",
+  "location": "southeastasia",
+  "macAddress": "00-22-48-59-EB-F9",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.5",
+  "publicIpAddress": "4.194.18.99",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "zones": ""
+}
+einfochips@PUNELPT0728:~$ az disk create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name data-disk-01 \
+>   --size-gb 128 \
+>   --sku Premium_LRS \
+>   --location southeastasia
+{
+  "creationData": {
+    "createOption": "Empty"
+  },
+  "diskIOPSReadWrite": 500,
+  "diskMBpsReadWrite": 100,
+  "diskSizeBytes": 137438953472,
+  "diskSizeGB": 128,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/data-disk-01",
+  "location": "southeastasia",
+  "name": "data-disk-01",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Premium_LRS",
+    "tier": "Premium"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "tier": "P10",
+  "timeCreated": "2025-08-21T12:13:18.1834702+00:00",
+  "type": "Microsoft.Compute/disks",
+  "uniqueId": "8e2b8ce1-d6a8-4049-a209-1408b8561013"
+}
+einfochips@PUNELPT0728:~$ az vm disk attach \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vm-name linux-vm-01 \
+>   --name data-disk-01
+einfochips@PUNELPT0728:~$ ssh -i ~/.ssh/azure-vm-key azureuser@4.194.184.3
+The authenticity of host '4.194.184.3 (4.194.184.3)' can't be established.
+ECDSA key fingerprint is SHA256:yi9aJBPRQfhha1xGjalp7XUtXOkSI7IvQcwrlS9dV+k.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '4.194.184.3' (ECDSA) to the list of known hosts.
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.11.0-1018-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Aug 21 12:18:22 UTC 2025
+
+  System load:  0.0               Processes:             118
+  Usage of /:   5.5% of 28.02GB   Users logged in:       0
+  Memory usage: 7%                IPv4 address for eth0: 10.0.0.4
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+azureuser@linux-vm-01:~$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda       8:0    0   30G  0 disk 
+├─sda1    8:1    0   29G  0 part /
+├─sda14   8:14   0    4M  0 part 
+├─sda15   8:15   0  106M  0 part /boot/efi
+└─sda16 259:0    0  913M  0 part /boot
+sdb       8:16   0    8G  0 disk 
+└─sdb1    8:17   0    8G  0 part /mnt
+sdc       8:32   0  128G  0 disk 
+sr0      11:0    1  628K  0 rom  
+azureuser@linux-vm-01:~$ sudo fdisk /dev/sdc 
+
+Welcome to fdisk (util-linux 2.39.3).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS (MBR) disklabel with disk identifier 0xe80b09da.
+
+Command (m for help): m
+
+Help:
+
+  DOS (MBR)
+   a   toggle a bootable flag
+   b   edit nested BSD disklabel
+   c   toggle the dos compatibility flag
+
+  Generic
+   d   delete a partition
+   F   list free unpartitioned space
+   l   list known partition types
+   n   add a new partition
+   p   print the partition table
+   t   change a partition type
+   v   verify the partition table
+   i   print information about a partition
+
+  Misc
+   m   print this menu
+   u   change display/entry units
+   x   extra functionality (experts only)
+
+  Script
+   I   load disk layout from sfdisk script file
+   O   dump disk layout to sfdisk script file
+
+  Save & Exit
+   w   write table to disk and exit
+   q   quit without saving changes
+
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty MBR (DOS) partition table
+   s   create a new empty Sun partition table
+
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): 
+
+Using default response p.
+Partition number (1-4, default 1): 
+First sector (2048-268435455, default 2048): 
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-268435455, default 268435455): 
+
+Created a new partition 1 of type 'Linux' and of size 128 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+azureuser@linux-vm-01:~$ sudo mkfs.ext4 /dev/sdc1 
+mke2fs 1.47.0 (5-Feb-2023)
+Discarding device blocks: done                            
+Creating filesystem with 33554176 4k blocks and 8388608 inodes
+Filesystem UUID: e4184ee6-7294-46e4-935d-c35910dd0b00
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+	4096000, 7962624, 11239424, 20480000, 23887872
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information: done     
+
+azureuser@linux-vm-01:~$ sudo mkdir /datadrive
+azureuser@linux-vm-01:~$ sudo mount /dev/sdc1 /datadrive
+azureuser@linux-vm-01:~$ echo '/dev/sdc1 /datadrive ext4 defaults,nofail 1 2' | sudo tee -a /etc/fstab
+/dev/sdc1 /datadrive ext4 defaults,nofail 1 2
+azureuser@linux-vm-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  1.6G   27G   6% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           774M  996K  773M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+efivarfs        128K   37K   87K  30% /sys/firmware/efi/efivars
+/dev/sda16      881M   60M  760M   8% /boot
+/dev/sda15      105M  6.2M   99M   6% /boot/efi
+/dev/sdb1       7.8G   28K  7.4G   1% /mnt
+tmpfs           387M   12K  387M   1% /run/user/1000
+/dev/sdc1       126G   24K  120G   1% /datadrive
+azureuser@linux-vm-01:~$ exit
+logout
+Connection to 4.194.184.3 closed.
+einfochips@PUNELPT0728:~$ az disk create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name data-disk-windows \
+>   --size-gb 128 \
+>   --sku Premium_LRS
+{
+  "creationData": {
+    "createOption": "Empty"
+  },
+  "diskIOPSReadWrite": 500,
+  "diskMBpsReadWrite": 100,
+  "diskSizeBytes": 137438953472,
+  "diskSizeGB": 128,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/data-disk-windows",
+  "location": "southeastasia",
+  "name": "data-disk-windows",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Premium_LRS",
+    "tier": "Premium"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "tier": "P10",
+  "timeCreated": "2025-08-21T12:22:12.3941758+00:00",
+  "type": "Microsoft.Compute/disks",
+  "uniqueId": "b5ebda58-1c57-4cc0-9c3b-59f97b7c31c6"
+}
+einfochips@PUNELPT0728:~$ az vm disk attach \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vm-name vm-windows-01 \
+>   --name data-disk-windows
+einfochips@PUNELPT0728:~$ az keyvault create \
+>   --name kv-disk-encryption-$(date +%s) \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --location southeastasia \
+>   --enabled-for-disk-encryption true
+(VaultNameNotValid) The vault name 'kv-disk-encryption-1755780002' is invalid. A vault's name must be between 3-24 alphanumeric characters. The name must begin with a letter, end with a letter or digit, and not contain consecutive hyphens. Follow this link for more information: https://go.microsoft.com/fwlink/?linkid=2147742
+Code: VaultNameNotValid
+Message: The vault name 'kv-disk-encryption-1755780002' is invalid. A vault's name must be between 3-24 alphanumeric characters. The name must begin with a letter, end with a letter or digit, and not contain consecutive hyphens. Follow this link for more information: https://go.microsoft.com/fwlink/?linkid=2147742
+einfochips@PUNELPT0728:~$ az keyvault create   --name kv_disk_encryption_$(date +%s)   --resource-group sa1_test_eic_SudarshanDarade   --location southeastasia   --enabled-for-disk-encryption true
+(VaultNameNotValid) The vault name 'kv_disk_encryption_1755780061' is invalid. A vault's name must be between 3-24 alphanumeric characters. The name must begin with a letter, end with a letter or digit, and not contain consecutive hyphens. Follow this link for more information: https://go.microsoft.com/fwlink/?linkid=2147742
+Code: VaultNameNotValid
+Message: The vault name 'kv_disk_encryption_1755780061' is invalid. A vault's name must be between 3-24 alphanumeric characters. The name must begin with a letter, end with a letter or digit, and not contain consecutive hyphens. Follow this link for more information: https://go.microsoft.com/fwlink/?linkid=2147742
+einfochips@PUNELPT0728:~$ az keyvault create   --name kv_disk_encryption_$(date)   --resource-group sa1_test_eic_SudarshanDarade   --location southeastasia   --enabled-for-disk-encryption true
+unrecognized arguments: 21 August 2025 06:11:19 PM IST
+
+Examples from AI knowledge base:
+az keyvault create --location westus2 --name MyKeyVault --resource-group MyResourceGroup
+Create a key vault. (autogenerated)
+
+az keyvault create --location westus2 --name MyKeyVault --resource-group MyResourceGroup --network-acls "{\"ip\": [\"1.2.3.4\", \"2.3.4.0/24\"], \"vnet\": [\"vnet_name_1/subnet_name1\", \"vnet_name_2/subnet_name2\", \"/subscriptions/000000-0000-0000/resourceGroups/MyResourceGroup/providers/Microsoft.Network/virtualNetworks/MyVNet/subnets/MySubnet\"]}"
+Create a key vault with network ACLs specified (use --network-acls to specify IP and VNet rules by using a JSON string).
+
+https://docs.microsoft.com/en-US/cli/azure/keyvault#az_keyvault_create
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$ az keyvault create   --name keyvault01   --resource-group sa1_test_eic_SudarshanDarade   --location southeastasia   --enabled-for-disk-encryption true
+(VaultAlreadyExists) The vault name 'keyvault01' is already in use. Vault names are globally unique so it is possible that the name is already taken. If you are sure that the vault name was not taken then it is possible that a vault with the same name was recently deleted but not purged after being placed in a recoverable state. If the vault is in a recoverable state then the vault will need to be purged before reusing the name. For more information about VaultAlreadyExists, soft delete and purging a vault follow this link https://go.microsoft.com/fwlink/?linkid=2147740.
+Code: VaultAlreadyExists
+Message: The vault name 'keyvault01' is already in use. Vault names are globally unique so it is possible that the name is already taken. If you are sure that the vault name was not taken then it is possible that a vault with the same name was recently deleted but not purged after being placed in a recoverable state. If the vault is in a recoverable state then the vault will need to be purged before reusing the name. For more information about VaultAlreadyExists, soft delete and purging a vault follow this link https://go.microsoft.com/fwlink/?linkid=2147740.
+einfochips@PUNELPT0728:~$ az keyvault create   --name keyvaultEinfochipsDemo   --resource-group sa1_test_eic_SudarshanDarade   --location southeastasia   --enabled-for-disk-encryption true
+{
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.KeyVault/vaults/keyvaultEinfochipsDemo",
+  "location": "southeastasia",
+  "name": "keyvaultEinfochipsDemo",
+  "properties": {
+    "accessPolicies": [],
+    "createMode": null,
+    "enablePurgeProtection": null,
+    "enableRbacAuthorization": true,
+    "enableSoftDelete": true,
+    "enabledForDeployment": false,
+    "enabledForDiskEncryption": true,
+    "enabledForTemplateDeployment": null,
+    "hsmPoolResourceId": null,
+    "networkAcls": null,
+    "privateEndpointConnections": null,
+    "provisioningState": "Succeeded",
+    "publicNetworkAccess": "Enabled",
+    "sku": {
+      "family": "A",
+      "name": "standard"
+    },
+    "softDeleteRetentionInDays": 90,
+    "tenantId": "0adb040b-ca22-4ca6-9447-ab7b049a22ff",
+    "vaultUri": "https://keyvaulteinfochipsdemo.vault.azure.net/"
+  },
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "systemData": {
+    "createdAt": "2025-08-21T12:43:24.277000+00:00",
+    "createdBy": "Sudarshan.Darade@eInfochipsIndia.onmicrosoft.com",
+    "createdByType": "User",
+    "lastModifiedAt": "2025-08-21T12:43:24.277000+00:00",
+    "lastModifiedBy": "Sudarshan.Darade@eInfochipsIndia.onmicrosoft.com",
+    "lastModifiedByType": "User"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "type": "Microsoft.KeyVault/vaults"
+}
+einfochips@PUNELPT0728:~$ ssh -i ~/.ssh/azure-vm-key azureuser@4.194.184.3
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.11.0-1018-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Aug 21 12:45:46 UTC 2025
+
+  System load:  0.0               Processes:             121
+  Usage of /:   5.6% of 28.02GB   Users logged in:       0
+  Memory usage: 7%                IPv4 address for eth0: 10.0.0.4
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Thu Aug 21 12:18:24 2025 from 223.233.85.60
+azureuser@linux-vm-01:~$ exit
+logout
+Connection to 4.194.184.3 closed.
+einfochips@PUNELPT0728:~$ KV_ID=$(az keyvault show --name keyvault* --resource-group sa1_test_eic_SudarshanDarade --query id -o tsv)
+ERROR: (ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/keyvault*' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+Code: ResourceNotFound
+Message: The Resource 'Microsoft.KeyVault/vaults/keyvault*' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+einfochips@PUNELPT0728:~$ KV_ID=$(az keyvault show --name keyvaultEinfochipsDemo --resource-group sa1_test_eic_SudarshanDarade --query id -o tsv)
+einfochips@PUNELPT0728:~$ echo $KV_ID
+/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.KeyVault/vaults/keyvaultEinfochipsDemo
+einfochips@PUNELPT0728:~$ az vm encryption enable \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name linux-vm-01 \
+>   --disk-encryption-keyvault $KV_ID \
+>   --volume-type All
+(VMExtensionProvisioningError) VM has reported a failure when processing extension 'AzureDiskEncryptionForLinux' (publisher 'Microsoft.Azure.Security' and type 'AzureDiskEncryptionForLinux'). Error message: 'Traceback (most recent call last):
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/handle.py", line 806, in enable
+    check_Util.precheck_for_fatal_failures(public_settings, encryption_status, DistroPatcher, existing_volume_type,check_release_rsa_or_ec_key)
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py", line 428, in precheck_for_fatal_failures
+    self.validate_memory_os_encryption(public_settings, encryption_status)
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py", line 312, in validate_memory_os_encryption
+    raise Exception("Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.")
+Exception: Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.
+'. More information on troubleshooting is available at https://aka.ms/VMExtensionADELinuxTroubleshoot. 
+Code: VMExtensionProvisioningError
+Message: VM has reported a failure when processing extension 'AzureDiskEncryptionForLinux' (publisher 'Microsoft.Azure.Security' and type 'AzureDiskEncryptionForLinux'). Error message: 'Traceback (most recent call last):
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/handle.py", line 806, in enable
+    check_Util.precheck_for_fatal_failures(public_settings, encryption_status, DistroPatcher, existing_volume_type,check_release_rsa_or_ec_key)
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py", line 428, in precheck_for_fatal_failures
+    self.validate_memory_os_encryption(public_settings, encryption_status)
+  File "/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py", line 312, in validate_memory_os_encryption
+    raise Exception("Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.")
+Exception: Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.
+'. More information on troubleshooting is available at https://aka.ms/VMExtensionADELinuxTroubleshoot. 
+einfochips@PUNELPT0728:~$ az vm encryption show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name linux-vm-01
+{
+  "disks": [
+    {
+      "encryptionSettings": null,
+      "name": "linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec",
+      "statuses": [
+        {
+          "code": "EncryptionState/notEncrypted",
+          "displayStatus": "Disk is not encrypted",
+          "level": "Info",
+          "message": null,
+          "time": null
+        }
+      ]
+    },
+    {
+      "encryptionSettings": null,
+      "name": "data-disk-01",
+      "statuses": [
+        {
+          "code": "EncryptionState/notEncrypted",
+          "displayStatus": "Disk is not encrypted",
+          "level": "Info",
+          "message": null,
+          "time": null
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "code": "ProvisioningState/failed/53",
+      "displayStatus": "Provisioning failed",
+      "level": "Error",
+      "message": "Traceback (most recent call last):\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/handle.py\", line 806, in enable\n    check_Util.precheck_for_fatal_failures(public_settings, encryption_status, DistroPatcher, existing_volume_type,check_release_rsa_or_ec_key)\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py\", line 428, in precheck_for_fatal_failures\n    self.validate_memory_os_encryption(public_settings, encryption_status)\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py\", line 312, in validate_memory_os_encryption\n    raise Exception(\"Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.\")\nException: Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.\n",
+      "time": null
+    }
+  ],
+  "substatus": [
+    {
+      "code": "ComponentStatus/Microsoft.Azure.Security.AzureDiskEncryptionForLinux/failed/53",
+      "displayStatus": "Provisioning failed",
+      "level": "Error",
+      "message": "{\"data\": \"NotEncrypted\", \"os\": \"NotEncrypted\"}",
+      "time": null
+    }
+  ]
+}
+einfochips@PUNELPT0728:~$ az vm encryption enable \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vm-windows-01 \
+>   --disk-encryption-keyvault $KV_ID \
+>   --volume-type All
+einfochips@PUNELPT0728:~$ az snapshot create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name snapshot-data-disk-$(date +%Y%m%d) \
+>   --source data-disk-01
+{
+  "creationData": {
+    "createOption": "Copy",
+    "sourceResourceId": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/data-disk-01",
+    "sourceUniqueId": "8e2b8ce1-d6a8-4049-a209-1408b8561013"
+  },
+  "diskSizeBytes": 137438953472,
+  "diskSizeGB": 128,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/snapshots/snapshot-data-disk-20250821",
+  "incremental": false,
+  "location": "southeastasia",
+  "name": "snapshot-data-disk-20250821",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "timeCreated": "2025-08-21T12:51:36.7463697+00:00",
+  "type": "Microsoft.Compute/snapshots",
+  "uniqueId": "40a9554d-f88d-4a53-ac72-20a3b5affd90"
+}
+einfochips@PUNELPT0728:~$ az snapshot create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name snapshot-windows-disk-$(date +%Y%m%d) \
+>   --source data-disk-windows
+{
+  "creationData": {
+    "createOption": "Copy",
+    "sourceResourceId": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/data-disk-windows",
+    "sourceUniqueId": "b5ebda58-1c57-4cc0-9c3b-59f97b7c31c6"
+  },
+  "diskSizeBytes": 137438953472,
+  "diskSizeGB": 128,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "encryptionSettingsCollection": {
+    "enabled": true,
+    "encryptionSettings": [
+      {
+        "diskEncryptionKey": {
+          "secretUrl": "https://keyvaulteinfochipsdemo.vault.azure.net/secrets/96687371-CC59-4158-BD67-52C54DC124D1/5f456be7ed1042a2a2f9aa70b30b9c76",
+          "sourceVault": {
+            "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.KeyVault/vaults/keyvaultEinfochipsDemo"
+          }
+        }
+      }
+    ],
+    "encryptionSettingsVersion": "1.1"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/snapshots/snapshot-windows-disk-20250821",
+  "incremental": false,
+  "location": "southeastasia",
+  "name": "snapshot-windows-disk-20250821",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "timeCreated": "2025-08-21T12:51:52.8247608+00:00",
+  "type": "Microsoft.Compute/snapshots",
+  "uniqueId": "b6d40707-5310-47c6-8b9d-3d576efb2afb"
+}
+einfochips@PUNELPT0728:~$ LINUX_OS_DISK=$(az vm show --resource-group sa1_test_eic_SudarshanDarade --name linux-vm-01 --query "storageProfile.osDisk.name" -o tsv)
+einfochips@PUNELPT0728:~$ echo $LINUX_OS_DISK
+linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec
+einfochips@PUNELPT0728:~$ az snapshot create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name snapshot-linux-os-$(date +%Y%m%d) \
+>   --source $LINUX_OS_DISK
+{
+  "creationData": {
+    "createOption": "Copy",
+    "sourceResourceId": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec",
+    "sourceUniqueId": "81a53a14-ac15-4819-87fd-e07404c334ec"
+  },
+  "diskSizeBytes": 32213303296,
+  "diskSizeGB": 30,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "hyperVGeneration": "V2",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/snapshots/snapshot-linux-os-20250821",
+  "incremental": false,
+  "location": "southeastasia",
+  "name": "snapshot-linux-os-20250821",
+  "networkAccessPolicy": "AllowAll",
+  "osType": "Linux",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "securityProfile": {
+    "securityType": "TrustedLaunch"
+  },
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "supportedCapabilities": {
+    "acceleratedNetwork": true,
+    "architecture": "x64",
+    "diskControllerTypes": "SCSI, NVMe"
+  },
+  "supportsHibernation": true,
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "timeCreated": "2025-08-21T12:53:42.7011907+00:00",
+  "type": "Microsoft.Compute/snapshots",
+  "uniqueId": "2fd7a1a5-ebea-4e02-a69b-23f43e4b59c0"
+}
+einfochips@PUNELPT0728:~$ az disk create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name restored-data-disk \
+>   --source snapshot-data-disk-* \
+>   --size-gb 128
+usage error: --source {SNAPSHOT | DISK | RESTOREPOINT} | --source VHD_BLOB_URI [--source-storage-account-id ID]
+einfochips@PUNELPT0728:~$ az disk create   --resource-group sa1_test_eic_SudarshanDarade   --name restored-data-disk   --source SNAPSHOT snapshot-data-disk-*   --size-gb 128
+unrecognized arguments: snapshot-data-disk-*
+
+Examples from AI knowledge base:
+https://aka.ms/cli_ref
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$ az disk create   --resource-group sa1_test_eic_SudarshanDarade   --name restored-data-disk   --source SNAPSHOT snapshot-data-disk-20250821   --size-gb 128
+unrecognized arguments: snapshot-data-disk-20250821
+
+Examples from AI knowledge base:
+az disk create --resource-group MyResourceGroup --name MyDisk --source https://vhd1234.blob.core.windows.net/vhds/osdisk1234.vhd
+Create a managed disk by importing from a blob uri.
+
+az disk create --resource-group MyResourceGroup --name MyDisk --size-gb 256 --max-shares 2 --location centraluseuap
+Create a disk and specify maximum number of VMs that can attach to the disk at the same time.
+
+https://docs.microsoft.com/en-US/cli/azure/disk#az_disk_create
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$ az disk create   --resource-group sa1_test_eic_SudarshanDarade   --name restored-data-disk   --source SNAPSHOT  --size-gb 128
+usage error: --source {SNAPSHOT | DISK | RESTOREPOINT} | --source VHD_BLOB_URI [--source-storage-account-id ID]
+einfochips@PUNELPT0728:~$ az disk create   --resource-group sa1_test_eic_SudarshanDarade   --name restored-data-disk   --source  snapshot-data-disk-20250821   --size-gb 128
+{
+  "creationData": {
+    "createOption": "Copy",
+    "sourceResourceId": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/snapshots/snapshot-data-disk-20250821",
+    "sourceUniqueId": "40a9554d-f88d-4a53-ac72-20a3b5affd90"
+  },
+  "diskIOPSReadWrite": 500,
+  "diskMBpsReadWrite": 100,
+  "diskSizeBytes": 137438953472,
+  "diskSizeGB": 128,
+  "diskState": "Unattached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/restored-data-disk",
+  "location": "southeastasia",
+  "name": "restored-data-disk",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Premium_LRS",
+    "tier": "Premium"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "tier": "P10",
+  "timeCreated": "2025-08-21T12:58:16.3298167+00:00",
+  "type": "Microsoft.Compute/disks",
+  "uniqueId": "b334e555-8d03-4e24-af83-5047ea5fca21"
+}
+einfochips@PUNELPT0728:~$ az vm disk attach \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vm-name linux-vm-01 \
+>   --name restored-data-disk
+einfochips@PUNELPT0728:~$ az disk update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name data-disk-01 \
+>   --size-gb 256
+{
+  "LastOwnershipUpdateTime": "2025-08-21T12:16:27.74885+00:00",
+  "creationData": {
+    "createOption": "Empty"
+  },
+  "diskIOPSReadWrite": 1100,
+  "diskMBpsReadWrite": 125,
+  "diskSizeBytes": 274877906944,
+  "diskSizeGB": 256,
+  "diskState": "Attached",
+  "encryption": {
+    "type": "EncryptionAtRestWithPlatformKey"
+  },
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/data-disk-01",
+  "location": "southeastasia",
+  "managedBy": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/linux-vm-01",
+  "name": "data-disk-01",
+  "networkAccessPolicy": "AllowAll",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": "Enabled",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sku": {
+    "name": "Premium_LRS",
+    "tier": "Premium"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "tier": "P15",
+  "timeCreated": "2025-08-21T12:13:18.1834702+00:00",
+  "type": "Microsoft.Compute/disks",
+  "uniqueId": "8e2b8ce1-d6a8-4049-a209-1408b8561013"
+}
+einfochips@PUNELPT0728:~$ ssh -i ~/.ssh/azure-vm-key azureuser@4.194.184.3
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.11.0-1018-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Aug 21 13:03:40 UTC 2025
+
+  System load:  0.32              Processes:             135
+  Usage of /:   5.7% of 28.02GB   Users logged in:       0
+  Memory usage: 8%                IPv4 address for eth0: 10.0.0.4
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Thu Aug 21 12:45:47 2025 from 223.233.85.60
+azureuser@linux-vm-01:~$ dh -h
+Command 'dh' not found, but can be installed with:
+sudo apt install debhelper
+azureuser@linux-vm-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  1.8G   27G   7% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           774M  1.1M  773M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+efivarfs        128K   37K   87K  30% /sys/firmware/efi/efivars
+/dev/sda16      881M   60M  760M   8% /boot
+/dev/sda15      105M  6.2M   99M   6% /boot/efi
+/dev/sdb1       7.8G   32K  7.4G   1% /mnt
+/dev/sdc1       126G   24K  120G   1% /datadrive
+/dev/sdd1        42M   512   42M   1% /mnt/azure_bek_disk
+tmpfs           387M   12K  387M   1% /run/user/1000
+azureuser@linux-vm-01:~$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda       8:0    0   30G  0 disk 
+├─sda1    8:1    0   29G  0 part /
+├─sda14   8:14   0    4M  0 part 
+├─sda15   8:15   0  106M  0 part /boot/efi
+└─sda16 259:0    0  913M  0 part /boot
+sdb       8:16   0    8G  0 disk 
+└─sdb1    8:17   0    8G  0 part /mnt
+sdc       8:32   0  256G  0 disk 
+└─sdc1    8:33   0  128G  0 part /datadrive
+sdd       8:48   0   48M  0 disk 
+└─sdd1    8:49   0   46M  0 part /mnt/azure_bek_disk
+sde       8:64   0  128G  0 disk 
+└─sde1    8:65   0  128G  0 part 
+sr0      11:0    1  628K  0 rom  
+azureuser@linux-vm-01:~$ sudo resize2fs /dev/sdc1
+resize2fs 1.47.0 (5-Feb-2023)
+The filesystem is already 33554176 (4k) blocks long.  Nothing to do!
+
+azureuser@linux-vm-01:~$ sudo resize2fs /dev/sdc
+resize2fs 1.47.0 (5-Feb-2023)
+resize2fs: Device or resource busy while trying to open /dev/sdc
+Couldn't find valid filesystem superblock.
+azureuser@linux-vm-01:~$ sudo resize2fs /dev/sdc1
+resize2fs 1.47.0 (5-Feb-2023)
+The filesystem is already 33554176 (4k) blocks long.  Nothing to do!
+
+azureuser@linux-vm-01:~$ sudo growpart /dev/sdc
+growpart disk partition
+   rewrite partition table so that partition takes up all the space it can
+   options:
+    -h | --help            print Usage and exit
+         --free-percent F  resize so that specified percentage F of the disk is
+                           not used in total (not just by this partition). This
+                           is useful for consumer SSD or SD cards where a small
+                           percentage unallocated can improve device lifetime.
+         --fudge F         if part could be resized, but change would be less
+                           than 'F' bytes, do not resize (default: 1048576)
+    -N | --dry-run         only report what would be done, show new 'sfdisk -d'
+    -v | --verbose         increase verbosity / debug
+    -u | --update  R       update the the kernel partition table info after
+                           growing this requires kernel support and
+                           'partx --update'
+                           R is one of:
+                            - 'auto'  : [default] update partition if possible
+                            - 'force' : try despite sanity checks (fail on
+                                        failure)
+                            - 'off'   : do not attempt
+                            - 'on'    : fail if sanity checks indicate no
+                                        support
+
+   Example:
+    - growpart /dev/sda 1
+      Resize partition 1 on /dev/sda
+
+    - growpart --free-percent=10 /dev/sda 1
+      Resize partition 1 on /dev/sda so that 10% of the disk is unallocated
+must supply partition-number
+azureuser@linux-vm-01:~$ sudo growpart /dev/sdc 1
+CHANGED: partition=1 start=2048 old: size=268433408 end=268435455 new: size=536868831 end=536870878
+azureuser@linux-vm-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  2.6G   26G   9% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           774M  1.1M  773M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+efivarfs        128K   37K   87K  30% /sys/firmware/efi/efivars
+/dev/sda16      881M   60M  760M   8% /boot
+/dev/sda15      105M  6.2M   99M   6% /boot/efi
+/dev/sdb1       7.8G   32K  7.4G   1% /mnt
+/dev/sdc1       126G   24K  120G   1% /datadrive
+/dev/sdd1        42M   512   42M   1% /mnt/azure_bek_disk
+tmpfs           387M   12K  387M   1% /run/user/1000
+azureuser@linux-vm-01:~$ sudo resize2fs /dev/sdc1
+resize2fs 1.47.0 (5-Feb-2023)
+Filesystem at /dev/sdc1 is mounted on /datadrive; on-line resizing required
+old_desc_blocks = 16, new_desc_blocks = 32
+The filesystem on /dev/sdc1 is now 67108603 (4k) blocks long.
+
+azureuser@linux-vm-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  2.6G   26G   9% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           774M  1.1M  773M   1% /run
+tmpfs           5.0M     0  5.0M   0% /run/lock
+efivarfs        128K   37K   87K  30% /sys/firmware/efi/efivars
+/dev/sda16      881M   60M  760M   8% /boot
+/dev/sda15      105M  6.2M   99M   6% /boot/efi
+/dev/sdb1       7.8G   32K  7.4G   1% /mnt
+/dev/sdc1       252G   24K  240G   1% /datadrive
+/dev/sdd1        42M   512   42M   1% /mnt/azure_bek_disk
+tmpfs           387M   12K  387M   1% /run/user/1000
+azureuser@linux-vm-01:~$ exit
+logout
+Connection to 4.194.184.3 closed.
+einfochips@PUNELPT0728:~$ ssh -i ~/.ssh/azure-vm-key azureuser@4.194.184.3
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.11.0-1018-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Aug 21 13:11:50 UTC 2025
+
+  System load:  0.2               Processes:             128
+  Usage of /:   9.0% of 28.02GB   Users logged in:       0
+  Memory usage: 14%               IPv4 address for eth0: 10.0.0.4
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+27 updates can be applied immediately.
+3 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Last login: Thu Aug 21 13:03:41 2025 from 223.233.85.60
+azureuser@linux-vm-01:~$ sudo umount /datadrive 
+azureuser@linux-vm-01:~$ sudo sed -i' /\/datadrive/d' /etc/fstab 
+sed: -e expression #1, char 6: unknown command: `f'
+azureuser@linux-vm-01:~$ cat /etc/fstab 
+# CLOUD_IMG: This file was created/modified by the Cloud Image build process
+UUID=5b618de7-3de2-4d29-9615-b61ae39a7ef9	/	 ext4	discard,commit=30,errors=remount-ro	0 1
+LABEL=BOOT	/boot	ext4	defaults,discard	0 2
+UUID=200A-7E9B	/boot/efi	vfat	umask=0077	0 1
+/dev/disk/cloud/azure_resource-part1	/mnt	auto	defaults,nofail,x-systemd.after=cloud-init.service,_netdev,comment=cloudconfig	0	2
+/dev/sdc1 /datadrive ext4 defaults,nofail 1 2
+azureuser@linux-vm-01:~$ nano /etc/fstab
+azureuser@linux-vm-01:~$ sudo nano /etc/fstab
+azureuser@linux-vm-01:~$ exit
+logout
+Connection to 4.194.184.3 closed.
+einfochips@PUNELPT0728:~$ az vm disk detach \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vm-name linux-vm-01 \
+>   --name data-disk-01
+einfochips@PUNELPT0728:~$ az vm disk detach \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vm-name vm-windows-01 \
+>   --name data-disk-windows
+einfochips@PUNELPT0728:~$ az vm disk detach   --resource-group sa1_test_eic_SudarshanDarade   --vm-name linux-vm-01   --name restored-data-disk
+einfochips@PUNELPT0728:~$ az disk list --resource-group sa1_test_eic_SudarshanDarade --output table
+Name                                                  ResourceGroup                 Location       Zones    Sku          SizeGb    ProvisioningState    OsType
+----------------------------------------------------  ----------------------------  -------------  -------  -----------  --------  -------------------  --------
+data-disk-01                                          sa1_test_eic_SudarshanDarade  southeastasia           Premium_LRS  256       Succeeded
+data-disk-windows                                     sa1_test_eic_SudarshanDarade  southeastasia           Premium_LRS  128       Succeeded
+linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec    sa1_test_eic_SudarshanDarade  southeastasia           Premium_LRS  30        Succeeded            Linux
+restored-data-disk                                    sa1_test_eic_SudarshanDarade  southeastasia           Premium_LRS  128       Succeeded
+vm-windows-01_disk1_6aeaac1d0b074e2a81062b64403d2fe1  sa1_test_eic_SudarshanDarade  southeastasia           Premium_LRS  127       Succeeded            Windows
+einfochips@PUNELPT0728:~$ az vm show --resource-group sa1_test_eic_SudarshanDarade --name linux-vm-01 --query storageProfile
+{
+  "alignRegionalDisksToVmZone": null,
+  "dataDisks": [],
+  "diskControllerType": "SCSI",
+  "imageReference": {
+    "communityGalleryImageId": null,
+    "exactVersion": "24.04.202508010",
+    "id": null,
+    "offer": "ubuntu-24_04-lts",
+    "publisher": "Canonical",
+    "sharedGalleryImageId": null,
+    "sku": "server",
+    "version": "latest"
+  },
+  "osDisk": {
+    "caching": "ReadWrite",
+    "createOption": "FromImage",
+    "deleteOption": "Detach",
+    "diffDiskSettings": null,
+    "diskSizeGb": 30,
+    "encryptionSettings": null,
+    "image": null,
+    "managedDisk": {
+      "diskEncryptionSet": null,
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec",
+      "resourceGroup": "sa1_test_eic_SudarshanDarade",
+      "securityProfile": null,
+      "storageAccountType": "Premium_LRS"
+    },
+    "name": "linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec",
+    "osType": "Linux",
+    "vhd": null,
+    "writeAcceleratorEnabled": null
+  }
+}
+einfochips@PUNELPT0728:~$ az vm show --resource-group sa1_test_eic_SudarshanDarade --name vm-windows-01 --query storageProfile
+{
+  "alignRegionalDisksToVmZone": null,
+  "dataDisks": [],
+  "diskControllerType": "SCSI",
+  "imageReference": {
+    "communityGalleryImageId": null,
+    "exactVersion": "20348.4052.250808",
+    "id": null,
+    "offer": "WindowsServer",
+    "publisher": "MicrosoftWindowsServer",
+    "sharedGalleryImageId": null,
+    "sku": "2022-datacenter-g2",
+    "version": "latest"
+  },
+  "osDisk": {
+    "caching": "ReadWrite",
+    "createOption": "FromImage",
+    "deleteOption": "Detach",
+    "diffDiskSettings": null,
+    "diskSizeGb": 127,
+    "encryptionSettings": null,
+    "image": null,
+    "managedDisk": {
+      "diskEncryptionSet": null,
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/disks/vm-windows-01_disk1_6aeaac1d0b074e2a81062b64403d2fe1",
+      "resourceGroup": "sa1_test_eic_SudarshanDarade",
+      "securityProfile": null,
+      "storageAccountType": "Premium_LRS"
+    },
+    "name": "vm-windows-01_disk1_6aeaac1d0b074e2a81062b64403d2fe1",
+    "osType": "Windows",
+    "vhd": null,
+    "writeAcceleratorEnabled": null
+  }
+}
+einfochips@PUNELPT0728:~$ az snapshot list --resource-group sa1_test_eic_SudarshanDarade --output table
+DiskSizeBytes    DiskSizeGB    DiskState    Incremental    Location       Name                            NetworkAccessPolicy    ProvisioningState    PublicNetworkAccess    ResourceGroup                 TimeCreated                        UniqueId                              HyperVGeneration    OsType    SupportsHibernation
+---------------  ------------  -----------  -------------  -------------  ------------------------------  ---------------------  -------------------  ---------------------  ----------------------------  ---------------------------------  ------------------------------------  ------------------  --------  ---------------------
+137438953472     128           Unattached   False          southeastasia  snapshot-data-disk-20250821     AllowAll               Succeeded            Enabled                sa1_test_eic_SudarshanDarade  2025-08-21T12:51:36.7463697+00:00  40a9554d-f88d-4a53-ac72-20a3b5affd90
+32213303296      30            Unattached   False          southeastasia  snapshot-linux-os-20250821      AllowAll               Succeeded            Enabled                sa1_test_eic_SudarshanDarade  2025-08-21T12:53:42.7011907+00:00  2fd7a1a5-ebea-4e02-a69b-23f43e4b59c0  V2                  Linux     True
+137438953472     128           Unattached   False          southeastasia  snapshot-windows-disk-20250821  AllowAll               Succeeded            Enabled                sa1_test_eic_SudarshanDarade  2025-08-21T12:51:52.8247608+00:00  b6d40707-5310-47c6-8b9d-3d576efb2afb
+einfochips@PUNELPT0728:~$ az vm encryption show --resource-group sa1_test_eic_SudarshanDarade --name linux-vm-01
+{
+  "disks": [
+    {
+      "encryptionSettings": null,
+      "name": "linux-vm-01_disk1_81a53a14ac15481987fde07404c334ec",
+      "statuses": [
+        {
+          "code": "EncryptionState/notEncrypted",
+          "displayStatus": "Disk is not encrypted",
+          "level": "Info",
+          "message": null,
+          "time": null
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "code": "ProvisioningState/failed/53",
+      "displayStatus": "Provisioning failed",
+      "level": "Error",
+      "message": "Traceback (most recent call last):\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/handle.py\", line 806, in enable\n    check_Util.precheck_for_fatal_failures(public_settings, encryption_status, DistroPatcher, existing_volume_type,check_release_rsa_or_ec_key)\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py\", line 428, in precheck_for_fatal_failures\n    self.validate_memory_os_encryption(public_settings, encryption_status)\n  File \"/var/lib/waagent/Microsoft.Azure.Security.AzureDiskEncryptionForLinux-1.4.0.10/main/check_util.py\", line 312, in validate_memory_os_encryption\n    raise Exception(\"Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.\")\nException: Not enough memory for enabling encryption on OS volume. 8 GB memory is recommended.\n",
+      "time": null
+    }
+  ],
+  "substatus": [
+    {
+      "code": "ComponentStatus/Microsoft.Azure.Security.AzureDiskEncryptionForLinux/failed/53",
+      "displayStatus": "Provisioning failed",
+      "level": "Error",
+      "message": "{\"data\": \"NotEncrypted\", \"os\": \"NotEncrypted\"}",
+      "time": null
+    }
+  ]
+}
+einfochips@PUNELPT0728:~$ az vm encryption show --resource-group sa1_test_eic_SudarshanDarade --name vm-windows-01
+{
+  "disks": [
+    {
+      "encryptionSettings": [
+        {
+          "diskEncryptionKey": {
+            "secretUrl": "https://keyvaulteinfochipsdemo.vault.azure.net/secrets/DE9E409E-B4D0-45ED-A346-3299F125C9C9/02a1bc3f5ebe4e9b931c1abe9ffce218",
+            "sourceVault": {
+              "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.KeyVault/vaults/keyvaultEinfochipsDemo"
+            }
+          },
+          "enabled": true,
+          "keyEncryptionKey": null
+        }
+      ],
+      "name": "vm-windows-01_disk1_6aeaac1d0b074e2a81062b64403d2fe1",
+      "statuses": [
+        {
+          "code": "EncryptionState/encrypted",
+          "displayStatus": "Encryption is enabled on disk",
+          "level": "Info",
+          "message": null,
+          "time": null
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "[2.5.0.6] ",
+      "time": null
+    }
+  ],
+  "substatus": [
+    {
+      "code": "ComponentStatus/BitlockerExtension/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "{\"os\": \"Encrypted\", \"data\": \"Encrypted\"}",
+      "time": null
+    }
+  ]
+}
+einfochips@PUNELPT0728:~$ az snapshot delete --resource-group sa1_test_eic_SudarshanDarade --name snapshot-data-disk-*
+einfochips@PUNELPT0728:~$ az disk delete --resource-group sa1_test_eic_SudarshanDarade --name data-disk-01 --yes
+einfochips@PUNELPT0728:~$ az disk delete --resource-group sa1_test_eic_SudarshanDarade --name data-disk-windows --yes
+einfochips@PUNELPT0728:~$ az disk delete --resource-group sa1_test_eic_SudarshanDarade --name restored-data-disk --yes
+einfochips@PUNELPT0728:~$ az keyvault delete --name keyvaultEinfochipsDemo --resource-group sa1_test_eic_SudarshanDarade
+Warning! If you have soft-delete protection enabled on this key vault, you will not be able to reuse this key vault name until the key vault has been purged from the soft deleted state. Please see the following documentation for additional guidance.
+https://learn.microsoft.com/azure/key-vault/general/soft-delete-overview
+einfochips@PUNELPT0728:~$ az snapshot delete --resource-group sa1_test_eic_SudarshanDarade --name snapshot-data-disk-*
+einfochips@PUNELPT0728:~$ az snapshot delete --resource-group sa1_test_eic_SudarshanDarade --name snapshot-data-disk-20250821
+einfochips@PUNELPT0728:~$ az snapshot delete --resource-group sa1_test_eic_SudarshanDarade --name snapshot-linux-os-20250821
+einfochips@PUNELPT0728:~$ az snapshot delete --resource-group sa1_test_eic_SudarshanDarade --name snapshot-windows-disk-20250821
+einfochips@PUNELPT0728:~$ 

@@ -1,0 +1,200 @@
+einfochips@PUNELPT0728:~$ az vm create   --resource-group sa1_test_eic_SudarshanDarade   --name vm-windows-01   --image Win2022Datacenter   --admin-username azureuser   --admin-password 'P@ssw0rd123!'  --public-ip-sku Standard
+{
+  "fqdns": "",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-windows-01",
+  "location": "southeastasia",
+  "macAddress": "00-0D-3A-C6-D8-55",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "23.98.88.177",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "zones": ""
+}
+einfochips@PUNELPT0728:~$ curl -s https://ipinfo.io/ip
+einfochips@PUNELPT0728:~$ MY_IP=$(curl -s https://ipinfo.io/ip)
+einfochips@PUNELPT0728:~$ echo "Your current IP: $MY_IP"
+Your current IP: 
+einfochips@PUNELPT0728:~$ MY_IP=$(curl -s https://checkip.amazonaws.com)
+einfochips@PUNELPT0728:~$ echo "Your current IP: $MY_IP"
+Your current IP: 223.233.85.60
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-rdp-myip \
+>   --priority 900 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 3389 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "3389",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"a78c4c6d-6700-420f-be9b-8d1be3ec3d50\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vm-windows-01NSG/securityRules/allow-rdp-myip",
+  "name": "allow-rdp-myip",
+  "priority": 900,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "223.233.85.60/32",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-http-myip \
+>   --priority 1000 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 80 \
+>   --access Allow \
+>   --protocol Tcp
+(SecurityRuleConflict) Security rule rdp conflicts with rule allow-http-myip. Rules cannot have the same Priority and Direction. To learn more, see aka.ms/nsgrules.
+Code: SecurityRuleConflict
+Message: Security rule rdp conflicts with rule allow-http-myip. Rules cannot have the same Priority and Direction. To learn more, see aka.ms/nsgrules.
+einfochips@PUNELPT0728:~$ az network nsg rule create   --resource-group sa1_test_eic_SudarshanDarade   --nsg-name vm-windows-01NSG   --name allow-http-myip   --priority 1001   --source-address-prefixes "$MY_IP/32"   --destination-port-ranges 80   --access Allow   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "80",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"b855a7dc-5f66-4f47-94d2-d9bf3928bf58\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vm-windows-01NSG/securityRules/allow-http-myip",
+  "name": "allow-http-myip",
+  "priority": 1001,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "223.233.85.60/32",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-https-myip \
+>   --priority 1010 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 443 \
+>   --access Allow \
+>   --protocol Tcp
+ \ Running ..
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "443",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"a4a8d724-40c7-4cdf-99be-73d43270120b\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vm-windows-01NSG/securityRules/allow-https-myip",
+  "name": "allow-https-myip",
+  "priority": 1010,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "223.233.85.60/32",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ NEW_IP=$(curl -s https://checkip.amazonaws.com)
+einfochips@PUNELPT0728:~$ echo $NEW_IP
+
+einfochips@PUNELPT0728:~$ echo NEW_IP
+NEW_IP
+einfochips@PUNELPT0728:~$ echo "$NEW_IP"
+
+einfochips@PUNELPT0728:~$ NEW_IP=$(curl -s https://checkip.amazonaws.com)
+einfochips@PUNELPT0728:~$ echo $NEW_IP
+223.233.85.60
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-rdp-myip \
+>   --priority 900 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 3389 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "3389",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"18181cdf-8f0d-4286-9494-faefd5b2efdb\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vm-windows-01NSG/securityRules/allow-rdp-myip",
+  "name": "allow-rdp-myip",
+  "priority": 900,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "223.233.85.60/32",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-http-myip \
+>   --priority 1000 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 80 \
+>   --access Allow \
+>   --protocol Tcp
+(SecurityRuleConflict) Security rule rdp conflicts with rule allow-http-myip. Rules cannot have the same Priority and Direction. To learn more, see aka.ms/nsgrules.
+Code: SecurityRuleConflict
+Message: Security rule rdp conflicts with rule allow-http-myip. Rules cannot have the same Priority and Direction. To learn more, see aka.ms/nsgrules.
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name vm-windows-01NSG \
+>   --name allow-https-myip \
+>   --priority 1010 \
+>   --source-address-prefixes "$MY_IP/32" \
+>   --destination-port-ranges 443 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "443",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"6cd049db-6625-422f-8b05-ddec5d4e0cf1\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vm-windows-01NSG/securityRules/allow-https-myip",
+  "name": "allow-https-myip",
+  "priority": 1010,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "223.233.85.60/32",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az vm show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vm-windows-01 \
+>   --show-details \
+>   --query publicIps \
+>   --output tsv
+23.98.88.177
+einfochips@PUNELPT0728:~$ 

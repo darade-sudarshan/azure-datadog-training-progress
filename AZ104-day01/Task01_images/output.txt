@@ -1,0 +1,1325 @@
+einfochips@PUNELPT0728:~$ az network vnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vnet-3tier \
+>   --address-prefix 10.0.0.0/16 \
+>   --location southeastasia
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "enableDdosProtection": false,
+    "etag": "W/\"a2dcc939-4c8a-4f37-8341-9fef89ca387f\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier",
+    "location": "southeastasia",
+    "name": "vnet-3tier",
+    "privateEndpointVNetPolicies": "Disabled",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "aeae3f9c-ade8-4342-96ef-e4969de21355",
+    "subnets": [],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/virtualNetworks",
+    "virtualNetworkPeerings": []
+  }
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name web-subnet-1 \
+>   --address-prefix 10.0.1.0/24
+{
+  "addressPrefix": "10.0.1.0/24",
+  "delegations": [],
+  "etag": "W/\"1e6f5414-231d-4cfd-a681-4ad0e017b245\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/web-subnet-1",
+  "name": "web-subnet-1",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name web-subnet-2 \
+>   --address-prefix 10.0.2.0/24
+{
+  "addressPrefix": "10.0.2.0/24",
+  "delegations": [],
+  "etag": "W/\"0cd056d4-c317-4f53-8a50-4dbe2c473e4a\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/web-subnet-2",
+  "name": "web-subnet-2",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-1 \
+>   --address-prefix 10.0.10.0/24
+{
+  "addressPrefix": "10.0.10.0/24",
+  "delegations": [],
+  "etag": "W/\"8c728675-298e-402a-ba34-6c88184b27a3\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-1",
+  "name": "app-subnet-1",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-2 \
+>   --address-prefix 10.0.11.0/24
+{
+  "addressPrefix": "10.0.11.0/24",
+  "delegations": [],
+  "etag": "W/\"91dd4bc8-d1ee-4b15-a8c7-21587c9497ff\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-2",
+  "name": "app-subnet-2",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-1 \
+>   --address-prefix 10.0.20.0/24
+{
+  "addressPrefix": "10.0.20.0/24",
+  "delegations": [],
+  "etag": "W/\"caf1f1fd-f11f-4807-a98d-59fd29d47787\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-1",
+  "name": "db-subnet-1",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-2 \
+>   --address-prefix 10.0.21.0/24
+{
+  "addressPrefix": "10.0.21.0/24",
+  "delegations": [],
+  "etag": "W/\"291df069-b65b-4c28-a1e9-0ca5a45fbd25\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-2",
+  "name": "db-subnet-2",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name AzureBastionSubnet \
+>   --address-prefix 10.0.100.0/27
+{
+  "addressPrefix": "10.0.100.0/27",
+  "delegations": [],
+  "etag": "W/\"287f3734-6c03-43b0-885b-919d65b20a43\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/AzureBastionSubnet",
+  "name": "AzureBastionSubnet",
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network nsg create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name nsg-web-tier
+{
+  "NewNSG": {
+    "defaultSecurityRules": [
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/AllowVnetInBound",
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from azure load balancer",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all inbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/DenyAllInBound",
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/AllowVnetOutBound",
+        "name": "AllowVnetOutBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to Internet",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/AllowInternetOutBound",
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all outbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/defaultSecurityRules/DenyAllOutBound",
+        "name": "DenyAllOutBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      }
+    ],
+    "etag": "W/\"2f5f7afb-6eb9-48ba-aefa-f4aef37f5266\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier",
+    "location": "southeastasia",
+    "name": "nsg-web-tier",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "d887ce30-5e56-412c-b206-d8798f91f571",
+    "securityRules": [],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/networkSecurityGroups"
+  }
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-web-tier \
+>   --name allow-http \
+>   --priority 100 \
+>   --source-address-prefixes '*' \
+>   --destination-port-ranges 80 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "80",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"321b3b27-9c4e-48b0-85b6-de23687a4624\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/securityRules/allow-http",
+  "name": "allow-http",
+  "priority": 100,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-web-tier \
+>   --name allow-https \
+>   --priority 110 \
+>   --source-address-prefixes '*' \
+>   --destination-port-ranges 443 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "443",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"4affaadd-284c-4d35-a6d0-2e89be17d752\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/securityRules/allow-https",
+  "name": "allow-https",
+  "priority": 110,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-web-tier \
+>   --name allow-ssh-bastion \
+>   --priority 120 \
+>   --source-address-prefixes 10.0.100.0/27 \
+>   --destination-port-ranges 22 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "22",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"53bfad9e-f9ce-4ce2-92ed-879187da4703\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier/securityRules/allow-ssh-bastion",
+  "name": "allow-ssh-bastion",
+  "priority": 120,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "10.0.100.0/27",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name nsg-app-tier
+
+{
+  "NewNSG": {
+    "defaultSecurityRules": [
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/AllowVnetInBound",
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from azure load balancer",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all inbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/DenyAllInBound",
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/AllowVnetOutBound",
+        "name": "AllowVnetOutBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to Internet",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/AllowInternetOutBound",
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all outbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/defaultSecurityRules/DenyAllOutBound",
+        "name": "DenyAllOutBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      }
+    ],
+    "etag": "W/\"3139e88a-0b5a-4e23-9d70-7b844d38a14f\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "location": "southeastasia",
+    "name": "nsg-app-tier",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "acd12081-ccee-454d-b2a6-30b420c242e5",
+    "securityRules": [],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/networkSecurityGroups"
+  }
+}
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-app-tier \
+>   --name allow-web-tier \
+>   --priority 100 \
+>   --source-address-prefixes 10.0.1.0/24 10.0.2.0/24 \
+>   --destination-port-ranges 8080 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "8080",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"2c838678-6e97-44ad-a866-2695aaea4518\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/securityRules/allow-web-tier",
+  "name": "allow-web-tier",
+  "priority": 100,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefixes": [
+    "10.0.1.0/24",
+    "10.0.2.0/24"
+  ],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-app-tier \
+>   --name allow-ssh-bastion \
+>   --priority 110 \
+>   --source-address-prefixes 10.0.100.0/27 \
+>   --destination-port-ranges 22 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "22",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"09420920-bb0c-4e02-8302-d7fd3e883733\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier/securityRules/allow-ssh-bastion",
+  "name": "allow-ssh-bastion",
+  "priority": 110,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "10.0.100.0/27",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name nsg-db-tier
+{
+  "NewNSG": {
+    "defaultSecurityRules": [
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/AllowVnetInBound",
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from azure load balancer",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all inbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/DenyAllInBound",
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/AllowVnetOutBound",
+        "name": "AllowVnetOutBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to Internet",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/AllowInternetOutBound",
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all outbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/defaultSecurityRules/DenyAllOutBound",
+        "name": "DenyAllOutBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      }
+    ],
+    "etag": "W/\"4c47c466-cf3a-4fa2-be3a-cd4e8d450e26\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "location": "southeastasia",
+    "name": "nsg-db-tier",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "d9002c78-353e-4c31-8e8a-7d942f52759c",
+    "securityRules": [],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/networkSecurityGroups"
+  }
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-db-tier \
+>   --name allow-db-app-tier \
+>   --priority 100 \
+>   --source-address-prefixes 10.0.10.0/24 10.0.11.0/24 \
+>   --destination-port-ranges 3306 5432 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRanges": [
+    "3306",
+    "5432"
+  ],
+  "direction": "Inbound",
+  "etag": "W/\"2a093ea0-5d44-457a-ad4b-d13b77ba6c50\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/securityRules/allow-db-app-tier",
+  "name": "allow-db-app-tier",
+  "priority": 100,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefixes": [
+    "10.0.10.0/24",
+    "10.0.11.0/24"
+  ],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-db-tier \
+>   --name allow-ssh-bastion \
+>   --priority 110 \
+>   --source-address-prefixes 10.0.100.0/27 \
+>   --destination-port-ranges 22 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "22",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"78b0b194-2c1c-4d43-8a79-3bbda3993fa6\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier/securityRules/allow-ssh-bastion",
+  "name": "allow-ssh-bastion",
+  "priority": 110,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "10.0.100.0/27",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name web-subnet-1 \
+>   --network-security-group nsg-web-tier
+{
+  "addressPrefix": "10.0.1.0/24",
+  "delegations": [],
+  "etag": "W/\"a6171759-6aa8-4bdd-a813-64dd7f35e4f6\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/web-subnet-1",
+  "name": "web-subnet-1",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name web-subnet-2 \
+>   --network-security-group nsg-web-tier
+{
+  "addressPrefix": "10.0.2.0/24",
+  "delegations": [],
+  "etag": "W/\"538ac0c4-f2ff-4690-bb61-2ee7dfe1ffa3\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/web-subnet-2",
+  "name": "web-subnet-2",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-web-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-1 \
+>   --network-security-group nsg-app-tier
+{
+  "addressPrefix": "10.0.10.0/24",
+  "delegations": [],
+  "etag": "W/\"529a388e-bfc2-464e-ada2-7793a6182e2d\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-1",
+  "name": "app-subnet-1",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-2 \
+>   --network-security-group nsg-app-tier
+{
+  "addressPrefix": "10.0.11.0/24",
+  "delegations": [],
+  "etag": "W/\"9a26d063-ccd3-4419-8ea4-e30768e5c5e9\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-2",
+  "name": "app-subnet-2",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-1 \
+>   --network-security-group nsg-db-tier
+{
+  "addressPrefix": "10.0.20.0/24",
+  "delegations": [],
+  "etag": "W/\"3b02974f-4089-4010-8ae4-68d5a374fe76\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-1",
+  "name": "db-subnet-1",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-2 \
+>   --network-security-group nsg-db-tier
+{
+  "addressPrefix": "10.0.21.0/24",
+  "delegations": [],
+  "etag": "W/\"283045d0-a5d3-44b2-b96f-f4396411c5ad\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-2",
+  "name": "db-subnet-2",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network public-ip create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name pip-nat-gateway \
+>   --sku Standard \
+>   --allocation-method Static
+[Coming breaking change] In the coming release, the default behavior will be changed as follows when sku is Standard and zone is not provided: For zonal regions, you will get a zone-redundant IP indicated by zones:["1","2","3"]; For non-zonal regions, you will get a non zone-redundant IP indicated by zones:null.
+{
+  "publicIp": {
+    "ddosSettings": {
+      "protectionMode": "VirtualNetworkInherited"
+    },
+    "etag": "W/\"a3d1f274-9b48-4071-91f3-8f296e3a458c\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/publicIPAddresses/pip-nat-gateway",
+    "idleTimeoutInMinutes": 4,
+    "ipAddress": "4.194.160.168",
+    "ipTags": [],
+    "location": "southeastasia",
+    "name": "pip-nat-gateway",
+    "provisioningState": "Succeeded",
+    "publicIPAddressVersion": "IPv4",
+    "publicIPAllocationMethod": "Static",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "53dd0a43-f9ef-49d0-bbb3-0aba1e0f0e0b",
+    "sku": {
+      "name": "Standard",
+      "tier": "Regional"
+    },
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/publicIPAddresses"
+  }
+}
+einfochips@PUNELPT0728:~$ az network nat gateway create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name nat-gateway-3tier \
+>   --public-ip-addresses pip-nat-gateway \
+>   --idle-timeout 10
+{
+  "etag": "W/\"38ba5c4b-b785-46da-9652-9e9e47b04a75\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+  "idleTimeoutInMinutes": 10,
+  "location": "southeastasia",
+  "name": "nat-gateway-3tier",
+  "provisioningState": "Succeeded",
+  "publicIpAddresses": [
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/publicIPAddresses/pip-nat-gateway",
+      "resourceGroup": "sa1_test_eic_SudarshanDarade"
+    }
+  ],
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "resourceGuid": "c88495b2-0027-4ed4-8f0e-66baf7bd48e6",
+  "sku": {
+    "name": "Standard"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "type": "Microsoft.Network/natGateways"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-1 \
+>   --nat-gateway nat-gateway-3tier
+{
+  "addressPrefix": "10.0.10.0/24",
+  "delegations": [],
+  "etag": "W/\"9a1ecc28-665c-41cd-9cb3-05250ce73ece\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-1",
+  "name": "app-subnet-1",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-2 \
+>   --nat-gateway nat-gateway-3tier
+
+{
+  "addressPrefix": "10.0.11.0/24",
+  "delegations": [],
+  "etag": "W/\"0a6ddc1f-0b19-4d46-884c-35c83b4ffbb5\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-2",
+  "name": "app-subnet-2",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-1 \
+>   --nat-gateway nat-gateway-3tier
+{
+  "addressPrefix": "10.0.20.0/24",
+  "delegations": [],
+  "etag": "W/\"58528853-e8a0-43ad-9408-4dd3f0fb5344\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-1",
+  "name": "db-subnet-1",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-2 \
+>   --nat-gateway nat-gateway-3tier
+{
+  "addressPrefix": "10.0.21.0/24",
+  "delegations": [],
+  "etag": "W/\"c57cc479-7f7c-4f03-b142-eb99c7a6f2f1\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-2",
+  "name": "db-subnet-2",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name db-subnet-2 \
+>   --nat-gateway nat-gateway-3tier
+{
+  "addressPrefix": "10.0.21.0/24",
+  "delegations": [],
+  "etag": "W/\"0d146fa2-74e1-4e0d-be6a-9993e5d875ae\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/db-subnet-2",
+  "name": "db-subnet-2",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-db-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network public-ip create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name pip-bastion \
+>   --sku Standard \
+>   --allocation-method Static
+[Coming breaking change] In the coming release, the default behavior will be changed as follows when sku is Standard and zone is not provided: For zonal regions, you will get a zone-redundant IP indicated by zones:["1","2","3"]; For non-zonal regions, you will get a non zone-redundant IP indicated by zones:null.
+{
+  "publicIp": {
+    "ddosSettings": {
+      "protectionMode": "VirtualNetworkInherited"
+    },
+    "etag": "W/\"9b8eeaa0-5430-409e-8d1f-b27d92ff2737\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/publicIPAddresses/pip-bastion",
+    "idleTimeoutInMinutes": 4,
+    "ipAddress": "4.194.216.85",
+    "ipTags": [],
+    "location": "southeastasia",
+    "name": "pip-bastion",
+    "provisioningState": "Succeeded",
+    "publicIPAddressVersion": "IPv4",
+    "publicIPAllocationMethod": "Static",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "565a5c84-bc40-499d-a842-17f8cc37de70",
+    "sku": {
+      "name": "Standard",
+      "tier": "Regional"
+    },
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/publicIPAddresses"
+  }
+}
+einfochips@PUNELPT0728:~$ az network bastion create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name bastion-3tier \
+>   --public-ip-address pip-bastion \
+>   --vnet-name vnet-3tier \
+>   --location southeastasia
+Preview version of extension is disabled by default for extension installation, enabled for modules without stable versions. 
+Please run 'az config set extension.dynamic_install_allow_preview=true or false' to config it specifically. 
+The command requires the extension bastion. Do you want to install it now? The command will continue to run after the extension is installed. (Y/n): Y
+Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
+{
+  "disableCopyPaste": false,
+  "dnsName": "bst-ffe9e78f-f8e3-42ae-986d-e7c66c6c8346.bastion.azure.com",
+  "enableFileCopy": false,
+  "enableIpConnect": false,
+  "enableKerberos": false,
+  "enableSessionRecording": false,
+  "enableShareableLink": false,
+  "enableTunneling": false,
+  "etag": "W/\"8458b3c6-9ee3-42cb-8e85-440b433d0f7c\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/bastionHosts/bastion-3tier",
+  "ipConfigurations": [
+    {
+      "etag": "W/\"8458b3c6-9ee3-42cb-8e85-440b433d0f7c\"",
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/bastionHosts/bastion-3tier/bastionHostIpConfigurations/bastion_ip_config",
+      "name": "bastion_ip_config",
+      "privateIPAllocationMethod": "Dynamic",
+      "provisioningState": "Succeeded",
+      "publicIPAddress": {
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/publicIPAddresses/pip-bastion",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade"
+      },
+      "resourceGroup": "sa1_test_eic_SudarshanDarade",
+      "subnet": {
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/AzureBastionSubnet",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade"
+      },
+      "type": "Microsoft.Network/bastionHosts/bastionHostIpConfigurations"
+    }
+  ],
+  "location": "southeastasia",
+  "name": "bastion-3tier",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "scaleUnits": 2,
+  "sku": {
+    "name": "Standard"
+  },
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "type": "Microsoft.Network/bastionHosts"
+}
+einfochips@PUNELPT0728:~$ az network route-table create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name rt-app-tier
+{
+  "disableBgpRoutePropagation": false,
+  "etag": "W/\"417c68f3-7c50-49a2-815a-22bef3425525\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/routeTables/rt-app-tier",
+  "location": "southeastasia",
+  "name": "rt-app-tier",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "resourceGuid": "b8a43bd8-3e0f-4332-a0a6-e97375d94456",
+  "routes": [],
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "type": "Microsoft.Network/routeTables"
+}
+einfochips@PUNELPT0728:~$ az network route-table route create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --route-table-name rt-app-tier \
+>   --name route-to-internet \
+>   --address-prefix 0.0.0.0/0 \
+>   --next-hop-type VirtualAppliance \
+>   --next-hop-ip-address 10.0.100.4
+{
+  "addressPrefix": "0.0.0.0/0",
+  "etag": "W/\"f10a175c-8b28-4178-a4c9-83e8be4acadc\"",
+  "hasBgpOverride": false,
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/routeTables/rt-app-tier/routes/route-to-internet",
+  "name": "route-to-internet",
+  "nextHopIpAddress": "10.0.100.4",
+  "nextHopType": "VirtualAppliance",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/routeTables/routes"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-1 \
+>   --route-table rt-app-tier
+{
+  "addressPrefix": "10.0.10.0/24",
+  "delegations": [],
+  "etag": "W/\"c4d06418-ec76-4d12-ab5d-1b0f7a9bc4e6\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-1",
+  "name": "app-subnet-1",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "routeTable": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/routeTables/rt-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --name app-subnet-2 \
+>   --route-table rt-app-tier
+{
+  "addressPrefix": "10.0.11.0/24",
+  "delegations": [],
+  "etag": "W/\"32daa85d-f176-4d8e-a441-7cf2c3b736d8\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-3tier/subnets/app-subnet-2",
+  "name": "app-subnet-2",
+  "natGateway": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/natGateways/nat-gateway-3tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "routeTable": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/routeTables/rt-app-tier",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet list \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-3tier \
+>   --output table
+AddressPrefix    Name                PrivateEndpointNetworkPolicies    PrivateLinkServiceNetworkPolicies    ProvisioningState    ResourceGroup
+---------------  ------------------  --------------------------------  -----------------------------------  -------------------  ----------------------------
+10.0.1.0/24      web-subnet-1        Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.2.0/24      web-subnet-2        Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.20.0/24     db-subnet-1         Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.21.0/24     db-subnet-2         Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.100.0/27    AzureBastionSubnet  Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.10.0/24     app-subnet-1        Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+10.0.11.0/24     app-subnet-2        Disabled                          Enabled                              Succeeded            sa1_test_eic_SudarshanDarade
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ az network nsg list \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --output table
+Location       Name          ProvisioningState    ResourceGroup                 ResourceGuid
+-------------  ------------  -------------------  ----------------------------  ------------------------------------
+southeastasia  nsg-app-tier  Succeeded            sa1_test_eic_SudarshanDarade  acd12081-ccee-454d-b2a6-30b420c242e5
+southeastasia  nsg-db-tier   Succeeded            sa1_test_eic_SudarshanDarade  d9002c78-353e-4c31-8e8a-7d942f52759c
+southeastasia  nsg-web-tier  Succeeded            sa1_test_eic_SudarshanDarade  d887ce30-5e56-412c-b206-d8798f91f571
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ az network bastion list \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --output table
+DisableCopyPaste    DnsName                                                     EnableFileCopy    EnableIpConnect    EnableKerberos    EnableSessionRecording    EnableShareableLink    EnableTunneling    Location       Name           ProvisioningState    ResourceGroup                 ScaleUnits
+------------------  ----------------------------------------------------------  ----------------  -----------------  ----------------  ------------------------  ---------------------  -----------------  -------------  -------------  -------------------  ----------------------------  ------------
+False               bst-ffe9e78f-f8e3-42ae-986d-e7c66c6c8346.bastion.azure.com  False             False              False             False                     False                  False              southeastasia  bastion-3tier  Succeeded            sa1_test_eic_SudarshanDarade  2

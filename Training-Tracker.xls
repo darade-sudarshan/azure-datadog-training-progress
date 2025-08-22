@@ -1,0 +1,7 @@
+Azure Administrator Course – 46 hrs,,,,
+Working Days ,Course Sections,Duration,Completion Status,Hands-on performed
+Day 01,Section 4 : configure and manage Vnet,6hrs 20 min,"completed Networking basic,vNet in azure,subnet,NSG,ASG,azure bastion",created Vnet along with subnets and azure bastion host using terraform module and manually as well
+Day 02,Section 4 : configure and manage Vnet,6hrs 20 min,"completed Network watcher,vNet Peering",created Vnet along with vnet Peering Module and performed practice manually as well
+Day 02,Section 3 : Deploy and manage compute Resources,4hrs 47min,completed VM basics and azure disks,created windows VM and Linux VM and used SSH and RDP sessions
+Day 03,Section 3 : Deploy and manage compute Resources,4hrs 47min,completed section 03,"created ACR, ACI, webapp"
+Day 04,Section 4 : configure and manage Vnet,6hrs 20 min,completed Section 04 ; loadbalancers and app GW,created Loadbalancers and app gateway

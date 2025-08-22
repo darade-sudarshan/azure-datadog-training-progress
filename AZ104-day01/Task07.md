@@ -11,13 +11,94 @@ Azure VMSS with flexible orchestration and auto scaling provides:
 - **Mixed Instance Types**: Different VM sizes in same scale set
 
 ---
-
 ## Prerequisites
 
 - Active Microsoft Azure account
 - Azure CLI installed
 - SSH key pair for Linux VMs
 - Understanding of scaling metrics
+
+---
+## Manual VMSS Creation with Auto Scaling
+
+### Azure Portal Steps
+
+#### 1. Create VMSS via Portal
+1. Navigate to **Virtual machine scale sets** > **Create**
+2. **Basics Tab:**
+   - Resource group: `sa1_test_eic_SudarshanDarade`
+   - Scale set name: `vmss-autoscale-manual`
+   - Region: `SouthEast Asia`
+   - Orchestration mode: **Flexible**
+   - Image: `Ubuntu 24.04 LTS`
+   - Size: `Standard_B2s`
+   - Authentication: SSH public key
+   - Username: `azureuser`
+
+![alt text](Task07_images/vmss-basic-manual.png)
+![alt text](Task07_images/vmss-creds-manual.png)
+
+3. **Scaling Tab:**
+   - Initial instance count: `2`
+   - Scaling policy: **Custom**
+   - Enable autoscale: **Yes**
+   - Minimum instances: `2`
+   - Maximum instances: `10`
+   - Scale out CPU threshold: `70%`
+   - Scale in CPU threshold: `30%`
+
+![alt text](Task07_images/vmss-autoscaling-manual.png)
+
+4. **Networking Tab:**
+   - Virtual network: Create new `vnet-vmss-autoscale`
+   - Subnet: Create new `subnet-vmss` (10.0.1.0/24)
+   
+![alt text](Task07_images/vmss-net-manual.png)
+
+5. **Management Tab:**
+   - Upgrade policy: `Automatic`
+   - Enable system assigned managed identity: `Yes`
+
+![alt text](Task07_images/vmss-mgmt-manual.png)
+
+6. Click **Review + Create** > **Create**
+
+![alt text](Task07_images/vmss-validation-manual.png)
+
+#### 2. Configure Auto Scale Rules via Portal
+
+**Add Scale Rules:**
+1. Navigate to your VMSS
+2. Go to **Settings** > **Scaling**
+3. Click **Custom autoscale**
+4. **Scale condition:**
+   - Scale mode: `Scale based on a metric`
+   - Rules:
+     - **Scale out**: CPU > 70% for 5 minutes, increase by 1
+     - **Scale in**: CPU < 30% for 5 minutes, decrease by 1
+   - Instance limits: Min 2, Max 10, Default 2
+
+
+
+#### 3. PowerShell Manual Creation with Auto Scale
+
+```powershell
+# Create resource group
+New-AzResourceGroup -Name "sa1_test_eic_SudarshanDarade" -Location "SouthEast Asia"
+
+# Create VMSS
+$vmssConfig = New-AzVmssConfig -Location "SouthEast Asia" -SkuCapacity 2 -SkuName "Standard_B2s" -OrchestrationMode "Flexible"
+$vmss = New-AzVmss -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "vmss-autoscale-manual" -VirtualMachineScaleSet $vmssConfig
+
+# Create autoscale setting
+$rule1 = New-AzAutoscaleRule -MetricName "Percentage CPU" -MetricResourceId $vmss.Id -Operator GreaterThan -MetricStatistic Average -Threshold 70 -TimeGrain 00:01:00 -TimeWindow 00:05:00 -ScaleActionCooldown 00:05:00 -ScaleActionDirection Increase -ScaleActionValue 1
+
+$rule2 = New-AzAutoscaleRule -MetricName "Percentage CPU" -MetricResourceId $vmss.Id -Operator LessThan -MetricStatistic Average -Threshold 30 -TimeGrain 00:01:00 -TimeWindow 00:05:00 -ScaleActionCooldown 00:05:00 -ScaleActionDirection Decrease -ScaleActionValue 1
+
+$profile = New-AzAutoscaleProfile -DefaultCapacity 2 -MaximumCapacity 10 -MinimumCapacity 2 -Rule $rule1, $rule2 -Name "Default"
+
+Add-AzAutoscaleSetting -Location "SouthEast Asia" -Name "autoscale-manual" -ResourceGroupName "sa1_test_eic_SudarshanDarade" -TargetResourceId $vmss.Id -AutoscaleProfile $profile
+```
 
 ---
 
@@ -28,8 +109,8 @@ Azure VMSS with flexible orchestration and auto scaling provides:
 ```bash
 # Create resource group
 az group create \
-  --name rg-vmss-autoscale-linux \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 
 # Generate SSH key if not exists
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/vmss-autoscale-key -N ""
@@ -40,7 +121,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/vmss-autoscale-key -N ""
 ```bash
 # Create virtual network
 az network vnet create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-vmss-autoscale \
   --address-prefix 10.0.0.0/16 \
   --subnet-name subnet-vmss \
@@ -52,7 +133,7 @@ az network vnet create \
 ```bash
 # Create Linux VMSS
 az vmss create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vmss-linux-autoscale \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -72,7 +153,7 @@ az vmss create \
 ```bash
 # Apply custom script extension to install stress tool and web server
 az vmss extension set \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vmss-name vmss-linux-autoscale \
   --name customScript \
   --publisher Microsoft.Azure.Extensions \
@@ -85,7 +166,7 @@ az vmss extension set \
 ```bash
 # Create auto scale profile
 az monitor autoscale create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --resource vmss-linux-autoscale \
   --resource-type Microsoft.Compute/virtualMachineScaleSets \
   --name autoscale-linux \
@@ -95,14 +176,14 @@ az monitor autoscale create \
 
 # Create scale-out rule (CPU > 70%)
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Percentage CPU > 70 avg 5m" \
   --scale out 1
 
 # Create scale-in rule (CPU < 30%)
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Percentage CPU < 30 avg 5m" \
   --scale in 1
@@ -117,8 +198,8 @@ az monitor autoscale rule create \
 ```bash
 # Create resource group
 az group create \
-  --name rg-vmss-autoscale-windows \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 ```
 
 ### 2. Create Virtual Network
@@ -126,7 +207,7 @@ az group create \
 ```bash
 # Create virtual network
 az network vnet create \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-vmss-autoscale-win \
   --address-prefix 10.1.0.0/16 \
   --subnet-name subnet-vmss-win \
@@ -138,7 +219,7 @@ az network vnet create \
 ```bash
 # Create Windows VMSS
 az vmss create \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vmss-windows-autoscale \
   --image Win2022Datacenter \
   --admin-username azureuser \
@@ -152,13 +233,14 @@ az vmss create \
   --zones 1 2 3 \
   --upgrade-policy-mode Automatic
 ```
+![alt text](Task07_images/vmss-autoscale-win.png)
 
 ### 4. Configure IIS on Windows Instances
 
 ```bash
 # Apply custom script extension to install IIS
 az vmss extension set \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vmss-name vmss-windows-autoscale \
   --name CustomScriptExtension \
   --publisher Microsoft.Compute \
@@ -171,7 +253,7 @@ az vmss extension set \
 ```bash
 # Create auto scale profile
 az monitor autoscale create \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --resource vmss-windows-autoscale \
   --resource-type Microsoft.Compute/virtualMachineScaleSets \
   --name autoscale-windows \
@@ -181,19 +263,19 @@ az monitor autoscale create \
 
 # Create scale-out rule (CPU > 75%)
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-windows \
   --condition "Percentage CPU > 75 avg 5m" \
   --scale out 2
 
 # Create scale-in rule (CPU < 25%)
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-windows \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-windows \
   --condition "Percentage CPU < 25 avg 5m" \
   --scale in 1
 ```
-
+![alt text](Task07_images/vmss-autoscale-scaling.png)
 ---
 
 ## Advanced Auto Scaling Rules
@@ -203,14 +285,14 @@ az monitor autoscale rule create \
 ```bash
 # Add memory-based scale-out rule for Linux
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Available Memory Bytes < 1073741824 avg 5m" \
   --scale out 1
 
 # Add memory-based scale-in rule for Linux
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Available Memory Bytes > 2147483648 avg 10m" \
   --scale in 1
@@ -221,13 +303,13 @@ az monitor autoscale rule create \
 ```bash
 # Add network-based scaling for high traffic
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Network In Total > 10485760 avg 5m" \
   --scale out 1
 
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Network In Total < 1048576 avg 10m" \
   --scale in 1
@@ -238,7 +320,7 @@ az monitor autoscale rule create \
 ```bash
 # Create weekday business hours profile (9 AM - 6 PM)
 az monitor autoscale profile create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --name "business-hours" \
   --min-count 4 \
@@ -251,7 +333,7 @@ az monitor autoscale profile create \
 
 # Create weekend profile
 az monitor autoscale profile create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --name "weekend" \
   --min-count 1 \
@@ -272,13 +354,13 @@ az monitor autoscale profile create \
 ```bash
 # Get auto scale settings
 az monitor autoscale show \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name autoscale-linux \
   --query "{Name:name, MinCount:profiles[0].capacity.minimum, MaxCount:profiles[0].capacity.maximum, CurrentCount:profiles[0].capacity.default}"
 
 # List all auto scale rules
 az monitor autoscale rule list \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --output table
 ```
@@ -288,14 +370,14 @@ az monitor autoscale rule list \
 ```bash
 # Get scaling activity logs
 az monitor activity-log list \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --start-time 2024-01-01T00:00:00Z \
   --query "[?contains(operationName.value, 'Scale')]" \
   --output table
 
 # Get current instance count
 az vmss show \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vmss-linux-autoscale \
   --query "sku.capacity"
 ```
@@ -305,7 +387,7 @@ az vmss show \
 ```bash
 # Get CPU metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-vmss-autoscale-linux/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
   --metric "Percentage CPU" \
   --interval PT5M \
   --start-time 2024-01-01T00:00:00Z \
@@ -313,7 +395,7 @@ az monitor metrics list \
 
 # Get memory metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-vmss-autoscale-linux/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
   --metric "Available Memory Bytes" \
   --interval PT5M
 ```
@@ -335,7 +417,7 @@ sudo apt-get update && sudo apt-get install -y stress
 stress --cpu 4 --timeout 600s
 
 # Monitor scaling in another terminal
-watch -n 30 "az vmss list-instances --resource-group rg-vmss-autoscale-linux --name vmss-linux-autoscale --output table"
+watch -n 30 "az vmss list-instances --resource-group sa1_test_eic_SudarshanDarade --name vmss-linux-autoscale --output table"
 ```
 
 ### Generate CPU Load on Windows
@@ -367,7 +449,7 @@ $jobs | Remove-Job
 #!/bin/bash
 # Automated load testing for Linux VMSS
 
-RESOURCE_GROUP="rg-vmss-autoscale-linux"
+RESOURCE_GROUP="sa1_test_eic_SudarshanDarade"
 VMSS_NAME="vmss-linux-autoscale"
 
 echo "Starting load test..."
@@ -406,19 +488,19 @@ done
 ```bash
 # Create custom metric-based scaling rule
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "Requests per second > 100 avg 3m" \
   --scale out 2 \
-  --source /subscriptions/{subscription-id}/resourceGroups/rg-vmss-autoscale-linux/providers/Microsoft.Insights/components/app-insights
+  --source /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Insights/components/app-insights
 
 # Scale based on queue length
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-linux \
   --condition "ApproximateMessageCount > 50 avg 5m" \
   --scale out 1 \
-  --source /subscriptions/{subscription-id}/resourceGroups/rg-vmss-autoscale-linux/providers/Microsoft.ServiceBus/namespaces/sb-namespace/queues/work-queue
+  --source /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.ServiceBus/namespaces/sb-namespace/queues/work-queue
 ```
 
 ---
@@ -438,7 +520,7 @@ az monitor autoscale rule create \
 ```bash
 # Create optimized auto scale profile
 az monitor autoscale create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --resource vmss-linux-autoscale \
   --resource-type Microsoft.Compute/virtualMachineScaleSets \
   --name autoscale-optimized \
@@ -448,7 +530,7 @@ az monitor autoscale create \
 
 # Aggressive scale-out for performance
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-optimized \
   --condition "Percentage CPU > 60 avg 3m" \
   --scale out 3 \
@@ -456,7 +538,7 @@ az monitor autoscale rule create \
 
 # Conservative scale-in for stability
 az monitor autoscale rule create \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --autoscale-name autoscale-optimized \
   --condition "Percentage CPU < 20 avg 15m" \
   --scale in 1 \
@@ -479,18 +561,18 @@ az monitor autoscale rule create \
 ```bash
 # Check auto scale configuration
 az monitor autoscale show \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name autoscale-linux
 
 # View scaling events
 az monitor activity-log list \
-  --resource-group rg-vmss-autoscale-linux \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --caller "Microsoft.Insights/autoscaleSettings" \
   --start-time 2024-01-01T00:00:00Z
 
 # Check current metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-vmss-autoscale-linux/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-autoscale \
   --metric "Percentage CPU" \
   --interval PT1M \
   --aggregation Average
@@ -502,10 +584,10 @@ az monitor metrics list \
 
 ```bash
 # Delete Linux auto scale resources
-az group delete --name rg-vmss-autoscale-linux --yes --no-wait
+az group delete --name sa1_test_eic_SudarshanDarade --yes --no-wait
 
 # Delete Windows auto scale resources
-az group delete --name rg-vmss-autoscale-windows --yes --no-wait
+az group delete --name sa1_test_eic_SudarshanDarade --yes --no-wait
 ```
 
 ---

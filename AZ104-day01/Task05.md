@@ -64,10 +64,10 @@ Physically separate locations within an Azure region, each with independent powe
 
 ```bash
 # Check if region supports availability zones
-az vm list-skus --location eastus --query "[?contains(locationInfo[0].zones, '1')].{Name:name, Zones:locationInfo[0].zones}" --output table
+az vm list-skus --location southeastasia --query "[?contains(locationInfo[0].zones, '1')].{Name:name, Zones:locationInfo[0].zones}" --output table
 
 # List zone-supported VM sizes
-az vm list-sizes --location eastus --output table
+az vm list-sizes --location southeastasia --output table
 ```
 
 ### Deploy VM with Availability Zone
@@ -75,15 +75,17 @@ az vm list-sizes --location eastus --output table
 ```bash
 # Create VM in specific availability zone
 az vm create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-zone1 \
   --image Ubuntu2204 \
   --admin-username azureuser \
   --ssh-key-values ~/.ssh/azure-vm-key.pub \
-  --location eastus \
+  --location southeastasia \
   --zone 1 \
   --size Standard_B2s
 ```
+
+![alt text](Task05_images/Single_zone.png)
 
 ### Multi-Zone Deployment
 
@@ -91,16 +93,17 @@ az vm create \
 # Create VMs across multiple zones
 for zone in 1 2 3; do
   az vm create \
-    --resource-group rg-ha-demo \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --name vm-zone$zone \
     --image Ubuntu2204 \
     --admin-username azureuser \
     --ssh-key-values ~/.ssh/azure-vm-key.pub \
-    --location eastus \
+    --location southeastasia \
     --zone $zone \
     --size Standard_B2s
 done
 ```
+![alt text](Task05_images/Multi_zone.png)
 
 ---
 
@@ -121,11 +124,11 @@ Logical grouping of VMs that ensures they are deployed across multiple fault and
 ```bash
 # Create availability set
 az vm availability-set create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name avset-web-tier \
   --platform-fault-domain-count 2 \
   --platform-update-domain-count 5 \
-  --location eastus
+  --location southeastasia
 ```
 
 ### Deploy VMs in Availability Set
@@ -133,7 +136,7 @@ az vm availability-set create \
 ```bash
 # Create VMs in availability set
 az vm create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web1 \
   --availability-set avset-web-tier \
   --image Ubuntu2204 \
@@ -142,7 +145,7 @@ az vm create \
   --size Standard_B2s
 
 az vm create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web2 \
   --availability-set avset-web-tier \
   --image Ubuntu2204 \
@@ -150,7 +153,7 @@ az vm create \
   --ssh-key-values ~/.ssh/azure-vm-key.pub \
   --size Standard_B2s
 ```
-
+![alt text](Task05_images/AVset.png)
 ---
 
 ## Fault Domains
@@ -170,7 +173,7 @@ Logical groups of hardware that share a common power source and network switch.
 ```bash
 # Check VM fault domain assignment
 az vm get-instance-view \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web1 \
   --query "platformFaultDomain"
 ```
@@ -180,7 +183,7 @@ az vm get-instance-view \
 ```bash
 # Create availability set with specific fault domain count
 az vm availability-set create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name avset-app-tier \
   --platform-fault-domain-count 3 \
   --platform-update-domain-count 5
@@ -206,7 +209,7 @@ Logical groups of hardware that can be updated and rebooted simultaneously durin
 ```bash
 # Check VM update domain assignment
 az vm get-instance-view \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web1 \
   --query "platformUpdateDomain"
 ```
@@ -216,7 +219,7 @@ az vm get-instance-view \
 ```bash
 # Create availability set with specific update domain count
 az vm availability-set create \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name avset-db-tier \
   --platform-fault-domain-count 2 \
   --platform-update-domain-count 10
@@ -230,7 +233,7 @@ az vm availability-set create \
 
 ```bash
 # Create resource group
-az group create --name rg-web-ha --location eastus
+az group create --name rg-web-ha --location southeastasia
 
 # Create availability set
 az vm availability-set create \
@@ -270,7 +273,7 @@ done
 
 ```bash
 # Create resource group
-az group create --name rg-db-ha --location eastus
+az group create --name rg-db-ha --location southeastasia
 
 # Create VMs across availability zones
 az vm create \
@@ -296,7 +299,7 @@ az vm create \
 
 ```bash
 # Primary region deployment
-az group create --name rg-primary --location eastus
+az group create --name rg-primary --location southeastasia
 
 az vm create \
   --resource-group rg-primary \
@@ -340,13 +343,13 @@ az vm create \
 ```bash
 # Get detailed VM information
 az vm get-instance-view \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web1 \
   --query "{Name:name, Zone:zones[0], FaultDomain:platformFaultDomain, UpdateDomain:platformUpdateDomain, ProvisioningState:provisioningState}"
 
 # List all VMs with placement info
 az vm list \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --show-details \
   --query "[].{Name:name, Zone:zones[0], Location:location, PowerState:powerState}" \
   --output table
@@ -357,7 +360,7 @@ az vm list \
 ```bash
 # Check availability set configuration
 az vm availability-set show \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name avset-web-tier \
   --query "{Name:name, FaultDomains:platformFaultDomainCount, UpdateDomains:platformUpdateDomainCount, VMs:virtualMachines[].id}"
 ```
@@ -367,13 +370,13 @@ az vm availability-set show \
 ```bash
 # Check VM health status
 az vm get-instance-view \
-  --resource-group rg-ha-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web1 \
   --query "instanceView.statuses[?code=='PowerState/running']"
 
 # Monitor availability metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-ha-demo/providers/Microsoft.Compute/virtualMachines/vm-web1 \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-web1 \
   --metric "Percentage CPU" \
   --interval PT1M
 ```
@@ -433,13 +436,13 @@ az vm availability-set create \
 
 ```bash
 # Check resource quotas
-az vm list-usage --location eastus --output table
+az vm list-usage --location southeastasia --output table
 
 # Verify zone support for VM size
-az vm list-skus --location eastus --size Standard_B2s --query "[].{Name:name, Zones:locationInfo[0].zones}"
+az vm list-skus --location southeastasia --size Standard_B2s --query "[].{Name:name, Zones:locationInfo[0].zones}"
 
 # Check availability set constraints
-az vm availability-set show --resource-group rg-ha-demo --name avset-web-tier
+az vm availability-set show --resource-group sa1_test_eic_SudarshanDarade --name avset-web-tier
 ```
 
 ---
@@ -448,7 +451,7 @@ az vm availability-set show --resource-group rg-ha-demo --name avset-web-tier
 
 ```bash
 # Delete resource groups
-az group delete --name rg-ha-demo --yes --no-wait
+az group delete --name sa1_test_eic_SudarshanDarade --yes --no-wait
 az group delete --name rg-web-ha --yes --no-wait
 az group delete --name rg-db-ha --yes --no-wait
 az group delete --name rg-primary --yes --no-wait

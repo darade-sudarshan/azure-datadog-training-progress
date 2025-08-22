@@ -1,0 +1,401 @@
+einfochips@PUNELPT0728:~$ az network vnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vnet-vmss-autoscale \
+>   --address-prefix 10.0.0.0/16 \
+>   --subnet-name subnet-vmss \
+>   --subnet-prefix 10.0.1.0/24
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "enableDdosProtection": false,
+    "etag": "W/\"500515a8-51cb-427c-9baf-f9797f81ead5\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss-autoscale",
+    "location": "southeastasia",
+    "name": "vnet-vmss-autoscale",
+    "privateEndpointVNetPolicies": "Disabled",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "fe2f59a3-3852-49c9-831c-1edc941c8e03",
+    "subnets": [
+      {
+        "addressPrefix": "10.0.1.0/24",
+        "delegations": [],
+        "etag": "W/\"500515a8-51cb-427c-9baf-f9797f81ead5\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss-autoscale/subnets/subnet-vmss",
+        "name": "subnet-vmss",
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "type": "Microsoft.Network/virtualNetworks/subnets"
+      }
+    ],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/virtualNetworks",
+    "virtualNetworkPeerings": []
+  }
+}
+einfochips@PUNELPT0728:~$ az network vnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vnet-vmss-autoscale-win \
+>   --address-prefix 10.1.0.0/16 \
+>   --subnet-name subnet-vmss-win \
+>   --subnet-prefix 10.1.1.0/24
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.1.0.0/16"
+      ]
+    },
+    "enableDdosProtection": false,
+    "etag": "W/\"65c3a6f4-a9c0-4e99-bf03-119f725087b0\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss-autoscale-win",
+    "location": "southeastasia",
+    "name": "vnet-vmss-autoscale-win",
+    "privateEndpointVNetPolicies": "Disabled",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "f57187df-cae0-455d-8141-e76e78606654",
+    "subnets": [
+      {
+        "addressPrefix": "10.1.1.0/24",
+        "delegations": [],
+        "etag": "W/\"65c3a6f4-a9c0-4e99-bf03-119f725087b0\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss-autoscale-win/subnets/subnet-vmss-win",
+        "name": "subnet-vmss-win",
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "type": "Microsoft.Network/virtualNetworks/subnets"
+      }
+    ],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/virtualNetworks",
+    "virtualNetworkPeerings": []
+  }
+}
+einfochips@PUNELPT0728:~$ az vmss create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-windows-autoscale \
+>   --image Win2022Datacenter \
+>   --admin-username azureuser \
+>   --admin-password 'P@ssw0rd123!' \
+>   --instance-count 2 \
+>   --vm-sku Standard_B2s \
+>   --vnet-name vnet-vmss-autoscale-win \
+>   --subnet subnet-vmss-win \
+>   --orchestration-mode Flexible \
+>   --platform-fault-domain-count 1 \
+>   --zones 1 2 3 \
+>   --upgrade-policy-mode Automatic
+ \ Running ..
+{
+  "vmss": {
+    "constrainedMaximumCapacity": false,
+    "highSpeedInterconnectPlacement": "None",
+    "orchestrationMode": "Flexible",
+    "platformFaultDomainCount": 1,
+    "provisioningState": "Succeeded",
+    "singlePlacementGroup": false,
+    "timeCreated": "2025-08-22T09:22:53.5039851+00:00",
+    "uniqueId": "09de61d9-6ddb-417f-9390-fec20e0145b2",
+    "upgradePolicy": {
+      "mode": "Automatic"
+    },
+    "virtualMachineProfile": {
+      "networkProfile": {
+        "networkApiVersion": "2020-11-01",
+        "networkInterfaceConfigurations": [
+          {
+            "name": "vmssw27f7Nic",
+            "properties": {
+              "auxiliaryMode": "None",
+              "auxiliarySku": "None",
+              "deleteOption": "Delete",
+              "disableTcpStateTracking": false,
+              "dnsSettings": {
+                "dnsServers": []
+              },
+              "enableIPForwarding": false,
+              "ipConfigurations": [
+                {
+                  "name": "vmssw27f7IPConfig",
+                  "properties": {
+                    "applicationGatewayBackendAddressPools": [],
+                    "applicationSecurityGroups": [],
+                    "loadBalancerBackendAddressPools": [
+                      {
+                        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/vmss-windows-autoscaleLB/backendAddressPools/vmss-windows-autoscaleLBBEPool",
+                        "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                      }
+                    ],
+                    "privateIPAddressVersion": "IPv4",
+                    "subnet": {
+                      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss-autoscale-win/subnets/subnet-vmss-win",
+                      "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                    }
+                  }
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vmss-windows-autoscaleNSG",
+                "resourceGroup": "sa1_test_eic_SudarshanDarade"
+              },
+              "nicAuxiliarySkuBillingNotificationType": "NoOp",
+              "primary": true
+            }
+          }
+        ]
+      },
+      "osProfile": {
+        "adminUsername": "azureuser",
+        "allowExtensionOperations": true,
+        "computerNamePrefix": "vmss-win",
+        "requireGuestProvisionSignal": true,
+        "secrets": [],
+        "windowsConfiguration": {
+          "enableAutomaticUpdates": true,
+          "patchSettings": {
+            "assessmentMode": "ImageDefault",
+            "patchMode": "AutomaticByOS"
+          },
+          "provisionVMAgent": true
+        }
+      },
+      "storageProfile": {
+        "diskControllerType": "SCSI",
+        "imageReference": {
+          "offer": "WindowsServer",
+          "publisher": "MicrosoftWindowsServer",
+          "sku": "2022-datacenter-g2",
+          "version": "latest"
+        },
+        "osDisk": {
+          "caching": "ReadWrite",
+          "createOption": "FromImage",
+          "deleteOption": "Delete",
+          "diskSizeGB": 127,
+          "managedDisk": {
+            "storageAccountType": "Premium_LRS"
+          },
+          "osType": "Windows"
+        }
+      },
+      "timeCreated": "2025-08-22T09:22:53.5039851+00:00"
+    },
+    "zoneBalance": false
+  }
+}
+einfochips@PUNELPT0728:~$ 
+einfochips@PUNELPT0728:~$ az vmss extension set \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vmss-name vmss-windows-autoscale \
+>   --name CustomScriptExtension \
+>   --publisher Microsoft.Compute \
+>   --version 1.10 \
+>   --settings '{"commandToExecute":"powershell -ExecutionPolicy Unrestricted Install-WindowsFeature -name Web-Server -IncludeManagementTools; $hostname = $env:COMPUTERNAME; $zone = (Invoke-RestMethod -Uri \"http://169.254.169.254/metadata/instance/compute/zone?api-version=2021-02-01\" -Headers @{\"Metadata\"=\"true\"}); $html = \"<html><body><h1>Windows VMSS Instance: $hostname</h1><p>Zone: $zone</p><p>CPU Load Test: <a href=stress.html>Start Stress Test</a></p></body></html>\"; $html | Out-File -FilePath \"C:\\inetpub\\wwwroot\\index.html\" -Encoding UTF8"}'
+(VMExtensionProvisioningError) VM has reported a user failure when processing extension 'CustomScriptExtension'. Please correct the error and try again. (publisher 'Microsoft.Compute' and type 'CustomScriptExtension'). Error code: '2'. Error message: 'Command execution finished, but failed because it returned a non-zero exit code of: '255'. The command had an error output of: ''Out-File' is not recognized as an internal or external command,
+operable program or batch file.
+''. Detailed error: ''. More information on troubleshooting is available at https://aka.ms/VMExtensionCSEWindowsTroubleshoot.
+Code: VMExtensionProvisioningError
+Message: VM has reported a user failure when processing extension 'CustomScriptExtension'. Please correct the error and try again. (publisher 'Microsoft.Compute' and type 'CustomScriptExtension'). Error code: '2'. Error message: 'Command execution finished, but failed because it returned a non-zero exit code of: '255'. The command had an error output of: ''Out-File' is not recognized as an internal or external command,
+operable program or batch file.
+''. Detailed error: ''. More information on troubleshooting is available at https://aka.ms/VMExtensionCSEWindowsTroubleshoot.
+Target: vmss-windows-autoscale_4e108d89
+einfochips@PUNELPT0728:~$ az monitor autoscale create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --resource vmss-windows-autoscale \
+>   --resource-type Microsoft.Compute/virtualMachineScaleSets \
+>   --name autoscale-windows \
+>   --min-count 2 \
+>   --max-count 8 \
+>   --count 2
+Follow up with `az monitor autoscale rule create` to add scaling rules.
+{
+  "enabled": true,
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/microsoft.insights/autoscalesettings/autoscale-windows",
+  "location": "southeastasia",
+  "name": "autoscale-windows",
+  "notifications": [
+    {
+      "email": {
+        "customEmails": [],
+        "sendToSubscriptionAdministrator": false,
+        "sendToSubscriptionCoAdministrators": false
+      },
+      "operation": "Scale",
+      "webhooks": []
+    }
+  ],
+  "predictiveAutoscalePolicy": {
+    "scaleMode": "Disabled"
+  },
+  "profiles": [
+    {
+      "capacity": {
+        "default": "2",
+        "maximum": "8",
+        "minimum": "2"
+      },
+      "name": "default",
+      "rules": []
+    }
+  ],
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "targetResourceUri": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-windows-autoscale",
+  "type": "Microsoft.Insights/autoscaleSettings"
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --autoscale-name autoscale-windows \
+>   --condition "Percentage CPU > 75 avg 5m" \
+>   --scale out 2
+Profile 'default' has rules to scale out but none to scale in. Recommend creating at least 1 scale in rule.
+{
+  "metricTrigger": {
+    "dividePerInstance": false,
+    "metricName": "Percentage CPU",
+    "metricNamespace": "",
+    "metricResourceUri": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-windows-autoscale",
+    "operator": "GreaterThan",
+    "statistic": "Average",
+    "threshold": 75.0,
+    "timeAggregation": "Average",
+    "timeGrain": "PT1M",
+    "timeWindow": "PT5M"
+  },
+  "scaleAction": {
+    "cooldown": "PT5M",
+    "direction": "Increase",
+    "type": "ChangeCount",
+    "value": "2"
+  }
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --autoscale-name autoscale-windows \
+>   --condition "Percentage CPU < 25 avg 5m" \
+>   --scale in 1
+{
+  "metricTrigger": {
+    "dividePerInstance": false,
+    "metricName": "Percentage CPU",
+    "metricNamespace": "",
+    "metricResourceUri": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-windows-autoscale",
+    "operator": "LessThan",
+    "statistic": "Average",
+    "threshold": 25.0,
+    "timeAggregation": "Average",
+    "timeGrain": "PT1M",
+    "timeWindow": "PT5M"
+  },
+  "scaleAction": {
+    "cooldown": "PT5M",
+    "direction": "Decrease",
+    "type": "ChangeCount",
+    "value": "1"
+  }
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --autoscale-name autoscale-linux \
+>   --condition "Available Memory Bytes < 1073741824 avg 5m" \
+>   --scale out 1
+(ResourceNotFound) The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+Code: ResourceNotFound
+Message: The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create   --resource-group sa1_test_eic_SudarshanDarade   --autoscale-name autoscale-windows   --condition "Available Memory Bytes < 1073741824 avg 5m"   --scale out 1
+{
+  "metricTrigger": {
+    "dividePerInstance": false,
+    "metricName": "Available Memory Bytes",
+    "metricNamespace": "",
+    "metricResourceUri": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-windows-autoscale",
+    "operator": "LessThan",
+    "statistic": "Average",
+    "threshold": 1073741824.0,
+    "timeAggregation": "Average",
+    "timeGrain": "PT1M",
+    "timeWindow": "PT5M"
+  },
+  "scaleAction": {
+    "cooldown": "PT5M",
+    "direction": "Increase",
+    "type": "ChangeCount",
+    "value": "1"
+  }
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --autoscale-name autoscale-linux \
+>   --condition "Available Memory Bytes > 2147483648 avg 10m" \
+>   --scale in 1
+^[[A(ResourceNotFound) The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+Code: ResourceNotFound
+Message: The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+einfochips@PUNELPT0728:~$ az monitor autoscale rule create   --resource-group sa1_test_eic_SudarshanDarade   --autoscale-name autoscale-windows   --condition "Available Memory Bytes > 2147483648 avg 10m"   --scale in 1
+{
+  "metricTrigger": {
+    "dividePerInstance": false,
+    "metricName": "Available Memory Bytes",
+    "metricNamespace": "",
+    "metricResourceUri": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-windows-autoscale",
+    "operator": "GreaterThan",
+    "statistic": "Average",
+    "threshold": 2147483648.0,
+    "timeAggregation": "Average",
+    "timeGrain": "PT1M",
+    "timeWindow": "PT10M"
+  },
+  "scaleAction": {
+    "cooldown": "PT5M",
+    "direction": "Decrease",
+    "type": "ChangeCount",
+    "value": "1"
+  }
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name autoscale-linux \
+>   --query "{Name:name, MinCount:profiles[0].capacity.minimum, MaxCount:profiles[0].capacity.maximum, CurrentCount:profiles[0].capacity.default}"
+(ResourceNotFound) The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+Code: ResourceNotFound
+Message: The Resource 'Microsoft.Insights/autoscalesettings/autoscale-linux' under resource group 'sa1_test_eic_SudarshanDarade' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+einfochips@PUNELPT0728:~$ az monitor autoscale show   --resource-group sa1_test_eic_SudarshanDarade   --name autoscale-windows   --query "{Name:name, MinCount:profiles[0].capacity.minimum, MaxCount:profiles[0].capacity.maximum, CurrentCount:profiles[0].capacity.default}"
+{
+  "CurrentCount": "2",
+  "MaxCount": "8",
+  "MinCount": "2",
+  "Name": "autoscale-windows"
+}
+einfochips@PUNELPT0728:~$ az monitor autoscale rule list \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --autoscale-name autoscale-windows \
+>   --output table
+Index
+-------
+0
+1
+2
+3
+einfochips@PUNELPT0728:~$ az vmss show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-autoscale \
+>   --query "sku.capacit
+> ^C
+einfochips@PUNELPT0728:~$ az vmss show   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-windows-autoscale   --query "sku.capacity"
+2
+einfochips@PUNELPT0728:~$ 

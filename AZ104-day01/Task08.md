@@ -41,6 +41,123 @@ This guide covers creating and managing Virtual Machine Scale Sets (VMSS) using 
 - Understanding of scaling metrics
 
 ---
+## Manual VMSS Creation with Uniform Orchestration
+
+### Azure Portal Steps
+
+#### 1. Create Uniform VMSS via Portal
+1. Navigate to **Virtual machine scale sets** > **Create**
+2. **Basics Tab:**
+   - Resource group: `sa1_test_eic_SudarshanDarade`
+   - Scale set name: `vmss-uniform-manual`
+   - Region: `SouthEast Asia`
+   - Orchestration mode: **Uniform**
+   - Image: `Ubuntu 24.04 LTS`
+   - Size: `Standard_B2s`
+   - Authentication: SSH public key
+   - Username: `azureuser`
+
+3. **Disks Tab:**
+   - OS disk type: `Premium SSD`
+   - Use managed disks: `Yes`
+
+4. **Networking Tab:**
+   - Virtual network: Create new `vnet-vmss-uniform`
+   - Subnet: Create new `subnet-vmss` (10.0.1.0/24)
+   - Public IP: `Enabled`
+
+
+5. **Scaling Tab:**
+   - Initial instance count: `3`
+   - Scaling policy: **Custom**
+   - Enable autoscale: **Yes**
+   - Minimum instances: `2`
+   - Maximum instances: `15`
+   - Scale out CPU threshold: `75%`
+   - Scale in CPU threshold: `25%`
+
+6. **Management Tab:**
+   - Upgrade policy: `Rolling`
+   - Max unhealthy instances: `20%`
+   - Max batch size: `20%`
+   - Pause time between batches: `0 seconds`
+
+7. **Advanced Tab:**
+   - Fault domain count: `3`
+   - Update domain count: `5`
+   - Custom data: Add stress tool installation
+   ```bash
+   #!/bin/bash
+   apt-get update
+   apt-get install -y nginx stress
+   systemctl start nginx
+   systemctl enable nginx
+   echo "<h1>Uniform VMSS Instance: $(hostname)</h1>" > /var/www/html/index.html
+   ```
+
+8. Click **Review + Create** > **Create**
+
+#### 2. Configure Advanced Auto Scale via Portal
+
+**Multi-Metric Scaling:**
+1. Navigate to VMSS > **Settings** > **Scaling**
+2. Click **Custom autoscale**
+3. Add multiple scale conditions:
+   - **CPU-based**: Scale out when CPU > 75%, scale in when CPU < 25%
+   - **Memory-based**: Scale out when Available Memory < 1GB
+   - **Network-based**: Scale out when Network In > 10MB/s
+
+
+
+#### 3. PowerShell Uniform VMSS Creation
+
+```powershell
+# Create resource group
+New-AzResourceGroup -Name "sa1_test_eic_SudarshanDarade" -Location "SouthEast Asia"
+
+# Create virtual network
+$subnet = New-AzVirtualNetworkSubnetConfig -Name "subnet-vmss" -AddressPrefix "10.0.1.0/24"
+$vnet = New-AzVirtualNetwork -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "SouthEast Asia" -Name "vnet-vmss-uniform" -AddressPrefix "10.0.0.0/16" -Subnet $subnet
+
+# Create load balancer
+$publicIP = New-AzPublicIpAddress -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "SouthEast Asia" -AllocationMethod Static -Name "lb-vmss-ip"
+$frontendIP = New-AzLoadBalancerFrontendIpConfig -Name "lb-frontend" -PublicIpAddress $publicIP
+$backendPool = New-AzLoadBalancerBackendAddressPoolConfig -Name "lb-backend"
+$probe = New-AzLoadBalancerProbeConfig -Name "http-probe" -Protocol Http -Port 80 -IntervalInSeconds 15 -ProbeCount 2 -RequestPath "/"
+$lbrule = New-AzLoadBalancerRuleConfig -Name "http-rule" -FrontendIpConfiguration $frontendIP -BackendAddressPool $backendPool -Probe $probe -Protocol Tcp -FrontendPort 80 -BackendPort 80
+$lb = New-AzLoadBalancer -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "SouthEast Asia" -Name "lb-vmss" -FrontendIpConfiguration $frontendIP -BackendAddressPool $backendPool -Probe $probe -LoadBalancingRule $lbrule
+
+# Create VMSS configuration
+$vmssConfig = New-AzVmssConfig -Location "SouthEast Asia" -SkuCapacity 3 -SkuName "Standard_B2s" -OrchestrationMode "Uniform" -PlatformFaultDomainCount 3 -UpgradePolicyMode "Rolling"
+
+# Set OS profile
+$vmssConfig = Set-AzVmssOsProfile -VirtualMachineScaleSet $vmssConfig -ComputerNamePrefix "vmss" -AdminUsername "azureuser" -LinuxConfigurationDisablePasswordAuthentication $true
+
+# Set storage profile
+$vmssConfig = Set-AzVmssStorageProfile -VirtualMachineScaleSet $vmssConfig -ImageReferencePublisher "Canonical" -ImageReferenceOffer "0001-com-ubuntu-server-jammy" -ImageReferenceSku "22_04-lts-gen2" -ImageReferenceVersion "latest" -OsDiskCreateOption "FromImage" -OsDiskCaching "ReadWrite"
+
+# Set network profile
+$ipConfig = New-AzVmssIpConfig -Name "vmss-ip-config" -LoadBalancerBackendAddressPoolsId $lb.BackendAddressPools[0].Id -SubnetId $vnet.Subnets[0].Id
+$networkProfile = New-AzVmssNetworkInterfaceConfiguration -Name "vmss-nic" -Primary $true -IpConfiguration $ipConfig
+$vmssConfig = Add-AzVmssNetworkInterfaceConfiguration -VirtualMachineScaleSet $vmssConfig -NetworkInterfaceConfiguration $networkProfile
+
+# Create VMSS
+New-AzVmss -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "vmss-uniform-manual" -VirtualMachineScaleSet $vmssConfig
+
+# Create autoscale rules
+$vmssId = "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-uniform-manual"
+$rule1 = New-AzAutoscaleRule -MetricName "Percentage CPU" -MetricResourceId $vmssId -Operator GreaterThan -MetricStatistic Average -Threshold 75 -TimeGrain 00:01:00 -TimeWindow 00:05:00 -ScaleActionCooldown 00:05:00 -ScaleActionDirection Increase -ScaleActionValue 2
+
+$rule2 = New-AzAutoscaleRule -MetricName "Percentage CPU" -MetricResourceId $vmssId -Operator LessThan -MetricStatistic Average -Threshold 25 -TimeGrain 00:01:00 -TimeWindow 00:10:00 -ScaleActionCooldown 00:10:00 -ScaleActionDirection Decrease -ScaleActionValue 1
+
+# Create autoscale profile
+$profile = New-AzAutoscaleProfile -DefaultCapacity 3 -MaximumCapacity 15 -MinimumCapacity 2 -Rule $rule1, $rule2 -Name "Default"
+
+# Apply autoscale setting
+Add-AzAutoscaleSetting -Location "SouthEast Asia" -Name "autoscale-uniform-manual" -ResourceGroupName "sa1_test_eic_SudarshanDarade" -TargetResourceId $vmssId -AutoscaleProfile $profile
+```
+
+---
 
 ## Linux VMSS with Uniform Orchestration
 
@@ -50,7 +167,7 @@ This guide covers creating and managing Virtual Machine Scale Sets (VMSS) using 
 # Create resource group
 az group create \
   --name rg-vmss-uniform-linux \
-  --location eastus
+  --location southeastasia
 
 # Generate SSH key if not exists
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/vmss-uniform-key -N ""
@@ -154,7 +271,7 @@ az monitor autoscale rule create \
 # Create resource group
 az group create \
   --name rg-vmss-uniform-windows \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 2. Create Virtual Network

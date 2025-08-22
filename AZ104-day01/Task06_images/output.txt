@@ -1,0 +1,1023 @@
+einfochips@PUNELPT0728:~$ az network vnet create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vnet-vmss \
+>   --address-prefix 10.0.0.0/16 \
+>   --subnet-name subnet-vmss \
+>   --subnet-prefix 10.0.1.0/24
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "enableDdosProtection": false,
+    "etag": "W/\"76839afa-bf49-4b0c-98be-c133b2d4aa16\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss",
+    "location": "southeastasia",
+    "name": "vnet-vmss",
+    "privateEndpointVNetPolicies": "Disabled",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "7e25fb09-0e45-448a-b72f-f577dc49dfb3",
+    "subnets": [
+      {
+        "addressPrefix": "10.0.1.0/24",
+        "delegations": [],
+        "etag": "W/\"76839afa-bf49-4b0c-98be-c133b2d4aa16\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+        "name": "subnet-vmss",
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "type": "Microsoft.Network/virtualNetworks/subnets"
+      }
+    ],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/virtualNetworks",
+    "virtualNetworkPeerings": []
+  }
+}
+einfochips@PUNELPT0728:~$ az vmss create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --image Ubuntu2204 \
+>   --admin-username azureuser \
+>   --ssh-key-values ~/.ssh/azure-vm-key.pub \
+>   --instance-count 2 \
+>   --vm-sku Standard_B2s \
+>   --vnet-name vnet-vmss \
+>   --subnet subnet-vmss \
+>   --orchestration-mode Flexible \
+>   --platform-fault-domain-count 1 \
+>   --zones 1 2 3 \
+>   --upgrade-policy-mode Manual
+{
+  "vmss": {
+    "constrainedMaximumCapacity": false,
+    "highSpeedInterconnectPlacement": "None",
+    "orchestrationMode": "Flexible",
+    "platformFaultDomainCount": 1,
+    "provisioningState": "Succeeded",
+    "singlePlacementGroup": false,
+    "timeCreated": "2025-08-22T06:41:09.1651661+00:00",
+    "uniqueId": "6768af68-7f63-4506-8aae-70a68651af3a",
+    "upgradePolicy": {
+      "mode": "Manual"
+    },
+    "virtualMachineProfile": {
+      "networkProfile": {
+        "networkApiVersion": "2020-11-01",
+        "networkInterfaceConfigurations": [
+          {
+            "name": "vmsslab40Nic",
+            "properties": {
+              "auxiliaryMode": "None",
+              "auxiliarySku": "None",
+              "deleteOption": "Delete",
+              "disableTcpStateTracking": false,
+              "dnsSettings": {
+                "dnsServers": []
+              },
+              "enableIPForwarding": false,
+              "ipConfigurations": [
+                {
+                  "name": "vmsslab40IPConfig",
+                  "properties": {
+                    "applicationGatewayBackendAddressPools": [],
+                    "applicationSecurityGroups": [],
+                    "loadBalancerBackendAddressPools": [
+                      {
+                        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/vmss-linux-flexLB/backendAddressPools/vmss-linux-flexLBBEPool",
+                        "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                      }
+                    ],
+                    "privateIPAddressVersion": "IPv4",
+                    "subnet": {
+                      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+                      "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                    }
+                  }
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vmss-linux-flexNSG",
+                "resourceGroup": "sa1_test_eic_SudarshanDarade"
+              },
+              "nicAuxiliarySkuBillingNotificationType": "NoOp",
+              "primary": true
+            }
+          }
+        ]
+      },
+      "osProfile": {
+        "adminUsername": "azureuser",
+        "allowExtensionOperations": true,
+        "computerNamePrefix": "vmss-lin",
+        "linuxConfiguration": {
+          "disablePasswordAuthentication": true,
+          "patchSettings": {
+            "assessmentMode": "ImageDefault",
+            "patchMode": "ImageDefault"
+          },
+          "provisionVMAgent": true,
+          "ssh": {
+            "publicKeys": [
+              {
+                "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVq+ePfQmxqmzlJh5A4L/Rh1+gn6ThynlZ2V0uDqM/cA8a6iTcb5Nal8muLhpeIS9EnBcv7ECtZl6oz5DsmjgxPu9tIeU63DpsvjiVmb+bk96oGVZ3ljhVK4x1bSXt8DnYhjdoBCwRH9Ab2U5V6ZUWNDG5MAjYFH7KyZm+239DHm4XCw3W7+tq5NHGKLTmHy4RJ/hKOBII/SAIBbCzRTSj/Bpksq9qoTB2tMN0lbYVlj0ZcPM+/+a6UI0+niX2u3K2KJYMjxv+ZEW41uhIajCuuU1Yj9yRdGjekoUsZv60+hL0Rm8dw90Rc1mgoaaMEur6MHdLxlhfOMkXEnQ0cge9tQypFDJ3f96iY1fH59t/QVDYLcbAU8tLYU8l5FKZqzHi8XDnhIeCc5wJ4z+0QMi4LmEpB23PrIpXXbTaU1drQba8m47DVHC+J9HK3LfqYPAGOChHAx+NkUYRCVV6kH3hsEgTA3Y+r7DO9lIOdPCd6WJnXksiB4VcMUTtDdf1EAyVpOO25jwhjrubGyTbSCaz+wk7wcj7M9HG+Vv40hGlc2kcuse24saEGkuAUYZH+mphOKksFNoWGWT7NgdP+LPwmOdQz53kmVXfu3gFiBf5IGMrTS49spLEe9Cwv7nBnNPCNpQU7eKGLFABR9atXx2Cre7Zz1pjFm/F3jbRXI9wrw== einfochips@PUNELPT0728\n",
+                "path": "/home/azureuser/.ssh/authorized_keys"
+              }
+            ]
+          }
+        },
+        "requireGuestProvisionSignal": true,
+        "secrets": []
+      },
+      "storageProfile": {
+        "diskControllerType": "SCSI",
+        "imageReference": {
+          "offer": "0001-com-ubuntu-server-jammy",
+          "publisher": "Canonical",
+          "sku": "22_04-lts-gen2",
+          "version": "latest"
+        },
+        "osDisk": {
+          "caching": "ReadWrite",
+          "createOption": "FromImage",
+          "deleteOption": "Delete",
+          "diskSizeGB": 30,
+          "managedDisk": {
+            "storageAccountType": "Premium_LRS"
+          },
+          "osType": "Linux"
+        }
+      },
+      "timeCreated": "2025-08-22T06:41:09.1651661+00:00"
+    },
+    "zoneBalance": false
+  }
+}
+einfochips@PUNELPT0728:~$ cat > install-nginx.sh << 'EOF'
+> #!/bin/bash
+> apt-get update
+> apt-get install -y nginx
+> systemctl start nginx
+> systemctl enable nginx
+> echo "<h1>Linux VMSS Instance: $(hostname)</h1>" > /var/www/html/index.html
+> echo "<p>Zone: $(curl -s -H Metadata:true http://169.254.169.254/metadata/instance/compute/zone?api-version=2021-02-01)</p>" >> /var/www/html/index.html
+> EOF
+einfochips@PUNELPT0728:~$ az vmss extension set \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vmss-name vmss-linux-flex \
+>   --name customScript \
+>   --publisher Microsoft.Azure.Extensions \
+>   --version 2.1 \
+>   --settings '{"fileUris":[],"commandToExecute":"apt-get update && apt-get install -y nginx && systemctl start nginx && systemctl enable nginx && echo \"<h1>Linux VMSS Instance: $(hostname)</h1><p>Zone: $(curl -s -H Metadata:true http://169.254.169.254/metadata/instance/compute/zone?api-version=2021-02-01)</p>\" > /var/www/html/index.html"}'
+{
+  "additionalCapabilities": null,
+  "automaticRepairsPolicy": null,
+  "constrainedMaximumCapacity": false,
+  "doNotRunExtensionsOnOverprovisionedVMs": null,
+  "etag": "\"2\"",
+  "extendedLocation": null,
+  "hostGroup": null,
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-flex",
+  "identity": null,
+  "location": "southeastasia",
+  "name": "vmss-linux-flex",
+  "orchestrationMode": "Flexible",
+  "overprovision": null,
+  "plan": null,
+  "platformFaultDomainCount": 1,
+  "priorityMixPolicy": null,
+  "provisioningState": "Succeeded",
+  "proximityPlacementGroup": null,
+  "resiliencyPolicy": null,
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "scaleInPolicy": null,
+  "scheduledEventsPolicy": null,
+  "singlePlacementGroup": false,
+  "sku": {
+    "capacity": 2,
+    "name": "Standard_B2s",
+    "tier": "Standard"
+  },
+  "skuProfile": null,
+  "spotRestorePolicy": null,
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "timeCreated": "2025-08-22T06:41:09.165166+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "6768af68-7f63-4506-8aae-70a68651af3a",
+  "upgradePolicy": {
+    "automaticOsUpgradePolicy": null,
+    "mode": "Manual",
+    "rollingUpgradePolicy": null
+  },
+  "virtualMachineProfile": {
+    "applicationProfile": null,
+    "billingProfile": null,
+    "capacityReservation": null,
+    "diagnosticsProfile": null,
+    "evictionPolicy": null,
+    "extensionProfile": {
+      "extensions": [
+        {
+          "autoUpgradeMinorVersion": true,
+          "enableAutomaticUpgrade": null,
+          "forceUpdateTag": null,
+          "id": null,
+          "name": "customScript",
+          "protectedSettings": null,
+          "protectedSettingsFromKeyVault": null,
+          "provisionAfterExtensions": null,
+          "provisioningState": null,
+          "publisher": "Microsoft.Azure.Extensions",
+          "settings": {
+            "commandToExecute": "apt-get update && apt-get install -y nginx && systemctl start nginx && systemctl enable nginx && echo \"<h1>Linux VMSS Instance: $(hostname)</h1><p>Zone: $(curl -s -H Metadata:true http://169.254.169.254/metadata/instance/compute/zone?api-version=2021-02-01)</p>\" > /var/www/html/index.html",
+            "fileUris": []
+          },
+          "suppressFailures": null,
+          "type": null,
+          "typeHandlerVersion": "2.1",
+          "typePropertiesType": "customScript"
+        }
+      ],
+      "extensionsTimeBudget": null
+    },
+    "hardwareProfile": null,
+    "licenseType": null,
+    "networkProfile": {
+      "healthProbe": null,
+      "networkApiVersion": "2020-11-01",
+      "networkInterfaceConfigurations": [
+        {
+          "auxiliaryMode": "None",
+          "auxiliarySku": "None",
+          "deleteOption": "Delete",
+          "disableTcpStateTracking": false,
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableAcceleratedNetworking": null,
+          "enableFpga": null,
+          "enableIpForwarding": false,
+          "ipConfigurations": [
+            {
+              "applicationGatewayBackendAddressPools": [],
+              "applicationSecurityGroups": [],
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/vmss-linux-flexLB/backendAddressPools/vmss-linux-flexLBBEPool",
+                  "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                }
+              ],
+              "loadBalancerInboundNatPools": null,
+              "name": "vmsslab40IPConfig",
+              "primary": null,
+              "privateIpAddressVersion": "IPv4",
+              "publicIpAddressConfiguration": null,
+              "subnet": {
+                "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+                "resourceGroup": "sa1_test_eic_SudarshanDarade"
+              }
+            }
+          ],
+          "name": "vmsslab40Nic",
+          "networkSecurityGroup": {
+            "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vmss-linux-flexNSG",
+            "resourceGroup": "sa1_test_eic_SudarshanDarade"
+          },
+          "primary": true
+        }
+      ]
+    },
+    "osProfile": {
+      "adminPassword": null,
+      "adminUsername": "azureuser",
+      "allowExtensionOperations": true,
+      "computerNamePrefix": "vmss-lin",
+      "customData": null,
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "enableVmAgentPlatformUpdates": null,
+        "patchSettings": {
+          "assessmentMode": "ImageDefault",
+          "automaticByPlatformSettings": null,
+          "patchMode": "ImageDefault"
+        },
+        "provisionVmAgent": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVq+ePfQmxqmzlJh5A4L/Rh1+gn6ThynlZ2V0uDqM/cA8a6iTcb5Nal8muLhpeIS9EnBcv7ECtZl6oz5DsmjgxPu9tIeU63DpsvjiVmb+bk96oGVZ3ljhVK4x1bSXt8DnYhjdoBCwRH9Ab2U5V6ZUWNDG5MAjYFH7KyZm+239DHm4XCw3W7+tq5NHGKLTmHy4RJ/hKOBII/SAIBbCzRTSj/Bpksq9qoTB2tMN0lbYVlj0ZcPM+/+a6UI0+niX2u3K2KJYMjxv+ZEW41uhIajCuuU1Yj9yRdGjekoUsZv60+hL0Rm8dw90Rc1mgoaaMEur6MHdLxlhfOMkXEnQ0cge9tQypFDJ3f96iY1fH59t/QVDYLcbAU8tLYU8l5FKZqzHi8XDnhIeCc5wJ4z+0QMi4LmEpB23PrIpXXbTaU1drQba8m47DVHC+J9HK3LfqYPAGOChHAx+NkUYRCVV6kH3hsEgTA3Y+r7DO9lIOdPCd6WJnXksiB4VcMUTtDdf1EAyVpOO25jwhjrubGyTbSCaz+wk7wcj7M9HG+Vv40hGlc2kcuse24saEGkuAUYZH+mphOKksFNoWGWT7NgdP+LPwmOdQz53kmVXfu3gFiBf5IGMrTS49spLEe9Cwv7nBnNPCNpQU7eKGLFABR9atXx2Cre7Zz1pjFm/F3jbRXI9wrw== einfochips@PUNELPT0728\n",
+              "path": "/home/azureuser/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "requireGuestProvisionSignal": true,
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "priority": null,
+    "scheduledEventsProfile": null,
+    "securityPostureReference": null,
+    "securityProfile": null,
+    "serviceArtifactReference": null,
+    "storageProfile": {
+      "dataDisks": null,
+      "diskControllerType": "SCSI",
+      "imageReference": {
+        "communityGalleryImageId": null,
+        "exactVersion": null,
+        "id": null,
+        "offer": "0001-com-ubuntu-server-jammy",
+        "publisher": "Canonical",
+        "sharedGalleryImageId": null,
+        "sku": "22_04-lts-gen2",
+        "version": "latest"
+      },
+      "osDisk": {
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "deleteOption": "Delete",
+        "diffDiskSettings": null,
+        "diskSizeGb": 30,
+        "image": null,
+        "managedDisk": {
+          "diskEncryptionSet": null,
+          "securityProfile": null,
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": null,
+        "osType": "Linux",
+        "vhdContainers": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "timeCreated": "2025-08-22T06:43:14.336556+00:00",
+    "userData": null
+  },
+  "zonalPlatformFaultDomainAlignMode": null,
+  "zoneBalance": false,
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+einfochips@PUNELPT0728:~$ az vmss scale \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --new-capacity 4
+(VMExtensionProvisioningError) VM has reported a failure when processing extension 'customScript' (publisher 'Microsoft.Azure.Extensions' and type 'customScript'). Error message: 'Enable failed: failed to execute command: command terminated with exit status=100
+[stdout]
+Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:4 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [2595 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:6 http://security.ubuntu.com/ubuntu jammy-security/main Translation-en [383 kB]
+Get:7 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [4118 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [14.1 MB]
+Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted Translation-en [751 kB]
+Get:10 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [994 kB]
+Get:11 http://security.ubuntu.com/ubuntu jammy-security/universe Translation-en [217 kB]
+Get:12 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [21.7 kB]
+Get:13 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [40.3 kB]
+Get:14 http://security.ubuntu.com/ubuntu jammy-security/multiverse Translation-en [8908 B]
+Get:15 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 c-n-f Metadata [368 B]
+Get:16 http://archive.ubuntu.com/ubuntu jammy/universe Translation-en [5652 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy/universe amd64 c-n-f Metadata [286 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [217 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy/multiverse Translation-en [112 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 c-n-f Metadata [8372 B]
+Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [2843 kB]
+Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [447 kB]
+Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [4269 kB]
+Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [778 kB]
+Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1226 kB]
+Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [304 kB]
+Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [28.7 kB]
+Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [59.5 kB]
+Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse Translation-en [14.2 kB]
+Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 c-n-f Metadata [592 B]
+Get:31 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [68.8 kB]
+Get:32 http://archive.ubuntu.com/ubuntu jammy-backports/main Translation-en [11.4 kB]
+Get:33 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 c-n-f Metadata [392 B]
+Get:34 http://archive.ubuntu.com/ubuntu jammy-backports/restricted amd64 c-n-f Metadata [116 B]
+Get:35 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [30.0 kB]
+Get:36 http://archive.ubuntu.com/ubuntu jammy-backports/universe Translation-en [16.6 kB]
+Get:37 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 c-n-f Metadata [672 B]
+Get:38 http://archive.ubuntu.com/ubuntu jammy-backports/multiverse amd64 c-n-f Metadata [116 B]
+Fetched 40.0 MB in 8s (4739 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[stderr]
+E: Unable to locate package nginx
+'. More information on troubleshooting is available at https://aka.ms/VMExtensionCSELinuxTroubleshoot. 
+Code: VMExtensionProvisioningError
+Message: VM has reported a failure when processing extension 'customScript' (publisher 'Microsoft.Azure.Extensions' and type 'customScript'). Error message: 'Enable failed: failed to execute command: command terminated with exit status=100
+[stdout]
+Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:4 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [2595 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:6 http://security.ubuntu.com/ubuntu jammy-security/main Translation-en [383 kB]
+Get:7 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [4118 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [14.1 MB]
+Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted Translation-en [751 kB]
+Get:10 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [994 kB]
+Get:11 http://security.ubuntu.com/ubuntu jammy-security/universe Translation-en [217 kB]
+Get:12 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [21.7 kB]
+Get:13 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [40.3 kB]
+Get:14 http://security.ubuntu.com/ubuntu jammy-security/multiverse Translation-en [8908 B]
+Get:15 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 c-n-f Metadata [368 B]
+Get:16 http://archive.ubuntu.com/ubuntu jammy/universe Translation-en [5652 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy/universe amd64 c-n-f Metadata [286 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [217 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy/multiverse Translation-en [112 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 c-n-f Metadata [8372 B]
+Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [2843 kB]
+Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [447 kB]
+Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [4269 kB]
+Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [778 kB]
+Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1226 kB]
+Get:26 http://archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [304 kB]
+Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [28.7 kB]
+Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [59.5 kB]
+Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse Translation-en [14.2 kB]
+Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 c-n-f Metadata [592 B]
+Get:31 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [68.8 kB]
+Get:32 http://archive.ubuntu.com/ubuntu jammy-backports/main Translation-en [11.4 kB]
+Get:33 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 c-n-f Metadata [392 B]
+Get:34 http://archive.ubuntu.com/ubuntu jammy-backports/restricted amd64 c-n-f Metadata [116 B]
+Get:35 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [30.0 kB]
+Get:36 http://archive.ubuntu.com/ubuntu jammy-backports/universe Translation-en [16.6 kB]
+Get:37 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 c-n-f Metadata [672 B]
+Get:38 http://archive.ubuntu.com/ubuntu jammy-backports/multiverse amd64 c-n-f Metadata [116 B]
+Fetched 40.0 MB in 8s (4739 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+
+[stderr]
+E: Unable to locate package nginx
+'. More information on troubleshooting is available at https://aka.ms/VMExtensionCSELinuxTroubleshoot. 
+Target: vmss-linux-flex_4e366406
+einfochips@PUNELPT0728:~$ az vmss list-instances \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --output table
+InstanceId                Location       Name                      ResourceGroup
+------------------------  -------------  ------------------------  ----------------------------
+vmss-linux-flex_4e366406  southeastasia  vmss-linux-flex_4e366406  sa1_test_eic_SudarshanDarade
+vmss-linux-flex_538ac2e8  southeastasia  vmss-linux-flex_538ac2e8  sa1_test_eic_SudarshanDarade
+vmss-linux-flex_5c860a78  southeastasia  vmss-linux-flex_5c860a78  sa1_test_eic_SudarshanDarade
+vmss-linux-flex_789b7c83  southeastasia  vmss-linux-flex_789b7c83  sa1_test_eic_SudarshanDarade
+einfochips@PUNELPT0728:~$ ^C
+einfochips@PUNELPT0728:~$ az vmss stop \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --instance-ids 0
+About to power off the VMSS instances...
+They will continue to be billed. To deallocate VMSS instances, run: az vmss deallocate.
+(InvalidParameter) The provided instanceId 0 is invalid. It must be one of the valid VM instanceIds or the character "*" for Virtual Machine Scale Set with Flexible orchestration mode.
+Code: InvalidParameter
+Message: The provided instanceId 0 is invalid. It must be one of the valid VM instanceIds or the character "*" for Virtual Machine Scale Set with Flexible orchestration mode.
+Target: instanceIds
+einfochips@PUNELPT0728:~$ az vmss stop   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-linux-flex   --instance-ids vmss-linux-flex_4e366406
+About to power off the VMSS instances...
+They will continue to be billed. To deallocate VMSS instances, run: az vmss deallocate.
+einfochips@PUNELPT0728:~$ az vmss start   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-linux-flex   --instance-ids vmss-linux-flex_4e366406
+einfochips@PUNELPT0728:~$ az vmss delete   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-linux-flex   --instance-ids vmss-linux-flex_4e366406
+unrecognized arguments: --instance-ids vmss-linux-flex_4e366406
+
+Examples from AI knowledge base:
+https://aka.ms/cli_ref
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$ az vmss delete   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-linux-flex   --instance-id vmss-linux-flex_4e366406
+unrecognized arguments: --instance-id vmss-linux-flex_4e366406
+
+Examples from AI knowledge base:
+az vmss delete --name myscaleset
+Deletes a VM scale set. (autogenerated)
+
+az vmss delete --name myscaleset --resource-group myresourcegroup
+Deletes a VM scale set. (autogenerated)
+
+https://docs.microsoft.com/en-US/cli/azure/vmss#az_vmss_delete
+Read more about the command in reference docs
+einfochips@PUNELPT0728:~$ az vmss delete-instances   --resource-group sa1_test_eic_SudarshanDarade   --name vmss-linux-flex   --instance-ids vmss-linux-flex_4e366406
+einfochips@PUNELPT0728:~$ az vmss show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --query "{Name:name, Capacity:sku.capacity, OrchestrationMode:orchestrationMode, UpgradePolicy:upgradePolicy.mode}"
+{
+  "Capacity": 3,
+  "Name": "vmss-linux-flex",
+  "OrchestrationMode": "Flexible",
+  "UpgradePolicy": "Manual"
+}
+einfochips@PUNELPT0728:~$ az vmss get-instance-view \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --query "statuses[?code=='ProvisioningState/succeeded']"
+(OperationNotAllowed) Operation 'VirtualMachineScaleSets.instanceView.GET' is not allowed on Virtual Machine Scale Set 'vmss-linux-flex'.
+Code: OperationNotAllowed
+Message: Operation 'VirtualMachineScaleSets.instanceView.GET' is not allowed on Virtual Machine Scale Set 'vmss-linux-flex'.
+einfochips@PUNELPT0728:~$ az vmss list-instance-connection-info \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex
+This command is not available for VMSS in Flex mode. Please use the "az network public-ip list/show" to retrieve networking information.
+einfochips@PUNELPT0728:~$ az vmss list-instances \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --query "[].{Name:name, Zone:zones[0], ProvisioningState:provisioningState}" \
+>   --output table
+Name                      Zone
+------------------------  ------
+vmss-linux-flex_538ac2e8  1
+vmss-linux-flex_5c860a78  3
+vmss-linux-flex_789b7c83  2
+einfochips@PUNELPT0728:~$ az vmss update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --set sku.name=Standard_B4ms
+{
+  "additionalCapabilities": null,
+  "automaticRepairsPolicy": null,
+  "constrainedMaximumCapacity": false,
+  "doNotRunExtensionsOnOverprovisionedVMs": null,
+  "etag": "\"5\"",
+  "extendedLocation": null,
+  "hostGroup": null,
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-linux-flex",
+  "identity": null,
+  "location": "southeastasia",
+  "name": "vmss-linux-flex",
+  "orchestrationMode": "Flexible",
+  "overprovision": null,
+  "plan": null,
+  "platformFaultDomainCount": 1,
+  "priorityMixPolicy": null,
+  "provisioningState": "Succeeded",
+  "proximityPlacementGroup": null,
+  "resiliencyPolicy": null,
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "scaleInPolicy": null,
+  "scheduledEventsPolicy": null,
+  "singlePlacementGroup": false,
+  "sku": {
+    "capacity": 3,
+    "name": "Standard_B4ms",
+    "tier": "Standard"
+  },
+  "skuProfile": null,
+  "spotRestorePolicy": null,
+  "tags": {
+    "Business Unit": "einfochips"
+  },
+  "timeCreated": "2025-08-22T06:41:09.165166+00:00",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "uniqueId": "6768af68-7f63-4506-8aae-70a68651af3a",
+  "upgradePolicy": {
+    "automaticOsUpgradePolicy": null,
+    "mode": "Manual",
+    "rollingUpgradePolicy": null
+  },
+  "virtualMachineProfile": {
+    "applicationProfile": null,
+    "billingProfile": null,
+    "capacityReservation": null,
+    "diagnosticsProfile": null,
+    "evictionPolicy": null,
+    "extensionProfile": {
+      "extensions": [
+        {
+          "autoUpgradeMinorVersion": true,
+          "enableAutomaticUpgrade": null,
+          "forceUpdateTag": null,
+          "id": null,
+          "name": "customScript",
+          "protectedSettings": null,
+          "protectedSettingsFromKeyVault": null,
+          "provisionAfterExtensions": null,
+          "provisioningState": null,
+          "publisher": "Microsoft.Azure.Extensions",
+          "settings": {
+            "commandToExecute": "apt-get update && apt-get install -y nginx && systemctl start nginx && systemctl enable nginx && echo \"<h1>Linux VMSS Instance: $(hostname)</h1><p>Zone: $(curl -s -H Metadata:true http://169.254.169.254/metadata/instance/compute/zone?api-version=2021-02-01)</p>\" > /var/www/html/index.html",
+            "fileUris": []
+          },
+          "suppressFailures": null,
+          "type": null,
+          "typeHandlerVersion": "2.1",
+          "typePropertiesType": "customScript"
+        }
+      ],
+      "extensionsTimeBudget": null
+    },
+    "hardwareProfile": null,
+    "licenseType": null,
+    "networkProfile": {
+      "healthProbe": null,
+      "networkApiVersion": "2020-11-01",
+      "networkInterfaceConfigurations": [
+        {
+          "auxiliaryMode": "None",
+          "auxiliarySku": "None",
+          "deleteOption": "Delete",
+          "disableTcpStateTracking": false,
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableAcceleratedNetworking": null,
+          "enableFpga": null,
+          "enableIpForwarding": false,
+          "ipConfigurations": [
+            {
+              "applicationGatewayBackendAddressPools": [],
+              "applicationSecurityGroups": [],
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/vmss-linux-flexLB/backendAddressPools/vmss-linux-flexLBBEPool",
+                  "resourceGroup": "sa1_test_eic_SudarshanDarade"
+                }
+              ],
+              "loadBalancerInboundNatPools": null,
+              "name": "vmsslab40IPConfig",
+              "primary": null,
+              "privateIpAddressVersion": "IPv4",
+              "publicIpAddressConfiguration": null,
+              "subnet": {
+                "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+                "resourceGroup": "sa1_test_eic_SudarshanDarade"
+              }
+            }
+          ],
+          "name": "vmsslab40Nic",
+          "networkSecurityGroup": {
+            "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/vmss-linux-flexNSG",
+            "resourceGroup": "sa1_test_eic_SudarshanDarade"
+          },
+          "primary": true
+        }
+      ]
+    },
+    "osProfile": {
+      "adminPassword": null,
+      "adminUsername": "azureuser",
+      "allowExtensionOperations": true,
+      "computerNamePrefix": "vmss-lin",
+      "customData": null,
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "enableVmAgentPlatformUpdates": null,
+        "patchSettings": {
+          "assessmentMode": "ImageDefault",
+          "automaticByPlatformSettings": null,
+          "patchMode": "ImageDefault"
+        },
+        "provisionVmAgent": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVq+ePfQmxqmzlJh5A4L/Rh1+gn6ThynlZ2V0uDqM/cA8a6iTcb5Nal8muLhpeIS9EnBcv7ECtZl6oz5DsmjgxPu9tIeU63DpsvjiVmb+bk96oGVZ3ljhVK4x1bSXt8DnYhjdoBCwRH9Ab2U5V6ZUWNDG5MAjYFH7KyZm+239DHm4XCw3W7+tq5NHGKLTmHy4RJ/hKOBII/SAIBbCzRTSj/Bpksq9qoTB2tMN0lbYVlj0ZcPM+/+a6UI0+niX2u3K2KJYMjxv+ZEW41uhIajCuuU1Yj9yRdGjekoUsZv60+hL0Rm8dw90Rc1mgoaaMEur6MHdLxlhfOMkXEnQ0cge9tQypFDJ3f96iY1fH59t/QVDYLcbAU8tLYU8l5FKZqzHi8XDnhIeCc5wJ4z+0QMi4LmEpB23PrIpXXbTaU1drQba8m47DVHC+J9HK3LfqYPAGOChHAx+NkUYRCVV6kH3hsEgTA3Y+r7DO9lIOdPCd6WJnXksiB4VcMUTtDdf1EAyVpOO25jwhjrubGyTbSCaz+wk7wcj7M9HG+Vv40hGlc2kcuse24saEGkuAUYZH+mphOKksFNoWGWT7NgdP+LPwmOdQz53kmVXfu3gFiBf5IGMrTS49spLEe9Cwv7nBnNPCNpQU7eKGLFABR9atXx2Cre7Zz1pjFm/F3jbRXI9wrw== einfochips@PUNELPT0728\n",
+              "path": "/home/azureuser/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "requireGuestProvisionSignal": true,
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "priority": null,
+    "scheduledEventsProfile": null,
+    "securityPostureReference": null,
+    "securityProfile": null,
+    "serviceArtifactReference": null,
+    "storageProfile": {
+      "dataDisks": null,
+      "diskControllerType": "SCSI",
+      "imageReference": {
+        "communityGalleryImageId": null,
+        "exactVersion": null,
+        "id": null,
+        "offer": "0001-com-ubuntu-server-jammy",
+        "publisher": "Canonical",
+        "sharedGalleryImageId": null,
+        "sku": "22_04-lts-gen2",
+        "version": "latest"
+      },
+      "osDisk": {
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "deleteOption": "Delete",
+        "diffDiskSettings": null,
+        "diskSizeGb": 30,
+        "image": null,
+        "managedDisk": {
+          "diskEncryptionSet": null,
+          "securityProfile": null,
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": null,
+        "osType": "Linux",
+        "vhdContainers": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "timeCreated": "2025-08-22T06:54:46.193740+00:00",
+    "userData": null
+  },
+  "zonalPlatformFaultDomainAlignMode": null,
+  "zoneBalance": false,
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+einfochips@PUNELPT0728:~$ az vmss update-instances \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --instance-ids "*"
+Long-running operation wait cancelled.  
+einfochips@PUNELPT0728:~$ az vmss list-instance-public-ips \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --output table
+This command is not available for VMSS in Flex mode. Please use the "az network public-ip list/show" to retrieve networking information.
+einfochips@PUNELPT0728:~$ az vmss list-instances \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex \
+>   --query "[].{Name:name, HealthState:instanceView.vmHealth.status.displayStatus, PowerState:instanceView.statuses[1].displayStatus}" \
+>   --output table
+Name
+------------------------
+vmss-linux-flex_538ac2e8
+vmss-linux-flex_5c860a78
+vmss-linux-flex_789b7c83
+einfochips@PUNELPT0728:~$ az network nsg create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name nsg-vmss
+{
+  "NewNSG": {
+    "defaultSecurityRules": [
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/AllowVnetInBound",
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from azure load balancer",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all inbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/DenyAllInBound",
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/AllowVnetOutBound",
+        "name": "AllowVnetOutBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to Internet",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/AllowInternetOutBound",
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all outbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+        "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/defaultSecurityRules/DenyAllOutBound",
+        "name": "DenyAllOutBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "sa1_test_eic_SudarshanDarade",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      }
+    ],
+    "etag": "W/\"26d1015f-ad00-4e56-a0da-e5687d7b6520\"",
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss",
+    "location": "southeastasia",
+    "name": "nsg-vmss",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade",
+    "resourceGuid": "339b2ca2-e314-44d2-a097-50522a561332",
+    "securityRules": [],
+    "tags": {
+      "Business Unit": "einfochips"
+    },
+    "type": "Microsoft.Network/networkSecurityGroups"
+  }
+}
+einfochips@PUNELPT0728:~$ az network nsg rule create \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --nsg-name nsg-vmss \
+>   --name allow-http \
+>   --priority 1000 \
+>   --source-address-prefixes '*' \
+>   --destination-port-ranges 80 \
+>   --access Allow \
+>   --protocol Tcp
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationPortRange": "80",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"28402bb3-4268-403d-b7bf-8a2cb1440ead\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss/securityRules/allow-http",
+  "name": "allow-http",
+  "priority": 1000,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+einfochips@PUNELPT0728:~$ az network vnet subnet update \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-vmss \
+>   --name subnet-vmss \
+>   --network-security-group nsg-vmss
+{
+  "addressPrefix": "10.0.1.0/24",
+  "delegations": [],
+  "etag": "W/\"ece6d6f0-0210-4e72-83ad-9f9c6daa1220\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+  "ipConfigurations": [
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-2EBBBCF1/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    },
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-B7DA2EDC/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    },
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-F6595390/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    }
+  ],
+  "name": "subnet-vmss",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ az vmss get-instance-view \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --name vmss-linux-flex
+(OperationNotAllowed) Operation 'VirtualMachineScaleSets.instanceView.GET' is not allowed on Virtual Machine Scale Set 'vmss-linux-flex'.
+Code: OperationNotAllowed
+Message: Operation 'VirtualMachineScaleSets.instanceView.GET' is not allowed on Virtual Machine Scale Set 'vmss-linux-flex'.
+einfochips@PUNELPT0728:~$ az network vnet subnet show \
+>   --resource-group sa1_test_eic_SudarshanDarade \
+>   --vnet-name vnet-vmss \
+>   --name subnet-vmss
+{
+  "addressPrefix": "10.0.1.0/24",
+  "delegations": [],
+  "etag": "W/\"ece6d6f0-0210-4e72-83ad-9f9c6daa1220\"",
+  "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/vnet-vmss/subnets/subnet-vmss",
+  "ipConfigurations": [
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-2EBBBCF1/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    },
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-B7DA2EDC/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    },
+    {
+      "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/SA1_TEST_EIC_SUDARSHANDARADE/providers/Microsoft.Network/networkInterfaces/VMSSLAB40NIC-F6595390/ipConfigurations/VMSSLAB40IPCONFIG",
+      "resourceGroup": "SA1_TEST_EIC_SUDARSHANDARADE"
+    }
+  ],
+  "name": "subnet-vmss",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkSecurityGroups/nsg-vmss",
+    "resourceGroup": "sa1_test_eic_SudarshanDarade"
+  },
+  "privateEndpointNetworkPolicies": "Disabled",
+  "privateLinkServiceNetworkPolicies": "Enabled",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "sa1_test_eic_SudarshanDarade",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+einfochips@PUNELPT0728:~$ 

@@ -8,48 +8,48 @@ This repository contains comprehensive training materials and hands-on tasks for
 
 #### Day 01 - Azure Fundamentals & Virtual Machines
 **Directory:** `AZ104-day01/`
-- **Task01.md** - Creating Virtual Network (VNet) with Subnets, NSG, and NAT Gateway
+- **Task01.md** - Creating 3-Tier Virtual Network Architecture with Subnets, NSG, NAT Gateway, and Azure Bastion
 - **Task02.md** - Creating Linux VM with SSH Key Authentication and Custom Data
 - **Task03.md** - Creating Windows VM with IIS Web Server and NSG IP Restrictions
-- **Task04.md** - Azure Storage Account Creation and Configuration
-- **Task05.md** - Azure Container Instances (ACI) Deployment
-- **Task06.md** - Azure App Service Web App Deployment
-- **Task07.md** - Azure Load Balancer Configuration
-- **Task08.md** - Virtual Machine Scale Sets (VMSS) with Auto Scaling
+- **Task04.md** - Azure Managed Disks - Creation, Snapshots, Encryption, and Management
+- **Task05.md** - Azure High Availability - Regions, Availability Sets, Zones, and Fault Domains
+- **Task06.md** - Virtual Machine Scale Sets (VMSS) with Flexible Orchestration and Manual Scaling
+- **Task07.md** - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Flexible Orchestration
+- **Task08.md** - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Uniform Orchestration
 
 #### Day 02 - Advanced Networking & Security
-**Directory:** `AZ104 -day02/`
-- **Task09.md** - Azure Application Gateway Configuration
-- **Task10.md** - Azure VPN Gateway and Site-to-Site Connectivity
-- **Task11.md** - Azure ExpressRoute Configuration
-- **Task12.md** - Azure Firewall Implementation
-- **Task13.md** - Azure Security Center and Policies
-- **Task14.md** - Azure Key Vault Management
-- **Task15.md** - Azure Active Directory Configuration
-- **Task16.md** - Role-Based Access Control (RBAC)
-- **Task17.md** - Azure Monitor and Alerts
+**Directory:** `AZ104-day02/`
+- **Task09.md** - Azure VM Images: Generalized vs Specialized Images
+- **Task10.md** - Azure Web App with App Service Plan and Deployment Slots
+- **Task11.md** - Azure Container Registry (ACR) with Application Containerization
+- **Task12.md** - Azure Container Groups (Azure Container Instances)
+- **Task13.md** - Azure Container Apps
+- **Task14.md** - Azure Network Security Groups (NSG) and Application Security Groups (ASG)
+- **Task15.md** - Azure Bastion: Cross-Region and Transitive VNet Peering
+- **Task16.md** - Azure VNet Peering: 3-Tier Networks with Cross-Environment Connectivity
+- **Task17.md** - Azure Network Watcher: Complete Network Monitoring and Diagnostics
 
 #### Day 03 - Storage & Database Services
 **Directory:** `AZ104-day03/`
-- **Task18.md** - Azure Blob Storage and Lifecycle Management
-- **Task19.md** - Azure File Shares and Storage Sync
-- **Task20.md** - Azure SQL Database Configuration
-- **Task21.md** - Azure Cosmos DB Implementation
-- **Task22.md** - Azure Database for MySQL/PostgreSQL
-- **Task23.md** - Azure Backup and Site Recovery
+- **Task18.md** - Azure Load Balancer with Linux VMs and Nginx Web Application
+- **Task19.md** - 3-Tier VNet with VMSS and Standard Load Balancer
+- **Task20.md** - Application Gateway with URL Routing
+- **Task21.md** - Application Gateway - Multiple Site Implementation
+- **Task22.md** - Azure DNS - Local vs Public vs Private DNS
+- **Task23.md** - Azure Web App Integration in 3-Tier Architecture
 
 #### Day 04 - Container Services & DevOps
 **Directory:** `AZ104-day04/`
-- **Task24.md** - Azure Kubernetes Service (AKS) Deployment
-- **Task25.md** - Azure Container Registry (ACR)
-- **Task26.md** - Azure DevOps Pipelines
-- **Task27.md** - Azure Functions Serverless Computing
-- **Task28.md** - Azure Logic Apps Workflow
-- **Task29.md** - Azure Event Grid and Service Bus
+- **Task24.md** - Azure Storage Account
+- **Task25.md** - Azure Blob Service
+- **Task26.md** - Azure Storage Account Advanced Features
+- **Task27.md** - Azure Storage Account - Advanced Blob Management
+- **Task28.md** - Azure File Share
+- **Task29.md** - Azure Storage Account - Data Transfer and Network Security
 
 #### Day 05 - Monitoring & Management
 **Directory:** `AZ104-day05/`
-- **Task30.md** - Azure Monitor Advanced Configuration
+- **Task30.md** - Azure Monitor Service
 - **Task31.md** - Log Analytics Workspace - Queries, Alerts, VM Connection, IIS Logs, Custom Logs, VM Insights
 - **Task32.md** - Azure Backup - VM Backup/Restore, File Backup/Restore, Recovery Vault Management
 - **Task33.md** - Azure Backup Advanced - MARS Agent, File Share Backup, Web App Backup, Backup Reports, Backup Vault

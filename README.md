@@ -8,56 +8,58 @@ This repository contains comprehensive training materials and hands-on tasks for
 
 #### Day 01 - Azure Fundamentals & Virtual Machines
 **Directory:** `AZ104-day01/`
-- **Task01.md** - Creating 3-Tier Virtual Network Architecture with Subnets, NSG, NAT Gateway, and Azure Bastion
-- **Task02.md** - Creating Linux VM with SSH Key Authentication and Custom Data
-- **Task03.md** - Creating Windows VM with IIS Web Server and NSG IP Restrictions
-- **Task04.md** - Azure Managed Disks - Creation, Snapshots, Encryption, and Management
-- **Task05.md** - Azure High Availability - Regions, Availability Sets, Zones, and Fault Domains
-- **Task06.md** - Virtual Machine Scale Sets (VMSS) with Flexible Orchestration and Manual Scaling
-- **Task07.md** - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Flexible Orchestration
-- **Task08.md** - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Uniform Orchestration
+- [**Task01.md**](AZ104-day01/Task01.md) - Creating 3-Tier Virtual Network Architecture with Subnets, NSG, NAT Gateway, and Azure Bastion
+- [**Task02.md**](AZ104-day01/Task02.md) - Creating Linux VM with SSH Key Authentication and Custom Data
+- [**Task03.md**](AZ104-day01/Task03.md) - Creating Windows VM with IIS Web Server and NSG IP Restrictions
+- [**Task04.md**](AZ104-day01/Task04.md) - Azure Managed Disks - Creation, Snapshots, Encryption, and Management
+- [**Task05.md**](AZ104-day01/Task05.md) - Azure High Availability - Regions, Availability Sets, Zones, and Fault Domains
+- [**Task06.md**](AZ104-day01/Task06.md) - Virtual Machine Scale Sets (VMSS) with Flexible Orchestration and Manual Scaling
+- [**Task07.md**](AZ104-day01/Task07.md)  - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Flexible Orchestration
+- [**Task08.md**](AZ104-day01/Task08.md) - Virtual Machine Scale Sets (VMSS) with Auto Scaling and Uniform Orchestration
 
 #### Day 02 - Advanced Networking & Security
 **Directory:** `AZ104-day02/`
-- **Task09.md** - Azure VM Images: Generalized vs Specialized Images
-- **Task10.md** - Azure Web App with App Service Plan and Deployment Slots
-- **Task11.md** - Azure Container Registry (ACR) with Application Containerization
-- **Task12.md** - Azure Container Groups (Azure Container Instances)
-- **Task13.md** - Azure Container Apps
-- **Task14.md** - Azure Network Security Groups (NSG) and Application Security Groups (ASG)
-- **Task15.md** - Azure Bastion: Cross-Region and Transitive VNet Peering
-- **Task16.md** - Azure VNet Peering: 3-Tier Networks with Cross-Environment Connectivity
-- **Task17.md** - Azure Network Watcher: Complete Network Monitoring and Diagnostics
+- [**Task09.md**](AZ104-day02/Task09.md)  - Azure VM Images: Generalized vs Specialized Images
+- [**Task10.md**](AZ104-day02/Task10.md)  - Azure Web App with App Service Plan and Deployment Slots
+- [**Task11.md** ](AZ104-day02/Task11.md) - Azure Container Registry (ACR) with Application Containerization
+- [**Task12.md**](AZ104-day02/Task12.md)  - Azure Container Groups (Azure Container Instances)
+- [**Task13.md**](AZ104-day02/Task13.md)  - Azure Container Apps
+- [**Task14.md**](AZ104-day02/Task14.md)  - Azure Network Security Groups (NSG) and Application Security Groups (ASG)
+- [**Task15.md**](AZ104-day02/Task15.md)  - Azure Bastion: Cross-Region and Transitive VNet Peering
+- [**Task16.md** ](AZ104-day02/Task15.md) - Azure VNet Peering: 3-Tier Networks with Cross-Environment Connectivity
+- [**Task17.md**](AZ104-day02/Task17.md)  - Azure Network Watcher: Complete Network Monitoring and Diagnostics
 
 #### Day 03 - Storage & Database Services
 **Directory:** `AZ104-day03/`
-- **Task18.md** - Azure Load Balancer with Linux VMs and Nginx Web Application
-- **Task19.md** - 3-Tier VNet with VMSS and Standard Load Balancer
-- **Task20.md** - Application Gateway with URL Routing
-- **Task21.md** - Application Gateway - Multiple Site Implementation
-- **Task22.md** - Azure DNS - Local vs Public vs Private DNS
-- **Task23.md** - Azure Web App Integration in 3-Tier Architecture
+- [**Task18.md**](AZ104-day03/Task18.md)  - Azure Load Balancer with Linux VMs and Nginx Web Application
+- [**Task19.md**](AZ104-day03/Task19.md)  - 3-Tier VNet with VMSS and Standard Load Balancer
+- [**Task20.md**](AZ104-day03/Task20.md)  - Application Gateway with URL Routing
+- [**Task21.md**](AZ104-day03/Task21.md)  - Application Gateway - Multiple Site Implementation
+- [**Task22.md**](AZ104-day03/Task22.md)  - Azure DNS - Local vs Public vs Private DNS
+- [**Task23.md**](AZ104-day03/Task23.md)  - Azure Web App Integration in 3-Tier Architecture
 
 #### Day 04 - Container Services & DevOps
 **Directory:** `AZ104-day04/`
-- **Task24.md** - Azure Storage Account
-- **Task25.md** - Azure Blob Service
-- **Task26.md** - Azure Storage Account Advanced Features
-- **Task27.md** - Azure Storage Account - Advanced Blob Management
-- **Task28.md** - Azure File Share
-- **Task29.md** - Azure Storage Account - Data Transfer and Network Security
+- [**Task24.md**](AZ104-day04/Task24.md) - Azure Storage Account
+- [**Task25.md**](AZ104-day04/Task25.md) - Azure Blob Service
+- [**Task26.md**](AZ104-day04/Task26.md) - Azure Storage Account Advanced Features
+- [**Task27.md**](AZ104-day04/Task27.md) - Azure Storage Account - Advanced Blob Management
+- [**Task28.md**](AZ104-day04/Task28.md) - Azure File Share
+- [**Task29.md**](AZ104-day04/Task29.md) - Azure Storage Account - Data Transfer and Network Security
 
 #### Day 05 - Monitoring & Management
 **Directory:** `AZ104-day05/`
-- **Task30.md** - Azure Monitor Service
-- **Task31.md** - Log Analytics Workspace - Queries, Alerts, VM Connection, IIS Logs, Custom Logs, VM Insights
-- **Task32.md** - Azure Backup - VM Backup/Restore, File Backup/Restore, Recovery Vault Management
-- **Task33.md** - Azure Backup Advanced - MARS Agent, File Share Backup, Web App Backup, Backup Reports, Backup Vault
-- **Task34.md** - Azure Site Recovery - Replication, Failover, Recovery Plans, Disaster Recovery
+- [**Task30.md**](AZ104-day05/Task30.md)  - Azure Monitor Service
+- [**Task31.md**](AZ104-day05/Task31.md)  - Log Analytics Workspace - Queries, Alerts, VM Connection, IIS Logs, Custom Logs, VM Insights
+- [**Task32.md**](AZ104-day05/Task32.md)  - Azure Backup - VM Backup/Restore, File Backup/Restore, Recovery Vault Management
+- [**Task33.md**](AZ104-day05/Task33.md)  - Azure Backup Advanced - MARS Agent, File Share Backup, Web App Backup, Backup Reports, Backup Vault
+- [**Task34.md**](AZ104-day05/Task34.md)  - Azure Site Recovery - Replication, Failover, Recovery Plans, Disaster Recovery
 
 #### Day 06 - Advanced Azure Services
 **Directory:** `AZ104-day06/`
-- Advanced Azure services and enterprise scenarios
+- [**Task35.md**](AZ104-day06/Task35.md) - Microsoft Entra ID and Role-Based Access Control (RBAC)
+- [**Task36.md**](AZ104-day06/Task36.md) - Azure ARM Templates - Infrastructure as Code
+- [**Task37.md**](AZ104-day06/Task37.md) - Azure Bicep-DSL - Infrastructure as Code
 
 ### Linux Administration
 
@@ -71,9 +73,7 @@ This repository contains comprehensive training materials and hands-on tasks for
 
 #### Day 09 - ITIL Practices
 **Directory:** `ITIL-day09/`
-- IT Service Management principles
-- ITIL framework implementation
-- Service lifecycle management
+- [**Task-ITIL-day09.md**](ITIL-day09/Task-ITIL-day09.md) - ITIL Framework and Service Management
 
 ### Container Technologies
 

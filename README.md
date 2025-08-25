@@ -75,42 +75,50 @@ This repository contains comprehensive training materials and hands-on tasks for
 **Directory:** `ITIL-day09/`
 - [**Task-ITIL-day09.md**](ITIL-day09/Task-ITIL-day09.md) - ITIL Framework and Service Management
 
-### Container Technologies
-
-#### Day 10-12 - Docker & Kubernetes
-**Directories:** `Docker-day10/`, `K8s-day11/`, `K8s-day12/`
-- Docker containerization
-- Kubernetes orchestration
-- Container deployment strategies
-
 ### Data Factory Training
 
-#### Day 13-15 - Azure Data Factory
-**Directories:** `ADF-day13/`, `ADF-day14/`, `ADF-day15/`
+#### Day 10-12 - Azure Data Factory
+**Directories:** `ADF-day10/`, `ADF-day11/`, `ADF-day12/`
 - Data integration and ETL processes
 - Pipeline creation and management
 - Data transformation workflows
 
 ### Database Management
 
-#### Day 16-17 - SQL Server
-**Directories:** `SQL-day16/`, `SQL-day17/`
+#### Day 13-14 - SQL Server
+**Directories:** `SQL-day13/`, `SQL-day14/`
 - SQL Server administration
 - Database design and optimization
 - Query performance tuning
 
+
 ### DataDog Monitoring Platform
 
-#### Day 18-25 - DataDog Implementation
-**Directories:** `DataDog-day18/` through `DataDog-day25/`
-- **Day 18** - DataDog Agent Installation and Configuration
-- **Day 19** - Infrastructure Monitoring Setup
-- **Day 20** - Application Performance Monitoring (APM)
-- **Day 21** - Log Management and Analysis
-- **Day 22** - Custom Metrics and Dashboards
-- **Day 23** - Alerting and Notification Setup
-- **Day 24** - Synthetic Monitoring and Testing
-- **Day 25** - Advanced DataDog Features and Integration
+#### Day 15-16 - DataDog Implementation
+**Directories:** `DataDog-day15/` through `DataDog-day16/`
+- **Task 01** - DataDog Agent Installation and Configuration
+- **Task 02** - Infrastructure Monitoring Setup
+- **Task 03** - Application Performance Monitoring (APM)
+- **Task 04** - Log Management and Analysis
+- **Task 05** - Custom Metrics and Dashboards
+- **Task 06** - Alerting and Notification Setup
+- **Task 07** - Synthetic Monitoring and Testing
+- **Task 08** - Advanced DataDog Features and Integration
+
+### Container Technologies
+
+#### Day 17-19 - Docker & Kubernetes
+**Directories:** `Docker-day17/`, `K8s-day18/`, `K8s-day19/`
+- Docker containerization
+- Kubernetes orchestration
+- Container deployment strategies
+
+### Excercise
+#### Day 20-25 - Comprehensive Exercise
+**Directory:** `Excercise-day20/`,`Excercise-day21/`,`Excercise-day22/`,`Excercise-day23/`,`Excercise-day24/`,`Excercise-day25/`
+- Hands-on project integrating learned skills
+- Real-world scenario implementation
+
 
 ## Key Features Covered
 

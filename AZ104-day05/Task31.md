@@ -3,7 +3,333 @@
 ## Overview
 Azure Log Analytics workspace is a centralized repository for collecting, analyzing, and acting on log data from various Azure resources, on-premises systems, and other cloud environments.
 
-## Log Analytics Queries (KQL)
+## Method 1: Using Azure Portal (GUI)
+
+### Create Log Analytics Workspace via Portal
+
+1. **Navigate to Log Analytics Workspaces**
+   - Go to Azure Portal → Search "Log Analytics workspaces"
+   - Click **Create**
+
+2. **Configure Workspace Settings**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `mylogworkspace-portal`
+   - **Region**: `Southeast Asia`
+
+3. **Pricing Tier Configuration**
+   - **Pricing tier**: `Pay-as-you-go (Per GB 2018)`
+   - **Daily cap**: Set if needed (optional)
+   - **Data retention**: `30 days` (default)
+
+4. **Review and Create**
+   - Click **Review + create**
+   - Click **Create**
+
+### Connect VM to Log Analytics via Portal
+
+1. **Navigate to Virtual Machines**
+   - Go to **Virtual machines**
+   - Select the VM to connect
+   - Go to **Monitoring** → **Insights**
+   - Click **Enable**
+
+2. **Configure Monitoring**
+   - **Log Analytics workspace**: Select `mylogworkspace-portal`
+   - **Enable guest-level monitoring**: Check if needed
+   - **Data collection rules**: Configure as needed
+   - Click **Enable**
+
+3. **Alternative Method - Direct Connection**
+   - Go to Log Analytics workspace
+   - Select **Virtual machines** under **Workspace Data Sources**
+   - Select VM from list
+   - Click **Connect**
+   - Agent installation will begin automatically
+
+### Configure Data Collection via Portal
+
+#### Enable Performance Counters
+1. **Navigate to Workspace Settings**
+   - Go to your Log Analytics workspace
+   - Select **Agents configuration** under **Settings**
+
+2. **Windows Performance Counters**
+   - Click **Windows performance counters** tab
+   - **Add recommended counters**: Click to add common counters
+   - **Custom counters**: Add specific counters
+     - Counter: `\Processor(_Total)\% Processor Time`
+     - Sample interval: `60 seconds`
+   - Click **Apply**
+
+3. **Linux Performance Counters**
+   - Click **Linux performance counters** tab
+   - Enable required counters:
+     - `Processor` → `% Processor Time`
+     - `Memory` → `% Used Memory`
+     - `Disk` → `% Used Space`
+   - Set sample intervals
+   - Click **Apply**
+
+#### Configure Windows Event Logs
+1. **Windows Event Logs Tab**
+   - Click **Windows event logs**
+   - **Add event logs**:
+     - `System` (Error, Warning, Information)
+     - `Application` (Error, Warning)
+     - `Security` (Audit Success, Audit Failure)
+   - Click **Apply**
+
+#### Configure Syslog (Linux)
+1. **Syslog Tab**
+   - Click **Syslog**
+   - **Add facilities**:
+     - `auth` (Info, Notice, Warning, Error, Critical)
+     - `daemon` (Warning, Error, Critical)
+     - `kern` (Critical)
+   - Click **Apply**
+
+### Configure IIS Log Collection via Portal
+
+1. **Enable IIS Logs**
+   - Go to workspace → **Agents configuration**
+   - Click **IIS logs** tab
+   - Check **Collect IIS logs**
+   - **Log directories**: Verify paths
+     - `C:\inetpub\logs\LogFiles\W3SVC1\`
+     - `C:\inetpub\logs\LogFiles\W3SVC2\`
+   - Click **Apply**
+
+2. **Configure IIS on Server**
+   - Connect to IIS server via RDP
+   - Open **IIS Manager**
+   - Select website → **Logging**
+   - **Format**: `W3C`
+   - **Fields**: Select required fields
+     - Date, Time, Client IP, Method, URI Stem
+     - Protocol Status, Bytes Sent, User Agent
+   - Click **Apply**
+
+### Create Custom Log Collection via Portal
+
+1. **Navigate to Custom Logs**
+   - Go to workspace → **Tables** under **Settings**
+   - Click **Create** → **New custom log (MMA-based)**
+
+2. **Upload Sample Log**
+   - **Sample log file**: Upload sample file
+   - **Record delimiter**: Select delimiter type
+     - `New line`
+     - `Timestamp`
+     - `Custom delimiter`
+   - Click **Next**
+
+3. **Configure Collection Paths**
+   - **Type**: `Windows` or `Linux`
+   - **Path**: Specify log file paths
+     - Windows: `C:\MyApp\Logs\*.log`
+     - Linux: `/var/log/myapp/*.log`
+   - Click **Next**
+
+4. **Provide Details**
+   - **Custom log name**: `MyAppLog`
+   - **Description**: Describe the log purpose
+   - Click **Next** → **Create**
+
+### Query Logs via Portal
+
+1. **Access Logs**
+   - Go to Log Analytics workspace
+   - Click **Logs** under **General**
+
+2. **Basic Queries Interface**
+   - **Schema browser**: Explore available tables
+   - **Query editor**: Write KQL queries
+   - **Time range**: Set query time scope
+   - **Run**: Execute queries
+
+3. **Sample Queries**
+   - Click **Queries** in left panel
+   - Browse **Sample queries**
+   - Select and run pre-built queries
+   - Modify as needed
+
+### Create Alerts via Portal
+
+#### Metric-based Alerts
+1. **Navigate to Alerts**
+   - Go to **Monitor** → **Alerts**
+   - Click **Create** → **Alert rule**
+
+2. **Select Resource**
+   - **Resource type**: `Log Analytics workspaces`
+   - Select your workspace
+   - Click **Done**
+
+3. **Configure Condition**
+   - **Signal name**: `Custom log search`
+   - **Search query**:
+     ```kql
+     Perf
+     | where ObjectName == "Processor" and CounterName == "% Processor Time"
+     | where TimeGenerated > ago(5m)
+     | summarize avg(CounterValue) by Computer
+     | where avg_CounterValue > 80
+     ```
+   - **Alert logic**:
+     - **Based on**: `Number of results`
+     - **Operator**: `Greater than`
+     - **Threshold value**: `0`
+   - **Evaluation**:
+     - **Period**: `5 minutes`
+     - **Frequency**: `1 minute`
+   - Click **Done**
+
+#### Log Search Alerts
+1. **Create from Logs**
+   - Go to workspace → **Logs**
+   - Write and test query
+   - Click **New alert rule**
+
+2. **Configure Alert Logic**
+   - **Based on**: `Number of results`
+   - **Operator**: `Greater than`
+   - **Threshold**: Set appropriate value
+   - **Trigger based on**: `Total` or `Consecutive breaches`
+
+3. **Add Actions**
+   - Select action group
+   - Configure notifications
+   - Set alert details
+   - Click **Create alert rule**
+
+### Enable VM Insights via Portal
+
+1. **Navigate to VM Insights**
+   - Go to **Monitor** → **Virtual Machines**
+   - Select **Not monitored** tab
+   - Select VMs to enable
+
+2. **Enable Insights**
+   - Click **Enable**
+   - **Log Analytics workspace**: Select workspace
+   - **Enable guest-level monitoring**: Check if needed
+   - **Data collection rule**: Create or select existing
+   - Click **Enable**
+
+3. **Configure Data Collection Rule**
+   - **Rule name**: `vm-insights-dcr`
+   - **Performance counters**: Select counters to collect
+   - **Events**: Configure event collection
+   - **Extensions**: Enable dependency agent if needed
+   - Click **Create**
+
+### Monitor VM Performance via Portal
+
+1. **Access VM Insights**
+   - Go to **Monitor** → **Virtual Machines**
+   - Select **Monitored** tab
+   - Click on VM name
+
+2. **Performance Tab**
+   - View **CPU utilization** trends
+   - Monitor **Memory usage** patterns
+   - Check **Disk I/O** metrics
+   - Analyze **Network traffic**
+
+3. **Map Tab**
+   - View **Process dependencies**
+   - Analyze **Network connections**
+   - Identify **Failed connections**
+   - Monitor **Port activity**
+
+4. **Health Tab**
+   - Check **Overall health status**
+   - Review **Health criteria**
+   - View **Health timeline**
+   - Configure **Health alerts**
+
+### Create Custom Dashboards via Portal
+
+1. **Navigate to Dashboards**
+   - Go to **Monitor** → **Dashboards**
+   - Click **New dashboard**
+
+2. **Add Tiles**
+   - **Logs tile**: Add KQL query results
+   - **Metrics tile**: Add metric charts
+   - **Text tile**: Add documentation
+   - **Web tile**: Embed external content
+
+3. **Configure Tiles**
+   - **Query**: Enter KQL query
+   - **Visualization**: Select chart type
+   - **Time range**: Set default range
+   - **Refresh**: Configure auto-refresh
+
+4. **Save Dashboard**
+   - **Name**: `VM Monitoring Dashboard`
+   - **Subscription**: Select subscription
+   - **Resource group**: Select group
+   - **Location**: Select region
+   - Click **Save**
+
+### Manage Workspace via Portal
+
+#### Usage and Costs
+1. **Monitor Usage**
+   - Go to workspace → **Usage and estimated costs**
+   - View **Data ingestion** trends
+   - Check **Retention costs**
+   - Monitor **Query usage**
+
+2. **Set Daily Cap**
+   - Click **Daily cap**
+   - **Daily volume cap**: Set GB limit
+   - **Alert threshold**: Set warning level
+   - Click **OK**
+
+#### Data Export
+1. **Configure Export**
+   - Go to workspace → **Data Export**
+   - Click **Add**
+   - **Export name**: `vm-logs-export`
+   - **Tables**: Select tables to export
+   - **Destination**: Storage account or Event Hub
+   - Click **Create**
+
+#### Access Control
+1. **Manage Access**
+   - Go to workspace → **Access control (IAM)**
+   - Click **Add** → **Add role assignment**
+   - **Role**: `Log Analytics Reader`
+   - **Assign access to**: User/Group/Service Principal
+   - Select members
+   - Click **Save**
+
+### Troubleshooting via Portal
+
+1. **Agent Health**
+   - Go to workspace → **Agents management**
+   - View **Connected sources**
+   - Check **Agent status**
+   - Review **Last heartbeat**
+
+2. **Data Collection Issues**
+   - Go to **Agents configuration**
+   - Verify **Performance counters**
+   - Check **Event logs** configuration
+   - Review **Custom logs** settings
+
+3. **Query Performance**
+   - Use **Query performance** insights
+   - Optimize **Time ranges**
+   - Review **Resource usage**
+   - Implement **Query caching**
+
+## Method 2: Using KQL Queries and CLI
+
+### Log Analytics Queries (KQL)
 
 ### Basic Query Structure
 ```kql
@@ -421,3 +747,49 @@ Heartbeat
 | summarize LastHeartbeat = max(TimeGenerated) by Computer
 | where LastHeartbeat < ago(5m)
 ```
+
+## Portal Best Practices
+
+### Data Management
+1. **Retention Policies**
+   - Set appropriate retention periods per table
+   - Use archive tiers for long-term storage
+   - Implement data lifecycle management
+
+2. **Cost Optimization**
+   - Monitor daily ingestion volumes
+   - Set up billing alerts
+   - Use sampling for high-volume logs
+   - Configure selective data collection
+
+3. **Performance Optimization**
+   - Use time-based partitioning
+   - Optimize KQL queries
+   - Implement proper indexing
+   - Cache frequently used queries
+
+### Security Best Practices
+1. **Access Control**
+   - Implement least privilege access
+   - Use Azure AD groups for permissions
+   - Regular access reviews
+   - Enable audit logging
+
+2. **Data Protection**
+   - Enable customer-managed keys
+   - Configure private endpoints
+   - Implement network security
+   - Data classification and labeling
+
+### Monitoring and Alerting
+1. **Proactive Monitoring**
+   - Set up health alerts
+   - Monitor agent connectivity
+   - Track data ingestion rates
+   - Performance threshold alerts
+
+2. **Alert Management**
+   - Use action groups effectively
+   - Implement alert suppression
+   - Configure escalation paths
+   - Regular alert rule reviews

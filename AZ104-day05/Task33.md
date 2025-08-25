@@ -1,6 +1,395 @@
 # Task 33: Azure Backup Advanced Features
 
-## MARS Agent (Microsoft Azure Recovery Services Agent)
+## Method 1: Using Azure Portal (GUI)
+
+### MARS Agent Installation and Configuration via Portal
+
+1. **Download MARS Agent from Portal**
+   - Go to **Recovery Services vaults**
+   - Select your vault: `rsv-backup-vault-portal`
+   - Go to **Getting Started** → **Backup**
+   - **Where is your workload running?**: `On-premises`
+   - **What do you want to backup?**: `Files and folders`
+   - Click **Download Agent for Windows Server**
+   - Save installer to target server
+
+2. **Download Vault Credentials**
+   - In the same backup configuration page
+   - Click **Download** vault credentials
+   - **Expiry**: Credentials valid for 10 days
+   - Save `.VaultCredentials` file securely
+
+3. **Install MARS Agent via GUI**
+   - Run `MARSAgentInstaller.exe` as Administrator
+   - **Welcome**: Click **Next**
+   - **License Agreement**: Accept and click **Next**
+   - **Installation Folder**: Default or custom path
+   - **Proxy Configuration**: Configure if needed
+     - **Use proxy server**: Check if required
+     - **Proxy server address**: Enter details
+     - **Authentication**: Configure credentials
+   - Click **Install**
+   - **Installation Complete**: Click **Proceed to Registration**
+
+4. **Register Server via GUI**
+   - **Microsoft Azure Backup** console opens
+   - Click **Register Server**
+   - **Vault Identification**:
+     - **Vault credentials file**: Browse and select downloaded file
+     - Click **Next**
+   - **Encryption Setting**:
+     - **Generate passphrase**: Auto-generate
+     - **Enter passphrase**: Manual entry
+     - **Save passphrase to**: Secure location
+   - **Proxy Settings**: Configure if needed
+   - Click **Finish**
+
+### Configure MARS Backup via Portal Interface
+
+1. **Schedule Backup Wizard**
+   - Open **Microsoft Azure Backup** console
+   - Click **Schedule Backup** in Actions panel
+   - **Getting Started**: Click **Next**
+
+2. **Select Items to Backup**
+   - **Add Items**: Click to browse folders
+   - Select folders/files:
+     - `C:\ImportantData`
+     - `C:\Documents`
+     - `C:\DatabaseBackups`
+   - **Exclusion Settings**: 
+     - **File Types**: `*.tmp, *.log, *.cache`
+     - **Folders**: Temporary folders
+   - Click **Next**
+
+3. **Specify Backup Schedule**
+   - **Backup frequency**: 
+     - `Daily` (recommended)
+     - `Weekly` (specific days)
+   - **Daily backup times**: 
+     - **First backup**: `11:00 PM`
+     - **Second backup**: `6:00 AM` (optional)
+   - **Time zone**: Select appropriate zone
+   - Click **Next**
+
+4. **Select Retention Policy**
+   - **Daily retention**: `30 days`
+   - **Weekly retention**: 
+     - **Keep weekly backups**: `12 weeks`
+     - **Day of week**: `Sunday`
+   - **Monthly retention**:
+     - **Keep monthly backups**: `12 months`
+     - **Week of month**: `First`
+     - **Day of week**: `Sunday`
+   - **Yearly retention**:
+     - **Keep yearly backups**: `1 year`
+     - **Month**: `January`
+     - **Week**: `First`
+     - **Day**: `Sunday`
+   - Click **Next**
+
+5. **Choose Initial Backup Type**
+   - **Automatically over the network**: Recommended
+   - **Offline using Azure Import/Export**: For large datasets
+   - **Network bandwidth usage**: Configure throttling
+     - **Enable internet bandwidth usage throttling**
+     - **Work hours**: 9:00 AM to 6:00 PM
+     - **Work day bandwidth**: 512 Kbps
+     - **Non-work hours bandwidth**: Unlimited
+   - Click **Next**
+
+6. **Confirmation and Completion**
+   - Review backup configuration
+   - Click **Finish**
+   - **Run backup now**: Check to start immediate backup
+   - Click **Close**
+
+### Perform MARS Backup and Recovery via GUI
+
+1. **Manual Backup Trigger**
+   - Open **Microsoft Azure Backup** console
+   - Click **Back Up Now** in Actions panel
+   - **Back Up Items**: Select items to backup
+   - **Retain Backup Till**: Select retention date
+   - **Backup Progress**: Monitor progress
+   - Click **Close** when complete
+
+2. **File Recovery via GUI**
+   - Click **Recover Data** in Actions panel
+   - **Getting Started**: Click **Next**
+   - **Select Recovery Mode**:
+     - `Individual files and folders`
+     - `Volumes`
+   - Click **Next**
+
+3. **Select Volume and Date**
+   - **Volume**: Select source volume
+   - **Calendar**: Choose backup date
+   - **Time**: Select specific backup time
+   - Click **Next**
+
+4. **Browse and Recover**
+   - **Browse**: Navigate folder structure
+   - **Search**: Find specific files
+   - **Select items**: Check files/folders to recover
+   - **Recovery options**:
+     - **Recover to**: Original or alternate location
+     - **Overwrite options**: Skip, Replace, Create copies
+     - **Security**: Restore ACL permissions
+   - Click **Recover**
+
+### File Share Backup via Portal
+
+1. **Navigate to Storage Account**
+   - Go to **Storage accounts**
+   - Select account: `mystorageaccount`
+   - Go to **Data management** → **Backup**
+
+2. **Configure File Share Backup**
+   - **File shares**: Select shares to backup
+     - `documents-share`
+     - `projects-share`
+   - **Recovery Services vault**: `rsv-backup-vault-portal`
+   - **Backup policy**: Create new or select existing
+
+3. **Create File Share Backup Policy**
+   - Click **Create a new policy**
+   - **Policy name**: `FileSharePolicy-Portal`
+   - **Backup schedule**:
+     - **Frequency**: `Daily`
+     - **Time**: `3:00 AM`
+     - **Timezone**: `(UTC+08:00) Singapore`
+   - **Retention range**:
+     - **Daily backup retention**: `30 days`
+     - **Weekly backup retention**: `12 weeks` (Sunday)
+     - **Monthly backup retention**: `12 months` (First Sunday)
+     - **Yearly backup retention**: `1 year` (January, First Sunday)
+   - Click **OK**
+
+4. **Enable Backup**
+   - Review configuration
+   - Click **Enable backup**
+   - Monitor enablement progress
+
+### File Share Recovery via Portal
+
+1. **Access File Share Backup**
+   - Go to Recovery Services vault
+   - Select **Backup items** → **Azure Storage (Azure Files)**
+   - Click on file share name
+
+2. **Restore File Share**
+   - Click **Restore**
+   - **Recovery point**: Select from calendar
+   - **Restore type**:
+     - `Full Share`: Complete file share
+     - `Item Level`: Specific files/folders
+
+3. **Configure Full Share Restore**
+   - **Restore location**:
+     - `Original location`: Overwrite existing
+     - `Alternate location`: Different storage account
+   - For alternate location:
+     - **Storage account**: Select target account
+     - **File share**: Enter target share name
+   - **Conflict resolution**:
+     - `Overwrite`: Replace existing files
+     - `Skip`: Keep existing files
+   - Click **Restore**
+
+4. **Configure Item-Level Restore**
+   - **Browse recovery point**: Navigate folder structure
+   - **Select items**: Check specific files/folders
+   - **Restore location**: Original or alternate
+   - **Restore options**: Overwrite, Skip, Create copy
+   - Click **Restore**
+
+### Web App Backup via Portal
+
+1. **Navigate to App Service**
+   - Go to **App Services**
+   - Select web app: `mywebapp-portal`
+   - Go to **Settings** → **Backups**
+
+2. **Configure Backup Settings**
+   - Click **Configure**
+   - **Backup Storage**:
+     - **Storage account**: Select or create account
+     - **Container**: `webappbackups`
+   - **Backup schedule**:
+     - **Scheduled backup**: `On`
+     - **Backup frequency**: `Daily`
+     - **Start time**: `2:00 AM`
+     - **Timezone**: Select appropriate zone
+   - **Retention**: `30 days`
+   - **Keep at least one backup**: `Yes`
+
+3. **Database Backup Configuration**
+   - **Databases**: Click **Included (0)**
+   - **Add database**:
+     - **Database type**: `SQL Database`
+     - **Connection string**: Enter connection details
+     - **Database name**: `MyAppDatabase`
+   - Click **OK**
+
+4. **Save and Enable**
+   - Click **Save**
+   - **Manual backup**: Click **Backup** for immediate backup
+   - Monitor backup progress
+
+### Web App Restore via Portal
+
+1. **Access Backup History**
+   - Go to App Service → **Backups**
+   - View **Backup History**
+   - Select backup to restore
+
+2. **Restore Options**
+   - Click **Restore**
+   - **Restore destination**:
+     - `Overwrite existing app`
+     - `Restore to new app`
+   - **Restore configuration**:
+     - **App content**: Include app files
+     - **App configuration**: Include settings
+     - **Database**: Include database restore
+
+3. **Configure New App Restore**
+   - **App name**: `mywebapp-restored`
+   - **Resource group**: Select target group
+   - **App Service plan**: Select or create plan
+   - Click **OK**
+
+### Backup Reports via Portal
+
+1. **Configure Backup Reports**
+   - Go to Recovery Services vault
+   - Select **Backup Reports** under **Monitoring**
+   - **Configure workspace**: 
+     - **Log Analytics workspace**: Create or select existing
+     - **Storage account**: For report data storage
+   - Click **Configure**
+
+2. **Access Backup Workbooks**
+   - Go to **Azure Monitor** → **Workbooks**
+   - Search for **Backup Reports**
+   - Click on **Backup Reports** template
+   - **Parameters**:
+     - **Subscriptions**: Select subscriptions
+     - **Resource Groups**: Select groups
+     - **Vaults**: Select Recovery Services vaults
+     - **Time Range**: Last 30 days
+   - Click **Apply**
+
+3. **View Report Sections**
+   - **Summary**: Overall backup health
+   - **Backup Items**: Protected items status
+   - **Usage**: Storage consumption trends
+   - **Jobs**: Success/failure rates
+   - **Alerts**: Active backup alerts
+   - **Policies**: Policy compliance
+
+### Backup Vault Configuration via Portal
+
+1. **Create Backup Vault**
+   - Go to Azure Portal → Search "Backup vaults"
+   - Click **Create**
+   - **Subscription**: Select subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Vault name**: `bv-backup-vault-portal`
+   - **Region**: `Southeast Asia`
+   - **Storage redundancy**: `Locally-redundant storage`
+   - Click **Review + create** → **Create**
+
+2. **Configure VM Disk Backup**
+   - Go to created Backup vault
+   - Select **Backup** under **Data management**
+   - **Datasource type**: `Azure Disks`
+   - **Vault**: Select backup vault
+   - **Backup policy**: Create or select policy
+   - **Azure Disks**: Select disks to backup
+   - Click **Review + configure backup**
+
+3. **Create Disk Backup Policy**
+   - **Policy name**: `DiskBackupPolicy-Portal`
+   - **Backup schedule**:
+     - **Frequency**: `Daily`
+     - **Time**: `2:00 AM`
+   - **Retention**:
+     - **Daily**: `30 days`
+     - **Weekly**: `12 weeks`
+     - **Monthly**: `12 months`
+   - Click **Create**
+
+4. **Configure Blob Backup**
+   - Select **Backup** → **Azure Blobs**
+   - **Storage accounts**: Select accounts for operational backup
+   - **Backup policy**: Operational backup (continuous)
+   - **Point-in-time restore**: Up to 365 days
+   - Click **Configure backup**
+
+### Advanced Backup Features via Portal
+
+1. **Cross Region Restore**
+   - Go to Recovery Services vault → **Properties**
+   - **Backup Configuration**:
+     - **Storage replication type**: `Geo-redundant storage`
+     - **Cross Region Restore**: `Enable`
+   - Click **Save**
+
+2. **Restore in Secondary Region**
+   - Go to **Backup items** → Select VM
+   - Click **Cross Region Restore**
+   - **Secondary region**: Automatically selected
+   - **Recovery point**: Select from available points
+   - **Restore configuration**: Configure VM settings
+   - Click **Restore**
+
+3. **Soft Delete Configuration**
+   - Go to vault → **Properties** → **Security Settings**
+   - **Soft Delete**: `Enable`
+   - **Security features**: `Enable`
+   - **Days to retain**: `14 days` (default)
+   - Click **Save**
+
+4. **Undelete Backup Items**
+   - Go to **Backup items**
+   - **Filter**: Show deleted items
+   - Select deleted item
+   - Click **Undelete**
+   - Confirm restoration
+
+### Monitoring and Alerting via Portal
+
+1. **Configure Backup Alerts**
+   - Go to **Monitor** → **Alerts**
+   - Click **Create** → **Alert rule**
+   - **Resource**: Select Recovery Services vault
+   - **Condition**: Configure alert conditions
+     - **Signal**: Backup Health Event
+     - **Threshold**: Greater than 0
+   - **Actions**: Select action group
+   - **Alert details**: Name and description
+   - Click **Create alert rule**
+
+2. **View Backup Health**
+   - Go to vault → **Backup Health**
+   - **Health status**: View overall health
+   - **Critical issues**: Address urgent problems
+   - **Warnings**: Review and resolve
+   - **Recommendations**: Follow best practices
+
+3. **Monitor Backup Jobs**
+   - Go to **Backup jobs** under **Monitoring**
+   - **Filter options**:
+     - **Time range**: Last 24 hours, 7 days
+     - **Status**: Failed, In progress, Completed
+     - **Workload type**: Azure VM, Files, etc.
+   - **Job details**: Click on jobs for detailed information
+
+## Method 2: Using PowerShell and CLI
+
+### MARS Agent (Microsoft Azure Recovery Services Agent)
 
 ### Overview
 MARS Agent enables backup of files, folders, and system state from Windows machines (on-premises or Azure VMs) directly to Azure Recovery Services vault without requiring a backup server.
@@ -261,7 +650,7 @@ Restore-AzWebAppBackup -ResourceGroupName $resourceGroupName -Name $webAppName -
 ```powershell
 # Create Log Analytics workspace for backup reports
 $workspaceName = "law-backup-reports"
-$resourceGroupName = "rg-backup"
+$resourceGroupName = "sa1_test_eic_SudarshanDarade"
 
 New-AzOperationalInsightsWorkspace -ResourceGroupName $resourceGroupName -Name $workspaceName -Location "East US" -Sku "PerGB2018"
 
@@ -322,7 +711,7 @@ Backup Vault is the next-generation backup solution supporting newer workloads l
 ### Create Backup Vault
 ```powershell
 # Create Backup Vault
-$resourceGroupName = "rg-backup"
+$resourceGroupName = "sa1_test_eic_SudarshanDarade"
 $vaultName = "bv-backup-vault"
 $location = "East US"
 
@@ -455,3 +844,57 @@ AddonAzureBackupAlerts
 - Regular restore testing
 - Maintain backup logs
 - Compliance reporting
+
+## Portal Best Practices
+
+### Security Best Practices
+1. **Access Control**
+   - Implement Azure RBAC for backup operations
+   - Use managed identities where possible
+   - Regular access reviews and audits
+   - Enable MFA for critical operations
+
+2. **Data Protection**
+   - Enable soft delete for accidental deletion protection
+   - Use customer-managed keys for encryption
+   - Implement cross-region restore for critical workloads
+   - Regular security assessments
+
+### Operational Excellence
+1. **Backup Strategy**
+   - Define clear backup and retention policies
+   - Regular backup testing and validation
+   - Document recovery procedures
+   - Implement automated monitoring
+
+2. **Performance Optimization**
+   - Schedule backups during off-peak hours
+   - Use incremental backups to reduce time and storage
+   - Monitor backup job performance
+   - Optimize network bandwidth usage
+
+### Cost Management
+1. **Storage Optimization**
+   - Choose appropriate storage redundancy levels
+   - Implement lifecycle policies for long-term retention
+   - Monitor storage consumption trends
+   - Use backup vault for newer workloads
+
+2. **Policy Management**
+   - Right-size retention policies based on requirements
+   - Regular policy reviews and optimization
+   - Use appropriate backup frequencies
+   - Implement data archival strategies
+
+### Monitoring and Alerting
+1. **Proactive Monitoring**
+   - Configure comprehensive backup alerts
+   - Monitor backup health and job success rates
+   - Set up automated reporting
+   - Regular backup validation
+
+2. **Troubleshooting**
+   - Maintain backup job logs
+   - Quick issue identification and resolution
+   - Regular agent health checks
+   - Network connectivity monitoring

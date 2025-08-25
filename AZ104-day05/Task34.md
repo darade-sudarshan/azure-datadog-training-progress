@@ -19,7 +19,371 @@ Azure Site Recovery is a disaster recovery service that helps ensure business co
 - **Hyper-V to Azure** - On-premises Hyper-V VMs to Azure
 - **Physical servers to Azure** - Physical Windows/Linux servers to Azure
 
-## Azure Site Recovery Setup
+## Method 1: Using Azure Portal (GUI)
+
+### Create Recovery Services Vault for ASR via Portal
+
+1. **Navigate to Recovery Services Vaults**
+   - Go to Azure Portal → Search "Recovery Services vaults"
+   - Click **Create**
+
+2. **Configure Vault Settings**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Vault name**: `rsv-asr-vault-portal`
+   - **Region**: `Southeast Asia` (primary region)
+
+3. **Review and Create**
+   - Click **Review + create**
+   - Click **Create**
+
+4. **Configure Vault Properties**
+   - Go to created vault
+   - Select **Properties** under **Settings**
+   - **Storage replication type**: `Geo-redundant storage (GRS)`
+   - **Cross Region Restore**: `Enable`
+   - **Security Settings**:
+     - **Soft Delete**: `Enable`
+     - **Security PIN**: `Enable`
+   - Click **Save**
+
+### Azure to Azure Replication via Portal
+
+1. **Enable Site Recovery**
+   - Go to Recovery Services vault
+   - Select **Site Recovery** under **Getting Started**
+   - Click **Enable Site Recovery**
+
+2. **Prepare Infrastructure**
+   - **Source**: `Azure`
+   - **Target**: `Azure`
+   - **Source location**: `Southeast Asia`
+   - **Target location**: `East Asia`
+   - **Source resource group**: `rg-vm-source`
+   - **Target resource group**: `rg-vm-target`
+   - **Source virtual network**: `vnet-source`
+   - **Target virtual network**: `vnet-target`
+   - Click **OK**
+
+3. **Configure Replication Settings**
+   - **Replication policy**: Create new or select existing
+   - **Policy name**: `A2A-ReplicationPolicy-Portal`
+   - **Recovery point retention**: `24 hours`
+   - **App-consistent snapshot frequency**: `4 hours`
+   - **Replication frequency**: `5 minutes`
+   - Click **Create**
+
+4. **Enable Replication for VMs**
+   - Click **Enable replication**
+   - **Source**: Configure source settings
+     - **Location**: `Southeast Asia`
+     - **Resource group**: `rg-vm-source`
+     - **Virtual machine deployment model**: `Resource Manager`
+   - **Virtual machines**: Select VMs to replicate
+     - Check `vm-web-server`
+     - Check `vm-db-server`
+   - Click **Next**
+
+5. **Configure Target Settings**
+   - **Target location**: `East Asia`
+   - **Target resource group**: `rg-vm-target`
+   - **Target virtual network**: `vnet-target`
+   - **Target subnet**: `subnet-target`
+   - **Target availability set**: None or select existing
+   - **Cache storage account**: Select or create account
+   - Click **Next**
+
+6. **Configure Replication Policy**
+   - **Replication policy**: Select created policy
+   - Click **Next**
+
+7. **Review and Enable**
+   - Review all settings
+   - Click **Enable replication**
+   - Monitor replication enablement progress
+
+### Monitor Replication Status via Portal
+
+1. **View Replicated Items**
+   - Go to vault → **Replicated items** under **Protected items**
+   - View replication status for each VM:
+     - **Status**: Protected, Enabling protection, etc.
+     - **Replication health**: Healthy, Warning, Critical
+     - **RPO**: Recovery Point Objective status
+     - **Last recovery point**: Timestamp of latest point
+
+2. **Detailed Replication Health**
+   - Click on VM name for detailed view
+   - **Overview**: General health and status
+   - **Recovery points**: Available recovery points
+   - **Latest recovery points**:
+     - **Latest crash-consistent**: Most recent point
+     - **Latest app-consistent**: Application-consistent point
+   - **Replication health**: Detailed health information
+
+3. **Infrastructure View**
+   - Go to **Site Recovery Infrastructure**
+   - **Azure virtual machines**: View protected VMs
+   - **Replication policies**: View and manage policies
+   - **Network mapping**: Source to target network mapping
+   - **Storage mapping**: Storage account mappings
+
+### Failover Operations via Portal
+
+#### Test Failover
+1. **Initiate Test Failover**
+   - Go to **Replicated items**
+   - Select VM: `vm-web-server`
+   - Click **Test failover**
+
+2. **Configure Test Failover**
+   - **Recovery point**: Choose recovery point
+     - `Latest processed (low RTO)`
+     - `Latest app-consistent`
+     - `Custom` (select specific point)
+   - **Azure virtual network**: Select test network
+     - `vnet-test` (isolated test network)
+   - Click **OK**
+
+3. **Monitor Test Failover**
+   - Go to **Site Recovery jobs** under **Monitoring**
+   - Monitor "Test failover" job progress
+   - View job details and any errors
+
+4. **Validate Test Environment**
+   - Navigate to target resource group
+   - Verify test VM creation
+   - Connect and validate application functionality
+   - Test network connectivity
+
+5. **Cleanup Test Failover**
+   - Return to replicated item
+   - Click **Cleanup test failover**
+   - **Notes**: Add test results and observations
+   - Check **Testing is complete**
+   - Click **OK**
+
+#### Planned Failover
+1. **Initiate Planned Failover**
+   - Select replicated item
+   - Click **Planned failover**
+   - **Warning**: Planned failover will shut down source VM
+
+2. **Configure Planned Failover**
+   - **Failover direction**: `Southeast Asia to East Asia`
+   - **Recovery point**: Select recovery point
+   - **Shut down machines before beginning failover**: Check
+   - Click **OK**
+
+3. **Monitor and Commit**
+   - Monitor failover job progress
+   - After successful failover, click **Commit**
+   - Confirm commit operation
+
+#### Unplanned Failover
+1. **Initiate Unplanned Failover**
+   - Select replicated item
+   - Click **Failover**
+   - **Warning**: Source VMs may not be cleanly shut down
+
+2. **Configure Unplanned Failover**
+   - **Failover direction**: `Southeast Asia to East Asia`
+   - **Recovery point**: Choose appropriate point
+     - `Latest` (most recent data)
+     - `Latest app-consistent` (application consistency)
+   - Click **OK**
+
+3. **Post-Failover Actions**
+   - Monitor failover completion
+   - Verify VM startup in target region
+   - Update DNS records if needed
+   - Commit failover when ready
+
+### Recovery Plans via Portal
+
+1. **Create Recovery Plan**
+   - Go to vault → **Recovery Plans** under **Manage**
+   - Click **Create recovery plan**
+   - **Name**: `WebApp-RecoveryPlan-Portal`
+   - **Source**: `Southeast Asia`
+   - **Target**: `East Asia`
+   - **Allow items with deployment model**: `Resource Manager`
+   - Click **Select items**
+
+2. **Add Items to Recovery Plan**
+   - **Available items**: Select VMs to include
+     - `vm-web-server` (Group 1)
+     - `vm-db-server` (Group 1)
+   - **Selected items**: Review selected VMs
+   - Click **OK**
+
+3. **Customize Recovery Plan**
+   - Click **Customize** on created plan
+   - **Groups**: Organize VMs into groups
+     - **Group 1**: Database servers (start first)
+     - **Group 2**: Web servers (start after Group 1)
+   - **Add action**: Add scripts or manual actions
+     - **Pre-action**: Scripts to run before group
+     - **Post-action**: Scripts to run after group
+
+4. **Add Scripts to Recovery Plan**
+   - Click **Add action** → **Script**
+   - **Action name**: `Start-DatabaseServices`
+   - **Location**: `Primary side` or `Recovery side`
+   - **Script location**: Azure Automation runbook
+   - **Azure Automation Account**: Select account
+   - **Runbook**: Select PowerShell runbook
+   - Click **OK**
+
+5. **Test Recovery Plan**
+   - Click **Test failover** on recovery plan
+   - **Recovery point**: Select point for all VMs
+   - **Azure virtual network**: Select test network
+   - Click **OK**
+   - Monitor multi-VM failover progress
+
+### VMware to Azure Replication via Portal
+
+1. **Prepare Infrastructure**
+   - Go to vault → **Site Recovery**
+   - **Source**: `On-premises`
+   - **Target**: `Azure`
+   - **Machine type**: `VMware VMs`
+   - Click **Prepare infrastructure**
+
+2. **Download Configuration Server**
+   - **Step 1**: Download Configuration Server OVA
+   - **Step 2**: Download vault registration key
+   - **Step 3**: Deploy OVA in VMware environment
+
+3. **Configure On-Premises Environment**
+   - Deploy Configuration Server VM from OVA
+   - **Network settings**: Configure static IP
+   - **Registration**: Use downloaded vault key
+   - **MySQL setup**: Configure database
+   - **Finalize setup**: Complete configuration
+
+4. **Add VMware Servers**
+   - Go to **Site Recovery Infrastructure** → **Configuration Servers**
+   - Verify Configuration Server registration
+   - **Process Servers**: View registered process servers
+   - **vCenter Servers**: Add vCenter/vSphere hosts
+     - **Server type**: `vCenter Server`
+     - **Server FQDN/IP**: vCenter server address
+     - **Credentials**: vCenter admin credentials
+
+5. **Enable Replication for VMware VMs**
+   - Click **Enable replication**
+   - **Source**: Configure source environment
+     - **Source location**: On-premises
+     - **Source machine type**: VMware VMs
+     - **Configuration Server**: Select server
+   - **Virtual machines**: Select VMs from vCenter
+   - **Target**: Configure Azure target settings
+   - **Replication policy**: Create or select policy
+   - Click **Enable replication**
+
+### Network Configuration via Portal
+
+1. **Network Mapping**
+   - Go to **Site Recovery Infrastructure** → **Network mapping**
+   - Click **Add network mapping**
+   - **Source network**: Select source VNet
+   - **Target network**: Select target VNet
+   - **Mapping type**: `One-to-one mapping`
+   - Click **OK**
+
+2. **IP Address Configuration**
+   - Go to replicated item → **Compute and Network**
+   - **Network interfaces**: Configure each NIC
+     - **Target subnet**: Select target subnet
+     - **IP allocation**: `Static` or `Dynamic`
+     - **IP address**: Specify static IP if needed
+   - **VM size**: Configure target VM size
+   - **Availability set**: Select target availability set
+   - Click **Save**
+
+### Failback Operations via Portal
+
+1. **Prepare for Failback**
+   - Ensure source environment is ready
+   - Configure reverse replication
+   - Set up process server in Azure (if needed)
+
+2. **Enable Reverse Replication**
+   - Go to failed-over VM in target region
+   - Click **Re-protect**
+   - **Source**: Current location (target region)
+   - **Target**: Original location (source region)
+   - **Replication policy**: Select or create policy
+   - **Cache storage account**: Select account
+   - Click **OK**
+
+3. **Execute Failback**
+   - After reverse replication completes
+   - Click **Planned failover**
+   - **Direction**: Target to source region
+   - **Recovery point**: Select appropriate point
+   - Click **OK**
+
+4. **Commit Failback**
+   - Monitor failback completion
+   - Verify VM startup in original location
+   - Click **Commit** to finalize failback
+   - Re-enable forward replication if needed
+
+### Monitoring and Reporting via Portal
+
+1. **Site Recovery Dashboard**
+   - Go to vault **Overview**
+   - **Replication health**: Overall health status
+   - **Failover readiness**: VMs ready for failover
+   - **Test failover success**: Recent test results
+   - **Configuration issues**: Items needing attention
+
+2. **Jobs Monitoring**
+   - Go to **Site Recovery jobs**
+   - **Filter options**:
+     - **Time range**: Last 24 hours, 7 days
+     - **Status**: All, Failed, In progress
+     - **Job type**: Replication, Failover, Test failover
+   - **Job details**: Click on jobs for detailed information
+
+3. **Infrastructure Health**
+   - Go to **Site Recovery Infrastructure**
+   - **Configuration Servers**: Health and connectivity
+   - **Process Servers**: Performance and capacity
+   - **Replication policies**: Policy compliance
+   - **Network mapping**: Mapping status
+
+4. **Capacity Planning**
+   - Go to **Site Recovery** → **Capacity planning**
+   - **Deployment planner**: Download and run tool
+   - **Capacity planning report**: Upload and view results
+   - **Bandwidth requirements**: Network planning
+   - **Storage requirements**: Target storage planning
+
+### Automation via Portal
+
+1. **Azure Automation Integration**
+   - Go to **Automation Accounts**
+   - Create automation account for ASR scripts
+   - **Runbooks**: Create PowerShell runbooks
+   - **Schedules**: Automate DR testing
+
+2. **Recovery Plan Automation**
+   - Add automation runbooks to recovery plans
+   - **Pre-actions**: Database preparation scripts
+   - **Post-actions**: Application startup scripts
+   - **Manual actions**: Human intervention points
+
+3. **Monitoring Automation**
+   - **Azure Monitor**: Set up ASR monitoring
+   - **Log Analytics**: Collect ASR logs
+   - **Alerts**: Automated alert notifications
+   - **Dashboards**: Custom monitoring dashboards
+
+## Method 2: Using PowerShell and CLI
 
 ### Create Recovery Services Vault
 ```powershell
@@ -433,3 +797,57 @@ Register-ScheduledJob -Name "MonthlyDRTest" -ScriptBlock {
     Start-DRDrill -RecoveryPlanName $using:testSchedule.RecoveryPlanName -TestNetworkId $using:testSchedule.TestNetwork
 } -Trigger (New-JobTrigger -Weekly -DaysOfWeek Sunday -At "02:00")
 ```
+
+## Portal Best Practices
+
+### Security Best Practices
+1. **Access Control**
+   - Implement Azure RBAC for Site Recovery operations
+   - Use managed identities for automation
+   - Regular access reviews and audits
+   - Enable MFA for critical DR operations
+
+2. **Data Protection**
+   - Enable soft delete for vault protection
+   - Use customer-managed keys for encryption
+   - Implement network security groups
+   - Regular security assessments
+
+### Operational Excellence
+1. **DR Strategy**
+   - Define clear RTO and RPO requirements
+   - Regular DR testing and validation
+   - Document recovery procedures
+   - Implement automated monitoring
+
+2. **Performance Optimization**
+   - Monitor replication performance and RPO
+   - Optimize network bandwidth usage
+   - Use premium storage for critical workloads
+   - Regular capacity planning
+
+### Cost Management
+1. **Resource Optimization**
+   - Right-size target VM configurations
+   - Use appropriate storage tiers
+   - Monitor replication costs
+   - Implement automated shutdown for test environments
+
+2. **Efficiency Measures**
+   - Optimize replication frequency
+   - Use incremental replication
+   - Regular policy reviews
+   - Implement lifecycle management
+
+### Monitoring and Alerting
+1. **Proactive Monitoring**
+   - Configure comprehensive ASR alerts
+   - Monitor replication health and RPO
+   - Set up automated reporting
+   - Regular infrastructure health checks
+
+2. **Incident Response**
+   - Maintain DR runbooks and procedures
+   - Quick issue identification and resolution
+   - Regular communication plan testing
+   - Post-incident reviews and improvements

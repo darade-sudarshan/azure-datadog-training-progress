@@ -1,5 +1,401 @@
 # Task 27: Azure Storage Account - Advanced Blob Management
 
+---
+
+## Method 1: Using Azure Portal (GUI)
+
+### Step 1: Access Storage Account
+
+1. **Navigate to Azure Portal**
+   - Go to https://portal.azure.com
+   - Sign in with your Azure credentials
+
+2. **Find Your Storage Account**
+   - Click "Storage accounts" in the left menu
+   - Select your existing storage account
+   - Or create a new one if needed
+
+### Step 2: Configure Access Tiers
+
+#### Set Default Access Tier at Account Level
+
+1. **Navigate to Configuration**
+   - In the storage account, click "Configuration" under "Settings"
+   - Find "Blob access tier (default)" section
+
+2. **Change Default Tier**
+   - **Current setting**: View current default tier
+   - **Available options**:
+     - `Hot` - Frequently accessed data ($0.0184/GB/month)
+     - `Cool` - Infrequently accessed data ($0.01/GB/month)
+   - Select desired default tier
+   - Click "Save"
+
+#### Manage Individual Blob Access Tiers
+
+1. **Navigate to Container**
+   - Click "Containers" under "Data storage"
+   - Click on a container with existing blobs
+
+2. **Change Single Blob Tier**
+   - Click on a blob name
+   - Click "Change tier" in the toolbar
+   - **Current tier**: View current access tier
+   - **New tier**: Select from:
+     - `Hot` - Immediate access, higher storage cost
+     - `Cool` - 30-day minimum, lower storage cost
+     - `Archive` - 180-day minimum, lowest cost, requires rehydration
+   - **Rehydration priority** (for Archive to Hot/Cool):
+     - `Standard` - Up to 15 hours
+     - `High` - Up to 1 hour (higher cost)
+   - Click "Save"
+
+3. **Bulk Tier Changes**
+   - Select multiple blobs using checkboxes
+   - Click "Change tier" in the toolbar
+   - Select new tier for all selected blobs
+   - Click "Save"
+
+#### Monitor Tier Distribution
+
+1. **View Storage Analytics**
+   - Go to "Insights" under "Monitoring"
+   - **Capacity** tab shows storage by tier:
+     - Hot tier usage and cost
+     - Cool tier usage and cost
+     - Archive tier usage and cost
+   - **Transactions** tab shows access patterns
+
+### Step 3: Configure Lifecycle Management Policies
+
+#### Create Lifecycle Management Rule
+
+1. **Navigate to Lifecycle Management**
+   - Click "Lifecycle management" under "Data management"
+   - Click "Add a rule"
+
+2. **Configure Rule Details**
+   - **Rule name**: `auto-tier-policy`
+   - **Rule scope**: Choose scope:
+     - `Apply rule to all blobs in the storage account`
+     - `Limit blobs with filters` (for specific containers/prefixes)
+
+3. **Set Filters** (if "Limit blobs" selected)
+   - **Blob types**: ☑ Block blobs
+   - **Container name**: Specify container (e.g., `documents`)
+   - **Blob name prefix**: Specify prefix (e.g., `archive/`)
+
+4. **Configure Base Blob Actions**
+   - **Tier to cool storage**:
+     - ☑ Enable
+     - **Days after last modification**: `30`
+   - **Tier to archive storage**:
+     - ☑ Enable
+     - **Days after last modification**: `90`
+   - **Delete blob**:
+     - ☑ Enable
+     - **Days after last modification**: `2555` (7 years)
+
+5. **Configure Snapshot Actions** (if snapshots enabled)
+   - **Delete snapshots**:
+     - ☑ Enable
+     - **Days after creation**: `90`
+
+6. **Configure Version Actions** (if versioning enabled)
+   - **Tier versions to cool storage**:
+     - ☑ Enable
+     - **Days after creation**: `30`
+   - **Tier versions to archive storage**:
+     - ☑ Enable
+     - **Days after creation**: `90`
+   - **Delete versions**:
+     - ☑ Enable
+     - **Days after creation**: `365`
+
+7. **Review and Create**
+   - Review all settings
+   - Click "Add" to create the rule
+
+#### Manage Existing Rules
+
+1. **View Active Rules**
+   - See list of all lifecycle rules
+   - Check rule status (Enabled/Disabled)
+   - View rule details and filters
+
+2. **Edit Rule**
+   - Click on rule name
+   - Modify conditions and actions
+   - Click "Update"
+
+3. **Disable/Enable Rule**
+   - Toggle rule status
+   - Temporarily disable without deleting
+
+4. **Delete Rule**
+   - Select rule and click "Delete"
+   - Confirm deletion
+
+### Step 4: Configure Object Replication
+
+#### Prerequisites Setup
+
+1. **Enable Blob Versioning**
+   - Go to "Data protection" under "Data management"
+   - **Versioning for blobs**: ☑ Enable
+   - Click "Save"
+
+2. **Enable Change Feed**
+   - In the same "Data protection" section
+   - **Blob change feed**: ☑ Enable
+   - Click "Save"
+
+#### Create Object Replication Policy
+
+1. **Navigate to Object Replication**
+   - Click "Object replication" under "Data management"
+   - Click "Create replication rules"
+
+2. **Configure Source Account**
+   - **Source storage account**: Current account (auto-selected)
+   - **Source container**: Select container to replicate
+
+3. **Configure Destination Account**
+   - **Destination storage account**: Select target account
+   - **Destination container**: Select or create target container
+   - **Note**: Must be different storage account
+
+4. **Set Replication Filters**
+   - **Blob name prefix**: Specify prefix to replicate (e.g., `important/`)
+   - **Blob types**: Block blobs (default)
+
+5. **Review and Create**
+   - **Policy name**: Auto-generated or custom
+   - **Rule name**: Auto-generated or custom
+   - Click "Create"
+
+#### Monitor Replication Status
+
+1. **View Replication Policies**
+   - See all active replication policies
+   - Check policy status and health
+
+2. **Monitor Replication Progress**
+   - View replication lag and status
+   - Check failed replications
+   - Monitor bandwidth usage
+
+### Step 5: Manage Blob Snapshots
+
+#### Create Manual Snapshots
+
+1. **Navigate to Blob**
+   - Go to container and select a blob
+   - Click on the blob name
+
+2. **Create Snapshot**
+   - Click "Create snapshot" in the toolbar
+   - **Snapshot name**: Auto-generated with timestamp
+   - Click "Create"
+   - Snapshot appears in blob list with timestamp
+
+#### View and Manage Snapshots
+
+1. **List Snapshots**
+   - In container view, click "Show snapshots" toggle
+   - View all snapshots with creation timestamps
+   - Snapshots shown with 📷 icon
+
+2. **Access Snapshot Data**
+   - Click on snapshot entry
+   - **Download**: Download snapshot content
+   - **Properties**: View snapshot metadata
+   - **Generate SAS**: Create access token for snapshot
+
+3. **Delete Snapshots**
+   - Select snapshot(s) using checkboxes
+   - Click "Delete" in toolbar
+   - **Warning**: Deletion is permanent
+   - Confirm deletion
+
+#### Restore from Snapshot
+
+1. **Copy Snapshot to New Blob**
+   - Click on snapshot
+   - Click "Copy" in toolbar
+   - **Destination**: Specify new blob name
+   - Click "Copy"
+
+2. **Overwrite Current Blob**
+   - Copy snapshot content over current blob
+   - **Warning**: Current blob data will be lost
+
+### Step 6: Configure Blob Versioning
+
+#### Enable Blob Versioning
+
+1. **Navigate to Data Protection**
+   - Go to "Data protection" under "Data management"
+   - **Versioning for blobs**: ☑ Enable
+   - Click "Save"
+
+2. **Understand Versioning Behavior**
+   - Every blob modification creates a new version
+   - Previous versions are automatically preserved
+   - Current version is always the latest
+
+#### Work with Blob Versions
+
+1. **View Blob Versions**
+   - Navigate to container
+   - Click "Show versions" toggle
+   - See all versions with timestamps
+   - Current version marked as "Current"
+
+2. **Access Previous Versions**
+   - Click on any version entry
+   - **Download**: Get version content
+   - **Properties**: View version metadata
+   - **Generate SAS**: Create access token
+
+3. **Promote Previous Version**
+   - Click on desired version
+   - Click "Promote to current version"
+   - **Warning**: Creates new current version
+   - Previous current becomes a version
+
+4. **Delete Specific Versions**
+   - Select version(s) to delete
+   - Click "Delete" in toolbar
+   - **Note**: Cannot delete current version
+   - Confirm deletion
+
+### Step 7: Monitor and Analyze Blob Usage
+
+#### Storage Analytics and Insights
+
+1. **View Capacity Metrics**
+   - Go to "Insights" under "Monitoring"
+   - **Capacity** tab shows:
+     - Total storage by tier
+     - Version and snapshot storage
+     - Growth trends over time
+
+2. **Analyze Transaction Patterns**
+   - **Transactions** tab shows:
+     - Read/write operations
+     - Tier transition activities
+     - Access patterns by time
+
+3. **Monitor Costs**
+   - **Cost analysis** shows:
+     - Storage costs by tier
+     - Transaction costs
+     - Data transfer costs
+
+#### Set Up Alerts
+
+1. **Create Storage Alerts**
+   - Go to "Alerts" under "Monitoring"
+   - Click "+ New alert rule"
+   - **Condition**: Select metrics:
+     - Used capacity
+     - Transaction count
+     - Availability
+   - **Threshold**: Set limits
+   - **Action**: Configure notifications
+
+### Step 8: Advanced Blob Security
+
+#### Configure Blob-Level Security
+
+1. **Set Blob Access Policies**
+   - Navigate to specific blob
+   - Click "Access policy"
+   - Configure container-level access
+   - Set stored access policies
+
+2. **Enable Soft Delete**
+   - Go to "Data protection"
+   - **Soft delete for blobs**: ☑ Enable
+   - **Retention period**: `7 days` (1-365 days)
+   - **Soft delete for containers**: ☑ Enable
+   - Click "Save"
+
+3. **Configure Immutable Storage** (if needed)
+   - Set time-based retention policies
+   - Configure legal holds
+   - Lock policies for compliance
+
+#### Monitor Security Events
+
+1. **Enable Diagnostic Logging**
+   - Go to "Diagnostic settings" under "Monitoring"
+   - Enable blob service logs
+   - Send to Log Analytics workspace
+
+2. **Review Access Logs**
+   - Monitor blob access patterns
+   - Track unauthorized access attempts
+   - Analyze security events
+
+### Step 9: Optimize Performance and Costs
+
+#### Performance Optimization
+
+1. **Monitor Performance Metrics**
+   - View latency and throughput metrics
+   - Identify performance bottlenecks
+   - Optimize access patterns
+
+2. **Configure CDN** (if needed)
+   - Set up Azure CDN for blob content
+   - Improve global access performance
+   - Reduce bandwidth costs
+
+#### Cost Optimization
+
+1. **Analyze Cost Patterns**
+   - Review storage costs by tier
+   - Identify optimization opportunities
+   - Monitor lifecycle policy effectiveness
+
+2. **Implement Cost Controls**
+   - Set up budget alerts
+   - Optimize tier transitions
+   - Clean up unnecessary versions/snapshots
+
+### Step 10: Automation and Integration
+
+#### Set Up Event-Driven Automation
+
+1. **Configure Event Grid**
+   - Go to "Events" under "Settings"
+   - Create event subscriptions
+   - **Event types**: Blob created, deleted, tier changed
+   - **Endpoint**: Azure Function, Logic App, or webhook
+
+2. **Automate Blob Processing**
+   - Trigger functions on blob events
+   - Automate tier transitions
+   - Process uploaded content
+
+#### Integration with Applications
+
+1. **Generate Connection Strings**
+   - Go to "Access keys"
+   - Copy connection strings for applications
+   - Use in application configuration
+
+2. **Configure CORS** (for web apps)
+   - Go to "Resource sharing (CORS)"
+   - Configure allowed origins and methods
+   - Enable cross-origin blob access
+
+---
+
+## Method 2: Using Azure CLI
+
 ## Access Tiers
 
 ### What are Access Tiers?
@@ -39,7 +435,7 @@ Access tiers optimize storage costs based on data access patterns. Different tie
 # Set default access tier for storage account
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --access-tier Hot
 ```
 
@@ -126,7 +522,7 @@ Automated rules that transition blobs between access tiers or delete blobs based
 # Create lifecycle policy
 az storage account management-policy create \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --policy @policy.json
 ```
 
@@ -139,7 +535,7 @@ $rule = New-AzStorageAccountManagementPolicyRule `
     -TierToArchiveDaysAfterModificationGreaterThan 90
 
 Set-AzStorageAccountManagementPolicy `
-    -ResourceGroupName "myRG" `
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
     -StorageAccountName "mystorageaccount" `
     -Rule $rule
 ```
@@ -163,18 +559,18 @@ Set-AzStorageAccountManagementPolicy `
 # View current policy
 az storage account management-policy show \
     --account-name mystorageaccount \
-    --resource-group myRG
+    --resource-group sa1_test_eic_SudarshanDarade
 
 # Update policy
 az storage account management-policy update \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --policy @updated-policy.json
 
 # Delete policy
 az storage account management-policy delete \
     --account-name mystorageaccount \
-    --resource-group myRG
+    --resource-group sa1_test_eic_SudarshanDarade
 ```
 
 ## Object Replication
@@ -195,18 +591,18 @@ Asynchronously copies block blobs between storage accounts, providing disaster r
 # Enable versioning on both accounts
 az storage account blob-service-properties update \
     --account-name sourcestorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-versioning true
 
 az storage account blob-service-properties update \
     --account-name deststorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-versioning true
 
 # Enable change feed on source
 az storage account blob-service-properties update \
     --account-name sourcestorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-change-feed true
 ```
 
@@ -234,7 +630,7 @@ az storage account blob-service-properties update \
 # Create object replication policy
 az storage account or-policy create \
     --account-name sourcestorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --policy @replication-policy.json
 ```
 
@@ -247,7 +643,7 @@ $rule = New-AzStorageObjectReplicationPolicyRule `
     -PrefixMatch "folder1/"
 
 New-AzStorageObjectReplicationPolicy `
-    -ResourceGroupName "myRG" `
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
     -StorageAccountName "sourcestorageaccount" `
     -Rule $rule `
     -DestinationAccountId "/subscriptions/.../deststorageaccount"
@@ -258,7 +654,7 @@ New-AzStorageObjectReplicationPolicy `
 # Check replication status
 az storage account or-policy show \
     --account-name sourcestorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --policy-id policy1
 ```
 
@@ -345,7 +741,7 @@ Automatically maintains previous versions of blobs when they are modified, provi
 # Enable versioning
 az storage account blob-service-properties update \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-versioning true
 ```
 
@@ -353,7 +749,7 @@ az storage account blob-service-properties update \
 ```powershell
 # Enable versioning
 Enable-AzStorageBlobVersioning \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -StorageAccountName "mystorageaccount"
 ```
 

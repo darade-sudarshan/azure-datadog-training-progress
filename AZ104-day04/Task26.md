@@ -1,5 +1,353 @@
 # Task 26: Azure Storage Account Advanced Features
 
+---
+
+## Method 1: Using Azure Portal (GUI)
+
+### Step 1: Access Storage Account
+
+1. **Navigate to Azure Portal**
+   - Go to https://portal.azure.com
+   - Sign in with your Azure credentials
+
+2. **Find Your Storage Account**
+   - Click "Storage accounts" in the left menu
+   - Select your existing storage account
+   - Or create a new one if needed
+
+### Step 2: Configure Stored Access Policy
+
+#### Create Container for Access Policy
+
+1. **Navigate to Containers**
+   - In the storage account, click "Containers" under "Data storage"
+   - Click "+ Container" to create a new container
+   - **Name**: `secure-documents`
+   - **Public access level**: `Private (no anonymous access)`
+   - Click "Create"
+
+#### Create Stored Access Policy
+
+1. **Access Container Settings**
+   - Click on the container name (`secure-documents`)
+   - Click "Access policy" in the left menu
+
+2. **Add Stored Access Policy**
+   - Click "+ Add policy"
+   - **Identifier**: `read-write-policy`
+   - **Permissions**: Select required permissions:
+     - ☑ Read - Read blob content and metadata
+     - ☑ Write - Write blob content and metadata
+     - ☑ Delete - Delete blobs
+     - ☑ List - List blobs in container
+   - **Start time**: Set when policy becomes active (e.g., current date/time)
+   - **Expiry time**: Set when policy expires (e.g., 1 year from now)
+   - Click "OK"
+
+3. **Save Access Policy**
+   - Click "Save" to apply the stored access policy
+   - Policy is now available for SAS token generation
+
+#### Generate SAS Using Stored Access Policy
+
+1. **Upload Test Blob**
+   - Upload a test file to the container
+   - Click "Upload" and select a file
+
+2. **Generate SAS Token**
+   - Click on the uploaded blob
+   - Click "Generate SAS" in the toolbar
+   - **Signing method**: `Account key`
+   - **Stored access policy**: Select `read-write-policy`
+   - **Start and expiry time**: Automatically populated from policy
+   - **Permissions**: Automatically set from policy
+   - Click "Generate SAS token and URL"
+
+3. **Use Generated SAS**
+   - Copy the **Blob SAS URL**
+   - Test access using the URL
+   - Share with authorized users
+
+#### Manage Stored Access Policies
+
+1. **Modify Policy**
+   - Go back to container → "Access policy"
+   - Click on existing policy (`read-write-policy`)
+   - **Modify permissions**: Remove "Write" and "Delete" permissions
+   - **Update expiry time**: Extend or reduce validity period
+   - Click "OK" and "Save"
+
+2. **Revoke Policy**
+   - Select the policy and click "Delete"
+   - All SAS tokens using this policy become invalid immediately
+   - Click "Save" to confirm
+
+### Step 3: Configure Immutable Blob Storage
+
+#### Create Container for Immutable Storage
+
+1. **Create Compliance Container**
+   - Navigate to "Containers"
+   - Click "+ Container"
+   - **Name**: `compliance-data`
+   - **Public access level**: `Private (no anonymous access)`
+   - Click "Create"
+
+#### Enable Version-Level Immutability
+
+1. **Configure Storage Account Settings**
+   - Go to storage account level
+   - Click "Data protection" under "Data management"
+   - **Version-level immutability support**: ☑ Enable
+   - Click "Save"
+
+#### Set Time-Based Retention Policy
+
+1. **Access Container Immutability**
+   - Click on `compliance-data` container
+   - Click "Access policy" in the left menu
+   - Scroll down to "Immutable blob storage"
+
+2. **Add Time-Based Retention Policy**
+   - Click "+ Add policy"
+   - **Policy type**: `Time-based retention`
+   - **Retention period**: Enter duration:
+     - **Years**: `7` (for 7-year retention)
+     - **Days**: `2555` (equivalent to 7 years)
+   - **Policy state**: `Unlocked` (for testing)
+   - Click "OK"
+
+3. **Test Immutability (Unlocked State)**
+   - Upload a test document to the container
+   - Try to delete or modify the blob
+   - Verify that operations are blocked
+   - Note: In unlocked state, policy can still be modified
+
+4. **Lock the Policy (Production)**
+   - Click on the retention policy
+   - Click "Lock policy"
+   - **Confirmation**: Type "yes" to confirm
+   - Click "Lock"
+   - **Warning**: Once locked, policy cannot be deleted, only extended
+
+#### Set Legal Hold Policy
+
+1. **Add Legal Hold**
+   - In the same "Access policy" section
+   - Under "Legal holds", click "+ Add legal hold"
+   - **Tag**: `legal-case-2024-001`
+   - **Description**: `Litigation hold for contract dispute`
+   - Click "OK"
+
+2. **Test Legal Hold**
+   - Upload documents to the container
+   - Verify that blobs cannot be deleted or modified
+   - Legal hold takes precedence over retention policies
+
+3. **Remove Legal Hold**
+   - When legal case is resolved, click on the legal hold
+   - Click "Remove legal hold"
+   - Confirm removal
+   - Blobs now follow time-based retention policy only
+
+#### Monitor Immutable Storage
+
+1. **View Policy Status**
+   - Check policy state (Locked/Unlocked)
+   - Monitor retention period remaining
+   - Track legal holds applied
+
+2. **Audit Compliance**
+   - Go to "Activity log" to view policy changes
+   - Monitor access attempts and policy modifications
+   - Generate compliance reports
+
+### Step 4: Configure Data Redundancy
+
+#### View Current Redundancy
+
+1. **Check Current Settings**
+   - Go to storage account "Overview"
+   - View current **Replication** setting
+   - Note the redundancy type (LRS, ZRS, GRS, etc.)
+
+2. **Understand Redundancy Options**
+   - **LRS**: 3 copies in single datacenter
+   - **ZRS**: 3 copies across availability zones
+   - **GRS**: 6 copies (3 local + 3 in paired region)
+   - **RA-GRS**: GRS + read access to secondary region
+   - **GZRS**: ZRS + GRS combined
+   - **RA-GZRS**: GZRS + read access to secondary
+
+#### Change Redundancy Type
+
+1. **Navigate to Configuration**
+   - Click "Configuration" under "Settings"
+   - Find "Replication" section
+
+2. **Select New Redundancy**
+   - **Current**: `Locally-redundant storage (LRS)`
+   - **Change to**: `Geo-redundant storage (GRS)`
+   - **Cost impact**: Review pricing changes
+   - **Availability impact**: Note SLA improvements
+
+3. **Apply Changes**
+   - Click "Save"
+   - **Warning**: Data migration may take time
+   - Monitor replication status during transition
+
+#### Monitor Replication Status
+
+1. **Check Replication Health**
+   - Go to "Monitoring" → "Insights"
+   - View replication metrics
+   - Monitor any replication lag
+
+2. **View Secondary Region Access**
+   - For RA-GRS/RA-GZRS accounts:
+   - Note secondary endpoint URL
+   - Test read access to secondary region
+   - Format: `https://[account]-secondary.blob.core.windows.net`
+
+### Step 5: Advanced Security Configuration
+
+#### Configure Network Access
+
+1. **Restrict Network Access**
+   - Go to "Networking" under "Security + networking"
+   - **Public network access**: `Enabled from selected virtual networks and IP addresses`
+   - **Virtual networks**: Add allowed VNets
+   - **IP addresses**: Add allowed IP ranges
+   - **Exceptions**: 
+     - ☑ Allow Azure services on the trusted services list
+     - ☑ Allow read access to storage logging
+     - ☑ Allow read access to storage metrics
+
+2. **Configure Private Endpoints**
+   - Click "Private endpoint connections"
+   - Click "+ Private endpoint"
+   - Configure private endpoint for secure VNet access
+
+#### Enable Advanced Threat Protection
+
+1. **Configure Microsoft Defender**
+   - Go to "Microsoft Defender for Cloud" under "Security + networking"
+   - **Microsoft Defender for Storage**: `On`
+   - **Malware scanning**: Enable for blob uploads
+   - **Sensitive data threat detection**: Enable
+   - Click "Save"
+
+2. **Set Up Alerts**
+   - Configure alert rules for suspicious activities
+   - Set up email notifications
+   - Monitor security recommendations
+
+### Step 6: Lifecycle Management and Automation
+
+#### Configure Lifecycle Policies
+
+1. **Create Lifecycle Rule**
+   - Go to "Lifecycle management" under "Data management"
+   - Click "Add a rule"
+   - **Rule name**: `compliance-lifecycle`
+   - **Rule scope**: `Apply rule to all blobs in the storage account`
+
+2. **Set Tier Transitions**
+   - **Base blobs**:
+     - If last modified > 30 days ago → Move to Cool storage
+     - If last modified > 90 days ago → Move to Archive storage
+     - If last modified > 2555 days ago → Delete blob
+   - **Snapshots**: Configure similar rules
+   - **Versions**: Set retention for blob versions
+
+3. **Apply to Specific Containers**
+   - **Limit blobs with filters**
+   - **Container name**: `compliance-data`
+   - **Blob name prefix**: `documents/`
+   - **Blob types**: Block blobs
+
+#### Set Up Monitoring and Alerts
+
+1. **Configure Storage Insights**
+   - Go to "Insights" under "Monitoring"
+   - View capacity, transactions, and availability
+   - Set up custom dashboards
+
+2. **Create Alert Rules**
+   - Go to "Alerts" under "Monitoring"
+   - Click "+ New alert rule"
+   - **Condition**: Used capacity > 80%
+   - **Action group**: Email notifications
+   - **Alert rule name**: `Storage Capacity Alert`
+
+### Step 7: Compliance and Governance
+
+#### Configure Audit Logging
+
+1. **Enable Diagnostic Settings**
+   - Go to "Diagnostic settings" under "Monitoring"
+   - Click "+ Add diagnostic setting"
+   - **Name**: `storage-audit-logs`
+   - **Categories**: 
+     - ☑ StorageRead
+     - ☑ StorageWrite
+     - ☑ StorageDelete
+   - **Destination**: Log Analytics workspace
+   - Click "Save"
+
+2. **Monitor Access Patterns**
+   - View logs in Log Analytics
+   - Create custom queries for compliance reporting
+   - Set up automated compliance checks
+
+#### Generate Compliance Reports
+
+1. **Create Custom Workbook**
+   - Go to "Workbooks" under "Monitoring"
+   - Create custom compliance dashboard
+   - Include immutability status, access logs, policy changes
+
+2. **Export Compliance Data**
+   - Use Log Analytics queries
+   - Export data for regulatory reporting
+   - Schedule automated reports
+
+### Step 8: Disaster Recovery and Business Continuity
+
+#### Configure Account Failover
+
+1. **Prepare for Failover**
+   - Ensure GRS or RA-GRS redundancy
+   - Document failover procedures
+   - Test application compatibility
+
+2. **Initiate Customer-Managed Failover**
+   - Go to "Geo-replication" under "Data management"
+   - **Current status**: View primary and secondary regions
+   - **Failover**: Click "Prepare for failover" (if needed)
+   - **Warning**: Potential data loss during failover
+
+3. **Monitor Failover Process**
+   - Track failover progress
+   - Update application endpoints
+   - Verify data accessibility
+
+#### Test Recovery Procedures
+
+1. **Regular Testing**
+   - Test secondary region access (RA-GRS)
+   - Verify backup and restore procedures
+   - Document recovery time objectives (RTO)
+
+2. **Update Disaster Recovery Plan**
+   - Include storage account failover procedures
+   - Train operations team
+   - Regular DR drills
+
+---
+
+## Method 2: Using Azure CLI
+
 ## Stored Access Policy
 
 ### What is Stored Access Policy?
@@ -117,7 +465,7 @@ az storage container create \
 ```bash
 # Set retention policy (PowerShell)
 Set-AzRmStorageContainerImmutabilityPolicy \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -StorageAccountName "mystorageaccount" \
     -ContainerName "immutablecontainer" \
     -ImmutabilityPeriod 365
@@ -127,7 +475,7 @@ Set-AzRmStorageContainerImmutabilityPolicy \
 ```bash
 # Set legal hold (PowerShell)
 Add-AzRmStorageContainerLegalHold \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -StorageAccountName "mystorageaccount" \
     -ContainerName "immutablecontainer" \
     -Tag "legal-case-001"
@@ -151,7 +499,7 @@ Add-AzRmStorageContainerLegalHold \
 ```bash
 # Lock policy (PowerShell)
 Lock-AzRmStorageContainerImmutabilityPolicy \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -StorageAccountName "mystorageaccount" \
     -ContainerName "immutablecontainer" \
     -Etag "policy-etag"
@@ -206,7 +554,7 @@ Data redundancy ensures data durability and availability by maintaining multiple
 # Change redundancy type
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --sku Standard_GRS
 ```
 
@@ -246,7 +594,7 @@ az storage account update \
 # Get replication status
 az storage account show \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --query "statusOfPrimary"
 ```
 
@@ -261,7 +609,7 @@ az storage account show \
 ```bash
 # Initiate account failover (PowerShell)
 Invoke-AzStorageAccountFailover \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -Name "mystorageaccount"
 ```
 
@@ -277,8 +625,8 @@ Invoke-AzStorageAccountFailover \
 # Create storage account with GRS
 az storage account create \
     --name mystorageaccount \
-    --resource-group myRG \
-    --location eastus \
+    --resource-group sa1_test_eic_SudarshanDarade \
+    --location southeastasia \
     --sku Standard_GRS \
     --kind StorageV2
 
@@ -300,7 +648,7 @@ az storage container policy create \
 ```powershell
 # Create storage account
 $storageAccount = New-AzStorageAccount `
-    -ResourceGroupName "myRG" `
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
     -Name "mystorageaccount" `
     -Location "East US" `
     -SkuName "Standard_GRS" `
@@ -314,7 +662,7 @@ New-AzStorageContainer -Name "compliancedata" -Context $ctx
 
 # Set immutability policy
 Set-AzRmStorageContainerImmutabilityPolicy `
-    -ResourceGroupName "myRG" `
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
     -StorageAccountName "mystorageaccount" `
     -ContainerName "compliancedata" `
     -ImmutabilityPeriod 2555 # 7 years

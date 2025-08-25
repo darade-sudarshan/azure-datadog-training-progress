@@ -30,23 +30,425 @@ Azure File Share provides fully managed file shares in the cloud accessible via 
 
 ## Steps to Create Azure File Share
 
-### Method 1: Azure Portal
+---
 
-#### Create Storage Account:
-1. **Navigate** to Azure Portal
-2. **Create** new Storage Account or use existing
-3. **Select** Standard or Premium performance
-4. **Choose** appropriate redundancy option
+## Method 1: Using Azure Portal (GUI)
 
-#### Create File Share:
-1. **Go to** Storage Account
-2. **Select** "File shares" from left menu
-3. **Click** "+ File share"
-4. **Configure**:
-   - Name: Enter file share name
-   - Tier: Hot, Cool, or Transaction optimized
-   - Size: Set quota (optional)
-5. **Click** "Create"
+### Step 1: Access Azure Portal
+
+1. **Navigate to Azure Portal**
+   - Go to https://portal.azure.com
+   - Sign in with your Azure credentials
+
+2. **Find Storage Account**
+   - Click "Storage accounts" in the left menu
+   - Select existing storage account or create new one
+
+### Step 2: Create Storage Account (if needed)
+
+1. **Create New Storage Account**
+   - Click "+ Create" if no suitable storage account exists
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Storage account name**: `fileshareaccount[unique-suffix]`
+   - **Region**: `Southeast Asia`
+   - **Performance**: Choose based on needs:
+     - `Standard` - HDD-based, up to 1,000 IOPS
+     - `Premium` - SSD-based, up to 100,000 IOPS
+   - **Redundancy**: Select appropriate option:
+     - `LRS` - Locally redundant (lowest cost)
+     - `ZRS` - Zone redundant (higher availability)
+     - `GRS` - Geo-redundant (regional protection)
+   - Click "Review + create" → "Create"
+
+### Step 3: Create File Share
+
+#### Navigate to File Shares
+
+1. **Access Storage Account**
+   - Go to your storage account
+   - Click "File shares" under "Data storage" in the left menu
+
+2. **Create New File Share**
+   - Click "+ File share"
+   - **File share creation** dialog opens
+
+#### Configure File Share Settings
+
+1. **Basic Configuration**
+   - **Name**: `company-documents` (3-63 characters, lowercase)
+   - **Tier**: Select based on access pattern:
+     - `Transaction optimized` - High transaction workloads
+     - `Hot` - Frequently accessed data
+     - `Cool` - Infrequently accessed data (30+ days)
+   - **Quota**: Set maximum size (e.g., `100 GB`)
+     - Standard: Up to 100 TiB
+     - Premium: Up to 100 TiB with provisioned IOPS
+
+2. **Advanced Options** (Click "Advanced")
+   - **Protocol**: 
+     - `SMB` - Windows/Linux/macOS compatibility
+     - `NFS` - Linux/Unix systems (Premium only)
+   - **Root squash**: For NFS shares
+     - `No root squash` - Root access preserved
+     - `Root squash` - Root mapped to anonymous user
+     - `All squash` - All users mapped to anonymous
+
+3. **Create File Share**
+   - Click "Create"
+   - File share appears in the list
+
+### Step 4: Configure File Share Properties
+
+#### Access File Share Settings
+
+1. **Navigate to File Share**
+   - Click on the created file share name
+   - View file share overview and properties
+
+2. **Modify Properties**
+   - Click "Properties" in the left menu
+   - **Quota**: Modify maximum size if needed
+   - **Tier**: Change access tier
+   - **Last modified**: View last modification time
+   - **URL**: Copy file share URL
+
+#### Configure Access Policy
+
+1. **Set Access Policy**
+   - Click "Access policy" in the left menu
+   - Click "+ Add policy"
+   - **Identifier**: `read-write-policy`
+   - **Permissions**: Select required permissions:
+     - ☑ Read - Read files and directories
+     - ☑ Create - Create files and directories
+     - ☑ Write - Write to files
+     - ☑ Delete - Delete files and directories
+     - ☑ List - List files and directories
+   - **Start time**: Set when policy becomes active
+   - **Expiry time**: Set when policy expires
+   - Click "OK" and "Save"
+
+### Step 5: Upload Files and Create Directories
+
+#### Upload Files via Portal
+
+1. **Navigate to File Share Content**
+   - Click on file share name
+   - View current contents (empty initially)
+
+2. **Upload Files**
+   - Click "Upload" in the toolbar
+   - **Upload files** dialog opens
+   - Click "Browse for files" or drag and drop
+   - Select single or multiple files
+   - **Overwrite if files already exist**: Check if needed
+   - Click "Upload"
+
+3. **Monitor Upload Progress**
+   - View upload progress for each file
+   - Files appear in the file share when complete
+
+#### Create Directory Structure
+
+1. **Create New Directory**
+   - Click "Add Directory" in the toolbar
+   - **Directory name**: `departments`
+   - Click "OK"
+
+2. **Navigate Directory Structure**
+   - Click on directory name to enter
+   - Use breadcrumb navigation to go back
+   - Create subdirectories as needed:
+     ```
+     company-documents/
+     ├── departments/
+     │   ├── hr/
+     │   ├── finance/
+     │   └── it/
+     ├── projects/
+     └── shared/
+     ```
+
+3. **Upload Files to Directories**
+   - Navigate to specific directory
+   - Upload files directly to that location
+
+### Step 6: Connect and Mount File Share
+
+#### Get Connection Information
+
+1. **Access Connect Dialog**
+   - Click "Connect" in the file share toolbar
+   - **Connect** dialog shows platform-specific instructions
+
+2. **Choose Platform**
+   - **Windows**: PowerShell and Command Prompt scripts
+   - **Linux**: Bash mounting commands
+   - **macOS**: Terminal mounting commands
+
+#### Windows Connection
+
+1. **PowerShell Method**
+   - Copy the provided PowerShell script:
+   ```powershell
+   # Connect using PowerShell
+   $connectTestResult = Test-NetConnection -ComputerName "fileshareaccount.file.core.windows.net" -Port 445
+   if ($connectTestResult.TcpTestSucceeded) {
+       cmd.exe /C "cmdkey /add:`"fileshareaccount.file.core.windows.net`" /user:`"Azure\fileshareaccount`" /pass:`"[storage-key]""
+       New-PSDrive -Name Z -PSProvider FileSystem -Root "\\fileshareaccount.file.core.windows.net\company-documents" -Persist
+   }
+   ```
+   - Run in PowerShell as Administrator
+   - File share mounts as Z: drive
+
+2. **Command Prompt Method**
+   ```cmd
+   net use Z: \\fileshareaccount.file.core.windows.net\company-documents /persistent:yes
+   ```
+
+3. **File Explorer Method**
+   - Open File Explorer
+   - Right-click "This PC" → "Map network drive"
+   - **Drive**: `Z:`
+   - **Folder**: `\\fileshareaccount.file.core.windows.net\company-documents`
+   - **Connect using different credentials**: Check
+   - **User name**: `Azure\fileshareaccount`
+   - **Password**: Storage account key
+
+#### Linux Connection
+
+1. **Install Required Packages**
+   ```bash
+   sudo apt-get update
+   sudo apt-get install cifs-utils
+   ```
+
+2. **Create Mount Point**
+   ```bash
+   sudo mkdir /mnt/company-documents
+   ```
+
+3. **Mount File Share**
+   ```bash
+   sudo mount -t cifs //fileshareaccount.file.core.windows.net/company-documents /mnt/company-documents -o vers=3.0,username=fileshareaccount,password=[storage-key],dir_mode=0777,file_mode=0777,serverino
+   ```
+
+4. **Persistent Mount** (add to /etc/fstab)
+   ```bash
+   echo "//fileshareaccount.file.core.windows.net/company-documents /mnt/company-documents cifs vers=3.0,username=fileshareaccount,password=[storage-key],dir_mode=0777,file_mode=0777,serverino" | sudo tee -a /etc/fstab
+   ```
+
+#### macOS Connection
+
+1. **Finder Method**
+   - Open Finder
+   - Press `Cmd+K` (Connect to Server)
+   - **Server Address**: `smb://fileshareaccount.file.core.windows.net/company-documents`
+   - **Username**: `fileshareaccount`
+   - **Password**: Storage account key
+
+2. **Terminal Method**
+   ```bash
+   mkdir ~/company-documents
+   mount -t smbfs //fileshareaccount:[storage-key]@fileshareaccount.file.core.windows.net/company-documents ~/company-documents
+   ```
+
+### Step 7: Configure Soft Delete Protection
+
+#### Enable Soft Delete
+
+1. **Navigate to Data Protection**
+   - Go to storage account level
+   - Click "Data protection" under "Data management"
+
+2. **Configure File Share Soft Delete**
+   - **Soft delete for file shares**: ☑ Enable
+   - **Retention period**: `7 days` (1-365 days available)
+   - Click "Save"
+
+3. **Understand Soft Delete Behavior**
+   - Deleted file shares retained for specified period
+   - Can be restored during retention period
+   - Billing continues for soft deleted data
+
+#### Manage Soft Deleted Shares
+
+1. **View Deleted Shares**
+   - In "File shares" section
+   - Click "Show deleted shares" toggle
+   - Deleted shares appear with deletion timestamp
+
+2. **Restore Deleted Share**
+   - Click on deleted file share
+   - Click "Restore" in the toolbar
+   - **New name**: Keep original or specify new name
+   - Click "Restore"
+   - Share restored with all content
+
+### Step 8: Configure Encryption and Security
+
+#### Encryption Settings
+
+1. **View Encryption Status**
+   - Go to storage account → "Encryption"
+   - **Encryption type**: View current setting
+     - `Microsoft-managed keys` (default)
+     - `Customer-managed keys`
+   - **Infrastructure encryption**: Additional layer
+
+2. **Configure Customer-Managed Keys** (if needed)
+   - **Key management**: `Azure Key Vault`
+   - **Key vault**: Select or create Key Vault
+   - **Key**: Select encryption key
+   - **Version**: Select key version
+   - Click "Save"
+
+#### Network Security
+
+1. **Configure Firewall**
+   - Go to "Networking" under "Security + networking"
+   - **Public network access**: Choose option:
+     - `Enabled from all networks`
+     - `Enabled from selected virtual networks and IP addresses`
+     - `Disabled`
+   - **Virtual networks**: Add allowed VNets
+   - **IP addresses**: Add allowed IP ranges
+
+2. **Require Secure Transfer**
+   - **Secure transfer required**: ☑ Enable
+   - Forces HTTPS and SMB 3.0+ with encryption
+   - Click "Save"
+
+### Step 9: Create and Manage Snapshots
+
+#### Create File Share Snapshot
+
+1. **Navigate to Snapshots**
+   - Go to file share → "Snapshots" in left menu
+   - View existing snapshots (if any)
+
+2. **Create New Snapshot**
+   - Click "+ Add snapshot"
+   - **Comment**: `Daily backup - $(date)`
+   - Click "OK"
+   - Snapshot created with timestamp
+
+3. **Schedule Regular Snapshots**
+   - Use Azure Backup for automated snapshots
+   - Go to "Backup" in file share menu
+   - Configure backup policy and schedule
+
+#### Restore from Snapshot
+
+1. **Browse Snapshot Content**
+   - Click on snapshot timestamp
+   - Browse files and directories in snapshot
+   - View point-in-time state of file share
+
+2. **Restore Individual Files**
+   - Navigate to desired file in snapshot
+   - Click "Restore" in toolbar
+   - **Restore location**: 
+     - `Original location` (overwrites current)
+     - `Alternate location` (specify new path)
+   - Click "Restore"
+
+3. **Restore Entire Share**
+   - Select snapshot
+   - Click "Restore share"
+   - **Warning**: Overwrites current share content
+   - Confirm restoration
+
+### Step 10: Monitor and Manage Performance
+
+#### View File Share Metrics
+
+1. **Access Metrics**
+   - Go to file share → "Metrics" under "Monitoring"
+   - View performance and usage metrics:
+     - **Transactions**: Request count
+     - **Ingress**: Data uploaded
+     - **Egress**: Data downloaded
+     - **Files**: Number of files
+     - **File capacity**: Storage used
+
+2. **Create Custom Dashboard**
+   - Pin important metrics to dashboard
+   - Set up custom time ranges
+   - Compare multiple file shares
+
+#### Configure Alerts
+
+1. **Create Alert Rules**
+   - Go to "Alerts" under "Monitoring"
+   - Click "+ New alert rule"
+   - **Condition**: Select metrics:
+     - File capacity > 80% of quota
+     - Transaction count > threshold
+     - Availability < 99%
+   - **Action group**: Configure notifications
+   - **Alert rule name**: `File Share Capacity Alert`
+
+### Step 11: Advanced Configuration
+
+#### Configure Access Tiers
+
+1. **Change File Share Tier**
+   - Go to file share → "Configuration"
+   - **Access tier**: Select new tier:
+     - `Transaction optimized` - High transaction workloads
+     - `Hot` - Frequently accessed ($0.0255/GB/month)
+     - `Cool` - Infrequently accessed ($0.0152/GB/month)
+   - Click "Save"
+   - **Note**: Tier changes may take time to complete
+
+#### Premium File Share Features
+
+1. **Provisioned IOPS** (Premium only)
+   - **Baseline IOPS**: 1 IOPS per GiB provisioned
+   - **Burst IOPS**: Up to 4,000 IOPS for shares < 1 TiB
+   - **Maximum IOPS**: Up to 100,000 IOPS
+
+2. **Performance Monitoring**
+   - Monitor IOPS utilization
+   - Track burst credit consumption
+   - Optimize share size for performance needs
+
+### Step 12: Integration and Automation
+
+#### Azure Backup Integration
+
+1. **Enable Azure Backup**
+   - Go to file share → "Backup"
+   - Click "Configure Backup"
+   - **Recovery Services vault**: Create or select vault
+   - **Backup policy**: Choose or create policy
+   - **Schedule**: Daily, weekly, monthly options
+   - **Retention**: Configure retention periods
+   - Click "Enable Backup"
+
+2. **Monitor Backup Jobs**
+   - View backup job status
+   - Check backup success/failure
+   - Restore from backup when needed
+
+#### Active Directory Integration
+
+1. **Enable AD Authentication**
+   - Go to storage account → "Configuration"
+   - **Azure Active Directory Domain Services**: Enable
+   - **Identity-based access**: Configure
+   - **NTFS permissions**: Set up on mounted shares
+
+2. **Configure Share Permissions**
+   - Mount share on domain-joined machine
+   - Set NTFS permissions using Windows tools
+   - Configure user and group access
+
+---
+
+## Method 2: Using Azure CLI
 
 ### Method 2: Azure CLI
 
@@ -55,8 +457,8 @@ Azure File Share provides fully managed file shares in the cloud accessible via 
 # Create storage account for file shares
 az storage account create \
     --name mystorageaccount \
-    --resource-group myRG \
-    --location eastus \
+    --resource-group sa1_test_eic_SudarshanDarade \
+    --location southeastasia \
     --sku Standard_LRS \
     --kind StorageV2
 ```
@@ -75,8 +477,8 @@ az storage share create \
 # Create premium storage account
 az storage account create \
     --name premiumstorageaccount \
-    --resource-group myRG \
-    --location eastus \
+    --resource-group sa1_test_eic_SudarshanDarade \
+    --location southeastasia \
     --sku Premium_LRS \
     --kind FileStorage
 
@@ -92,7 +494,7 @@ az storage share create \
 #### Create File Share:
 ```powershell
 # Get storage context
-$ctx = (Get-AzStorageAccount -ResourceGroupName "myRG" -Name "mystorageaccount").Context
+$ctx = (Get-AzStorageAccount -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "mystorageaccount").Context
 
 # Create file share
 New-AzStorageShare -Name "myfileshare" -Context $ctx -Quota 1024
@@ -206,7 +608,7 @@ Soft delete protects file share data from accidental deletion by retaining delet
 # Enable soft delete for file shares
 az storage account file-service-properties update \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-delete-retention true \
     --delete-retention-days 7
 ```
@@ -215,7 +617,7 @@ az storage account file-service-properties update \
 ```powershell
 # Enable soft delete
 Enable-AzStorageFileDeleteRetentionPolicy \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -StorageAccountName "mystorageaccount" \
     -RetentionDays 7
 ```
@@ -280,8 +682,8 @@ Restore-AzStorageShare -Name "myfileshare" -DeletedShareVersion "01D64EB9886F00C
 # Create Key Vault and key
 az keyvault create \
     --name mykeyvault \
-    --resource-group myRG \
-    --location eastus
+    --resource-group sa1_test_eic_SudarshanDarade \
+    --location southeastasia
 
 az keyvault key create \
     --vault-name mykeyvault \
@@ -291,7 +693,7 @@ az keyvault key create \
 # Configure storage account with customer key
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --encryption-key-source Microsoft.Keyvault \
     --encryption-key-vault https://mykeyvault.vault.azure.net \
     --encryption-key-name mykey
@@ -301,7 +703,7 @@ az storage account update \
 ```powershell
 # Set customer-managed key
 Set-AzStorageAccount \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -Name "mystorageaccount" \
     -KeyvaultEncryption \
     -KeyName "mykey" \
@@ -321,7 +723,7 @@ Set-AzStorageAccount \
 # Require secure transfer (HTTPS/SMB 3.0+)
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --https-only true
 ```
 
@@ -330,8 +732,8 @@ az storage account update \
 # Enable infrastructure encryption (double encryption)
 az storage account create \
     --name mystorageaccount \
-    --resource-group myRG \
-    --location eastus \
+    --resource-group sa1_test_eic_SudarshanDarade \
+    --location southeastasia \
     --sku Standard_LRS \
     --encryption-services file \
     --require-infrastructure-encryption
@@ -388,7 +790,7 @@ az storage share policy create \
 # Enable AD authentication
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --enable-files-aadds true
 ```
 
@@ -411,7 +813,7 @@ az storage account update \
 # Enable file share metrics
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --set properties.metrics.enabled=true
 ```
 

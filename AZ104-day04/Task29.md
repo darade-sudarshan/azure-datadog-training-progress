@@ -1,5 +1,387 @@
 # Task 29: Azure Storage Account - Data Transfer and Network Security
 
+---
+
+## Method 1: Using Azure Portal (GUI)
+
+### Step 1: Access Storage Account
+
+1. **Navigate to Azure Portal**
+   - Go to https://portal.azure.com
+   - Sign in with your Azure credentials
+
+2. **Find Your Storage Account**
+   - Click "Storage accounts" in the left menu
+   - Select your existing storage account
+   - Or create a new one if needed
+
+### Step 2: Upload Data via Azure Portal
+
+#### Basic File Upload
+
+1. **Navigate to Blob Container**
+   - Click "Containers" under "Data storage"
+   - Select existing container or create new one
+   - Click "+ Container" if creating new:
+     - **Name**: `data-uploads`
+     - **Public access level**: `Private`
+     - Click "Create"
+
+2. **Upload Files**
+   - Click on container name
+   - Click "Upload" in the toolbar
+   - **Upload blob** dialog opens
+
+3. **Select Files for Upload**
+   - Click "Browse for files" or drag and drop
+   - Select single or multiple files
+   - **Advanced options**:
+     - **Blob type**: `Block blob` (default)
+     - **Block size**: `4 MB` (default)
+     - **Access tier**: `Hot`, `Cool`, or `Archive`
+     - **Upload to folder**: Specify virtual folder path
+   - Click "Upload"
+
+4. **Monitor Upload Progress**
+   - View progress bar for each file
+   - Cancel uploads if needed
+   - Retry failed uploads
+
+#### Bulk Upload via Portal
+
+1. **Upload Multiple Files**
+   - Select multiple files using Ctrl+Click
+   - Or drag entire folders to maintain structure
+   - Portal preserves folder hierarchy
+
+2. **Large File Upload**
+   - Portal supports files up to 4.75 TB
+   - Automatic chunking for large files
+   - Resume capability for interrupted uploads
+
+### Step 3: Configure Storage Account Firewall
+
+#### Access Network Settings
+
+1. **Navigate to Networking**
+   - In storage account, click "Networking" under "Security + networking"
+   - View current network access configuration
+
+2. **Configure Public Network Access**
+   - **Public network access**: Choose option:
+     - `Enabled from all networks` - Default, allows all internet access
+     - `Enabled from selected virtual networks and IP addresses` - Restricted access
+     - `Disabled` - Private endpoints only
+
+#### Configure Firewall Rules
+
+1. **Set Up IP Address Rules**
+   - Select "Enabled from selected virtual networks and IP addresses"
+   - **Firewall** section appears
+   - **Add your client IP address**: ☑ Check to add current IP
+   - **Address range**: Add custom IP ranges:
+     - **Name**: `Office Network`
+     - **Address range**: `203.0.113.0/24`
+     - Click "Add"
+
+2. **Configure Virtual Network Rules**
+   - **Virtual networks** section
+   - Click "+ Add existing virtual network"
+   - **Subscription**: Select subscription
+   - **Virtual networks**: Select VNet
+   - **Subnets**: Select subnet(s)
+   - **Note**: Subnet must have Microsoft.Storage service endpoint
+   - Click "Add"
+
+3. **Configure Exceptions**
+   - **Exceptions** section:
+     - ☑ Allow Azure services on the trusted services list to access this storage account
+     - ☑ Allow read access to storage logging from any network
+     - ☑ Allow read access to storage metrics from any network
+
+4. **Save Configuration**
+   - Click "Save" to apply firewall rules
+   - **Warning**: May take up to 5 minutes to take effect
+
+### Step 4: Configure Service Endpoints
+
+#### Create Virtual Network with Service Endpoint
+
+1. **Navigate to Virtual Networks**
+   - Search "Virtual networks" in portal
+   - Click "+ Create" or select existing VNet
+
+2. **Configure Service Endpoints**
+   - Go to existing VNet → "Subnets"
+   - Click on subnet name
+   - **Service endpoints**: Click "+ Add"
+   - **Services**: Select `Microsoft.Storage`
+   - Click "Add"
+   - Click "Save"
+
+#### Add VNet to Storage Account
+
+1. **Return to Storage Account Networking**
+   - Go back to storage account → "Networking"
+   - **Virtual networks** section
+   - Click "+ Add existing virtual network"
+   - Select VNet and subnet with service endpoint
+   - Click "Add"
+
+### Step 5: Configure Private Endpoints
+
+#### Create Private Endpoint
+
+1. **Navigate to Private Endpoint Connections**
+   - In storage account, click "Private endpoint connections" under "Security + networking"
+   - Click "+ Private endpoint"
+
+2. **Configure Private Endpoint Basics**
+   - **Subscription**: Select subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `storage-private-endpoint`
+   - **Region**: `Southeast Asia`
+   - Click "Next: Resource >"
+
+3. **Configure Resource Settings**
+   - **Connection method**: `Connect to an Azure resource in my directory`
+   - **Subscription**: Select subscription
+   - **Resource type**: `Microsoft.Storage/storageAccounts`
+   - **Resource**: Select your storage account
+   - **Target sub-resource**: Select service:
+     - `blob` - Blob service
+     - `file` - File service
+     - `queue` - Queue service
+     - `table` - Table service
+   - Click "Next: Virtual Network >"
+
+4. **Configure Virtual Network**
+   - **Virtual network**: Select VNet
+   - **Subnet**: Select subnet for private endpoint
+   - **Private IP configuration**: `Dynamically allocate IP address`
+   - **Application security group**: None (optional)
+   - Click "Next: DNS >"
+
+5. **Configure DNS**
+   - **Integrate with private DNS zone**: `Yes`
+   - **Private DNS zone**: `privatelink.blob.core.windows.net` (auto-created)
+   - **Resource group**: Select resource group for DNS zone
+   - Click "Next: Tags >"
+
+6. **Add Tags and Create**
+   - Add tags if needed
+   - Click "Review + create"
+   - Click "Create"
+
+#### Verify Private Endpoint
+
+1. **Check Connection Status**
+   - Go to "Private endpoint connections"
+   - Verify connection state is "Approved"
+   - Note private IP address assigned
+
+2. **Test Private Connectivity**
+   - From VM in same VNet, test DNS resolution:
+   - `nslookup [storageaccount].blob.core.windows.net`
+   - Should resolve to private IP address
+
+### Step 6: Configure Network Routing
+
+#### Set Routing Preference
+
+1. **Navigate to Networking**
+   - Go to storage account → "Networking"
+   - Scroll to "Network routing" section
+
+2. **Configure Routing Options**
+   - **Routing preference**: Choose option:
+     - `Microsoft network routing` - Default, uses Microsoft's global network
+     - `Internet routing` - Uses public internet, lower cost
+   - **Publish route-specific endpoints**: 
+     - ☑ Publish Microsoft network routing endpoint
+     - ☑ Publish Internet routing endpoint
+   - Click "Save"
+
+3. **View Route-Specific Endpoints**
+   - **Microsoft routing endpoint**: `[account]-microsoftrouting.blob.core.windows.net`
+   - **Internet routing endpoint**: `[account]-internetrouting.blob.core.windows.net`
+   - Use specific endpoints for targeted routing
+
+### Step 7: Use Azure Storage Explorer
+
+#### Download and Install
+
+1. **Download Storage Explorer**
+   - Go to https://azure.microsoft.com/features/storage-explorer/
+   - Download for your platform (Windows, macOS, Linux)
+   - Install the application
+
+2. **Connect to Storage Account**
+   - Open Azure Storage Explorer
+   - Click "Add an account" or connection icon
+   - **Select Resource**: `Storage account or service`
+   - **Select Connection Method**: `Account name and key`
+   - **Account name**: Enter storage account name
+   - **Account key**: Copy from portal (Access keys)
+   - Click "Next" and "Connect"
+
+#### Manage Data with Storage Explorer
+
+1. **Navigate Storage Account**
+   - Expand storage account in left panel
+   - View Blob Containers, File Shares, Queues, Tables
+   - Browse folder structure
+
+2. **Upload Files**
+   - Right-click container or folder
+   - Select "Upload" → "Upload Files" or "Upload Folder"
+   - Select files/folders to upload
+   - Configure upload options:
+     - **Blob type**: Block blob, Page blob, Append blob
+     - **Access tier**: Hot, Cool, Archive
+     - **Metadata**: Add custom metadata
+   - Click "Upload"
+
+3. **Download Files**
+   - Right-click blob or folder
+   - Select "Download" or "Download As"
+   - Choose destination folder
+   - Monitor download progress
+
+4. **Copy Between Accounts**
+   - Connect multiple storage accounts
+   - Drag and drop between accounts
+   - Or right-click → "Copy" → paste in destination
+
+### Step 8: Monitor Data Transfer
+
+#### View Transfer Metrics
+
+1. **Navigate to Insights**
+   - Go to storage account → "Insights" under "Monitoring"
+   - **Transactions** tab shows:
+     - Request count by operation
+     - Success/failure rates
+     - Response times
+
+2. **Monitor Network Traffic**
+   - **Capacity** tab shows:
+     - Ingress (data uploaded)
+     - Egress (data downloaded)
+     - Total storage used
+   - Filter by time range and service
+
+#### Set Up Transfer Alerts
+
+1. **Create Alert Rules**
+   - Go to "Alerts" under "Monitoring"
+   - Click "+ New alert rule"
+   - **Condition**: Select metrics:
+     - Ingress > threshold
+     - Egress > threshold
+     - Transactions > threshold
+   - **Action group**: Configure notifications
+   - **Alert rule name**: `High Data Transfer Alert`
+
+### Step 9: Secure Data Transfer
+
+#### Configure HTTPS Requirements
+
+1. **Enable Secure Transfer**
+   - Go to storage account → "Configuration"
+   - **Secure transfer required**: `Enabled`
+   - Forces all connections to use HTTPS/SMB 3.0+
+   - Click "Save"
+
+2. **Set Minimum TLS Version**
+   - **Minimum TLS version**: `Version 1.2`
+   - Ensures strong encryption for all connections
+   - Click "Save"
+
+#### Configure Access Keys Security
+
+1. **Manage Access Keys**
+   - Go to "Access keys" under "Security + networking"
+   - **Allow storage account key access**: Control key-based access
+   - **Regenerate keys**: Rotate keys regularly
+   - **Copy keys**: Use for application configuration
+
+2. **Configure Shared Access Signatures**
+   - Go to "Shared access signature"
+   - **Allowed services**: Select services (Blob, File, Queue, Table)
+   - **Allowed resource types**: Service, Container, Object
+   - **Allowed permissions**: Minimum required permissions
+   - **Start and expiry date/time**: Set validity period
+   - **Allowed IP addresses**: Restrict by IP (optional)
+   - **Allowed protocols**: `HTTPS only`
+   - Click "Generate SAS and connection string"
+
+### Step 10: Troubleshoot Network Issues
+
+#### Test Connectivity
+
+1. **Check Network Rules**
+   - Go to "Networking" → review firewall rules
+   - Verify IP addresses and VNet rules
+   - Check service endpoint configuration
+
+2. **Test from Different Locations**
+   - Test access from allowed IP ranges
+   - Test from VNet with service endpoints
+   - Test via private endpoints
+
+#### Common Issues and Solutions
+
+1. **Access Denied Errors**
+   - **Check firewall rules**: Ensure client IP is allowed
+   - **Verify VNet rules**: Confirm subnet has service endpoint
+   - **Review private endpoint**: Check DNS resolution
+
+2. **Slow Transfer Speeds**
+   - **Check routing preference**: Consider Microsoft vs Internet routing
+   - **Monitor network metrics**: Look for bottlenecks
+   - **Optimize client location**: Use regional storage accounts
+
+3. **DNS Resolution Issues**
+   - **Private endpoints**: Verify private DNS zone configuration
+   - **Service endpoints**: Check VNet DNS settings
+   - **Public access**: Confirm public DNS resolution
+
+### Step 11: Advanced Data Transfer Options
+
+#### Configure Cross-Region Replication
+
+1. **Set Up Geo-Replication**
+   - Go to storage account → "Geo-replication"
+   - View primary and secondary regions
+   - **Redundancy**: Ensure GRS or RA-GRS is selected
+   - Monitor replication status
+
+2. **Test Secondary Access** (RA-GRS only)
+   - **Secondary endpoint**: `[account]-secondary.blob.core.windows.net`
+   - Test read access to secondary region
+   - Use for disaster recovery scenarios
+
+#### Configure Object Replication
+
+1. **Set Up Object Replication**
+   - Go to "Object replication" under "Data management"
+   - Click "Create replication rules"
+   - **Source account**: Current account
+   - **Destination account**: Select target account
+   - **Container mapping**: Configure source and destination containers
+   - **Filters**: Set blob prefix filters if needed
+   - Click "Create"
+
+2. **Monitor Replication**
+   - View replication policies and status
+   - Check replication lag and errors
+   - Monitor bandwidth usage
+
+---
+
+## Method 2: Using Azure CLI and Tools
+
 ## Copying Data to Storage Account
 
 ### Methods for Data Transfer
@@ -242,25 +624,25 @@ azcopy copy "./local-folder" "https://mystorageaccount.blob.core.windows.net/myc
 # Set default action to deny
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --default-action Deny
 
 # Add IP address rule
 az storage account network-rule add \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --ip-address 203.0.113.0
 
 # Add IP range rule
 az storage account network-rule add \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --ip-address 203.0.113.0/24
 
 # Add virtual network rule
 az storage account network-rule add \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vnet-name myvnet \
     --subnet mysubnet
 ```
@@ -269,7 +651,7 @@ az storage account network-rule add \
 ```powershell
 # Set network access rules
 Set-AzStorageAccount \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -Name "mystorageaccount" \
     -NetworkRuleSet (@{
         defaultAction="Deny";
@@ -309,7 +691,7 @@ Set-AzStorageAccount \
 # Allow trusted Microsoft services
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --bypass AzureServices
 ```
 
@@ -334,14 +716,14 @@ Service endpoints provide secure and direct connectivity to Azure services over 
 # Create virtual network
 az network vnet create \
     --name myvnet \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --address-prefix 10.0.0.0/16
 
 # Create subnet with service endpoint
 az network vnet subnet create \
     --name mysubnet \
     --vnet-name myvnet \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --address-prefix 10.0.1.0/24 \
     --service-endpoints Microsoft.Storage
 ```
@@ -352,7 +734,7 @@ az network vnet subnet create \
 az network vnet subnet update \
     --name mysubnet \
     --vnet-name myvnet \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --service-endpoints Microsoft.Storage
 ```
 
@@ -361,7 +743,7 @@ az network vnet subnet update \
 # Add VNet rule to storage account
 az storage account network-rule add \
     --account-name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vnet-name myvnet \
     --subnet mysubnet
 ```
@@ -373,12 +755,12 @@ az storage account network-rule add \
 # Create service endpoint policy
 az network service-endpoint policy create \
     --name mystorageendpointpolicy \
-    --resource-group myRG
+    --resource-group sa1_test_eic_SudarshanDarade
 
 # Add policy definition
 az network service-endpoint policy-definition create \
     --policy-name mystorageendpointpolicy \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --name allowspecificstorage \
     --service Microsoft.Storage \
     --service-resources /subscriptions/.../storageAccounts/mystorageaccount
@@ -397,7 +779,7 @@ Private endpoints provide private connectivity to Azure Storage using a private 
 # Create private endpoint
 az network private-endpoint create \
     --name mystoragepe \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vnet-name myvnet \
     --subnet mysubnet \
     --private-connection-resource-id /subscriptions/.../storageAccounts/mystorageaccount \
@@ -407,12 +789,12 @@ az network private-endpoint create \
 # Create private DNS zone
 az network private-dns zone create \
     --name privatelink.blob.core.windows.net \
-    --resource-group myRG
+    --resource-group sa1_test_eic_SudarshanDarade
 
 # Link DNS zone to VNet
 az network private-dns link vnet create \
     --name mystoragelink \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --zone-name privatelink.blob.core.windows.net \
     --virtual-network myvnet \
     --registration-enabled false
@@ -423,13 +805,13 @@ az network private-dns link vnet create \
 # Create private endpoint
 $pe = New-AzPrivateEndpoint \
     -Name "mystoragepe" \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -Location "East US" \
     -Subnet $subnet \
     -PrivateLinkServiceConnection $plsConnection
 
 # Create private DNS zone
-New-AzPrivateDnsZone -Name "privatelink.blob.core.windows.net" -ResourceGroupName "myRG"
+New-AzPrivateDnsZone -Name "privatelink.blob.core.windows.net" -ResourceGroupName "sa1_test_eic_SudarshanDarade"
 ```
 
 ### Private Endpoint Sub-resources
@@ -447,7 +829,7 @@ New-AzPrivateDnsZone -Name "privatelink.blob.core.windows.net" -ResourceGroupNam
 # Create private endpoint for blob service
 az network private-endpoint create \
     --name mystoragepe-blob \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vnet-name myvnet \
     --subnet mysubnet \
     --private-connection-resource-id /subscriptions/.../storageAccounts/mystorageaccount \
@@ -457,7 +839,7 @@ az network private-endpoint create \
 # Create private endpoint for file service
 az network private-endpoint create \
     --name mystoragepe-file \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vnet-name myvnet \
     --subnet mysubnet \
     --private-connection-resource-id /subscriptions/.../storageAccounts/mystorageaccount \
@@ -486,13 +868,13 @@ az network private-endpoint create \
 # Set routing preference to Internet
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --routing-choice InternetRouting
 
 # Set routing preference to Microsoft Network
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --routing-choice MicrosoftRouting
 ```
 
@@ -500,7 +882,7 @@ az storage account update \
 ```powershell
 # Set routing preference
 Set-AzStorageAccount \
-    -ResourceGroupName "myRG" \
+    -ResourceGroupName "sa1_test_eic_SudarshanDarade" \
     -Name "mystorageaccount" \
     -RoutingChoice "InternetRouting"
 ```
@@ -512,13 +894,13 @@ Set-AzStorageAccount \
 # Enable internet routing endpoint
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --publish-internet-endpoints true
 
 # Enable Microsoft routing endpoint
 az storage account update \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --publish-microsoft-endpoints true
 ```
 
@@ -562,7 +944,7 @@ az storage account update \
 # Check network rules
 az storage account show \
     --name mystorageaccount \
-    --resource-group myRG \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --query networkRuleSet
 
 # Test connectivity

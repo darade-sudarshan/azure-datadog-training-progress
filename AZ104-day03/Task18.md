@@ -33,9 +33,280 @@ This guide covers creating a basic Azure Load Balancer with two Linux VMs hostin
 ## Prerequisites
 
 - Active Microsoft Azure account
-- Azure CLI installed
+- Azure CLI installed (for CLI method)
 - SSH key pair for Linux VMs
 - Basic understanding of networking concepts
+
+---
+
+## Method 1: Using Azure Portal (GUI)
+
+### Step 1: Create Resource Group
+
+1. **Navigate to Azure Portal**
+   - Go to https://portal.azure.com
+   - Sign in with your Azure account
+
+2. **Create Resource Group**
+   - Click "Resource groups" in the left menu
+   - Click "+ Create"
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Region**: `Southeast Asia`
+   - Click "Review + create" → "Create"
+
+### Step 2: Create Virtual Network
+
+1. **Navigate to Virtual Networks**
+   - Search "Virtual networks" in the top search bar
+   - Click "+ Create"
+
+2. **Configure Virtual Network**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `vnet-lb-demo`
+   - **Region**: `Southeast Asia`
+
+3. **IP Addresses Tab**
+   - **IPv4 address space**: `10.0.0.0/16`
+   - Click "+ Add subnet"
+   - **Subnet name**: `subnet-web`
+   - **Subnet address range**: `10.0.1.0/24`
+   - Click "Add"
+
+4. **Review and Create**
+   - Click "Review + create" → "Create"
+
+### Step 3: Create Network Security Group
+
+1. **Navigate to Network Security Groups**
+   - Search "Network security groups"
+   - Click "+ Create"
+
+2. **Configure NSG**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `nsg-web-servers`
+   - **Region**: `Southeast Asia`
+   - Click "Review + create" → "Create"
+
+3. **Add Security Rules**
+   - Go to the created NSG
+   - Click "Inbound security rules"
+   - Click "+ Add"
+   
+   **HTTP Rule:**
+   - **Source**: `Any`
+   - **Source port ranges**: `*`
+   - **Destination**: `Any`
+   - **Service**: `HTTP`
+   - **Action**: `Allow`
+   - **Priority**: `100`
+   - **Name**: `allow-http`
+   - Click "Add"
+   
+   **SSH Rule:**
+   - Click "+ Add" again
+   - **Source**: `Any`
+   - **Source port ranges**: `*`
+   - **Destination**: `Any`
+   - **Service**: `SSH`
+   - **Action**: `Allow`
+   - **Priority**: `110`
+   - **Name**: `allow-ssh`
+   - Click "Add"
+
+### Step 4: Create Availability Set
+
+1. **Navigate to Availability Sets**
+   - Search "Availability sets"
+   - Click "+ Create"
+
+2. **Configure Availability Set**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `avset-web-servers`
+   - **Region**: `Southeast Asia`
+   - **Fault domains**: `2`
+   - **Update domains**: `2`
+   - Click "Review + create" → "Create"
+
+### Step 5: Create Virtual Machines
+
+#### Create VM1
+
+1. **Navigate to Virtual Machines**
+   - Search "Virtual machines"
+   - Click "+ Create" → "Azure virtual machine"
+
+2. **Basics Tab**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Virtual machine name**: `vm-web-01`
+   - **Region**: `Southeast Asia`
+   - **Availability options**: `Availability set`
+   - **Availability set**: `avset-web-servers`
+   - **Image**: `Ubuntu Server 22.04 LTS`
+   - **Size**: `Standard_B1s`
+   - **Authentication type**: `SSH public key`
+   - **Username**: `azureuser`
+   - **SSH public key source**: `Generate new key pair` or `Use existing public key`
+   - **Key pair name**: `azure-lb-key` (if generating new)
+
+3. **Networking Tab**
+   - **Virtual network**: `vnet-lb-demo`
+   - **Subnet**: `subnet-web`
+   - **Public IP**: `None`
+   - **NIC network security group**: `Advanced`
+   - **Configure network security group**: `nsg-web-servers`
+
+4. **Review and Create**
+   - Click "Review + create" → "Create"
+   - Download the private key if generated
+
+#### Create VM2
+
+1. **Repeat VM Creation Process**
+   - Follow same steps as VM1
+   - **Virtual machine name**: `vm-web-02`
+   - Use same configuration as VM1
+
+### Step 6: Install Nginx on VMs
+
+1. **Navigate to VM1**
+   - Go to "Virtual machines"
+   - Click on `vm-web-01`
+   - Click "Run command" in the left menu
+   - Select "RunShellScript"
+
+2. **Install Nginx Script**
+   ```bash
+   sudo apt update
+   sudo apt install -y nginx
+   sudo systemctl start nginx
+   sudo systemctl enable nginx
+   echo '<h1>Web Server 01</h1><p>Hostname: '$(hostname)'</p><p>Private IP: '$(hostname -I)'</p><p>Server Time: '$(date)'</p>' | sudo tee /var/www/html/index.html
+   sudo systemctl restart nginx
+   ```
+   - Click "Run"
+
+3. **Repeat for VM2**
+   - Navigate to `vm-web-02`
+   - Run the same script but change "Web Server 01" to "Web Server 02"
+
+### Step 7: Create Public IP for Load Balancer
+
+1. **Navigate to Public IP Addresses**
+   - Search "Public IP addresses"
+   - Click "+ Create"
+
+2. **Configure Public IP**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `pip-loadbalancer`
+   - **Region**: `Southeast Asia`
+   - **IP Version**: `IPv4`
+   - **SKU**: `Basic`
+   - **Assignment**: `Dynamic`
+   - Click "Review + create" → "Create"
+
+### Step 8: Create Load Balancer
+
+1. **Navigate to Load Balancers**
+   - Search "Load balancers"
+   - Click "+ Create"
+
+2. **Basics Tab**
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `lb-web-servers`
+   - **Region**: `Southeast Asia`
+   - **SKU**: `Basic`
+   - **Type**: `Public`
+
+3. **Frontend IP Configuration**
+   - **Name**: `frontend-ip`
+   - **Public IP address**: `pip-loadbalancer`
+
+4. **Backend Pools**
+   - **Name**: `backend-pool`
+   - **Virtual network**: `vnet-lb-demo`
+   - **Backend pool configuration**: `NIC`
+
+5. **Review and Create**
+   - Click "Review + create" → "Create"
+
+### Step 9: Configure Load Balancer Components
+
+#### Add VMs to Backend Pool
+
+1. **Navigate to Load Balancer**
+   - Go to the created load balancer `lb-web-servers`
+   - Click "Backend pools" in the left menu
+   - Click on `backend-pool`
+
+2. **Add Virtual Machines**
+   - Click "+ Add"
+   - **Virtual machine**: Select `vm-web-01`
+   - **Network IP configuration**: Select the IP config
+   - Click "Add"
+   - Repeat for `vm-web-02`
+   - Click "Save"
+
+#### Create Health Probe
+
+1. **Navigate to Health Probes**
+   - In the load balancer, click "Health probes"
+   - Click "+ Add"
+
+2. **Configure Health Probe**
+   - **Name**: `health-probe-http`
+   - **Protocol**: `HTTP`
+   - **Port**: `80`
+   - **Path**: `/`
+   - **Interval**: `15`
+   - **Unhealthy threshold**: `2`
+   - Click "OK"
+
+#### Create Load Balancing Rule
+
+1. **Navigate to Load Balancing Rules**
+   - Click "Load balancing rules"
+   - Click "+ Add"
+
+2. **Configure Rule**
+   - **Name**: `lb-rule-http`
+   - **IP Version**: `IPv4`
+   - **Frontend IP address**: `frontend-ip`
+   - **Protocol**: `TCP`
+   - **Port**: `80`
+   - **Backend port**: `80`
+   - **Backend pool**: `backend-pool`
+   - **Health probe**: `health-probe-http`
+   - **Session persistence**: `None`
+   - **Idle timeout**: `4`
+   - **Floating IP**: `Disabled`
+   - Click "OK"
+
+### Step 10: Test Load Balancer
+
+1. **Get Public IP**
+   - Go to "Public IP addresses"
+   - Click on `pip-loadbalancer`
+   - Copy the IP address
+
+2. **Test in Browser**
+   - Open web browser
+   - Navigate to `http://[load-balancer-ip]`
+   - Refresh multiple times to see load distribution
+
+3. **Monitor Backend Health**
+   - Go to load balancer → "Backend pools"
+   - Check the health status of backend instances
+
+---
+
+## Method 2: Using Azure CLI
 
 ---
 
@@ -46,12 +317,12 @@ This guide covers creating a basic Azure Load Balancer with two Linux VMs hostin
 ```bash
 # Create resource group
 az group create \
-  --name rg-loadbalancer-demo \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 
 # Create virtual network
 az network vnet create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-lb-demo \
   --address-prefix 10.0.0.0/16 \
   --subnet-name subnet-web \
@@ -66,11 +337,11 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/azure-lb-key -N ""
 ```bash
 # Create availability set for VMs
 az vm availability-set create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name avset-web-servers \
   --platform-fault-domain-count 2 \
   --platform-update-domain-count 2 \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 3. Create Network Security Group
@@ -78,13 +349,13 @@ az vm availability-set create \
 ```bash
 # Create NSG
 az network nsg create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nsg-web-servers \
-  --location eastus
+  --location southeastasia
 
 # Allow HTTP traffic
 az network nsg rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-web-servers \
   --name allow-http \
   --priority 100 \
@@ -97,7 +368,7 @@ az network nsg rule create \
 
 # Allow SSH traffic
 az network nsg rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-web-servers \
   --name allow-ssh \
   --priority 110 \
@@ -118,7 +389,7 @@ az network nsg rule create \
 ```bash
 # Create VM1
 az vm create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -137,7 +408,7 @@ az vm create \
 ```bash
 # Create VM2
 az vm create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-02 \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -160,7 +431,7 @@ az vm create \
 ```bash
 # Install nginx on VM1
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --command-id RunShellScript \
   --scripts "
@@ -178,7 +449,7 @@ az vm run-command invoke \
 ```bash
 # Install nginx on VM2
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-02 \
   --command-id RunShellScript \
   --scripts "
@@ -195,8 +466,8 @@ az vm run-command invoke \
 
 ```bash
 # Get VM private IPs
-VM1_IP=$(az vm show -d --resource-group rg-loadbalancer-demo --name vm-web-01 --query privateIps -o tsv)
-VM2_IP=$(az vm show -d --resource-group rg-loadbalancer-demo --name vm-web-02 --query privateIps -o tsv)
+VM1_IP=$(az vm show -d --resource-group sa1_test_eic_SudarshanDarade --name vm-web-01 --query privateIps -o tsv)
+VM2_IP=$(az vm show -d --resource-group sa1_test_eic_SudarshanDarade --name vm-web-02 --query privateIps -o tsv)
 
 echo "VM1 Private IP: $VM1_IP"
 echo "VM2 Private IP: $VM2_IP"
@@ -211,11 +482,11 @@ echo "VM2 Private IP: $VM2_IP"
 ```bash
 # Create public IP
 az network public-ip create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name pip-loadbalancer \
   --sku Basic \
   --allocation-method Dynamic \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 2. Create Load Balancer
@@ -223,13 +494,13 @@ az network public-ip create \
 ```bash
 # Create load balancer
 az network lb create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name lb-web-servers \
   --sku Basic \
   --public-ip-address pip-loadbalancer \
   --frontend-ip-name frontend-ip \
   --backend-pool-name backend-pool \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 3. Create Health Probe
@@ -237,7 +508,7 @@ az network lb create \
 ```bash
 # Create health probe
 az network lb probe create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name health-probe-http \
   --protocol Http \
@@ -252,7 +523,7 @@ az network lb probe create \
 ```bash
 # Create load balancing rule
 az network lb rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name lb-rule-http \
   --protocol Tcp \
@@ -272,11 +543,11 @@ az network lb rule create \
 
 ```bash
 # Get VM1 NIC ID
-VM1_NIC_ID=$(az vm show --resource-group rg-loadbalancer-demo --name vm-web-01 --query "networkProfile.networkInterfaces[0].id" -o tsv)
+VM1_NIC_ID=$(az vm show --resource-group sa1_test_eic_SudarshanDarade --name vm-web-01 --query "networkProfile.networkInterfaces[0].id" -o tsv)
 
 # Add VM1 to backend pool
 az network nic ip-config address-pool add \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-web-01VMNic \
   --ip-config-name ipconfigvm-web-01 \
   --lb-name lb-web-servers \
@@ -288,7 +559,7 @@ az network nic ip-config address-pool add \
 ```bash
 # Add VM2 to backend pool
 az network nic ip-config address-pool add \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-web-02VMNic \
   --ip-config-name ipconfigvm-web-02 \
   --lb-name lb-web-servers \
@@ -304,7 +575,7 @@ az network nic ip-config address-pool add \
 ```bash
 # Get load balancer public IP
 LB_PUBLIC_IP=$(az network public-ip show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name pip-loadbalancer \
   --query ipAddress -o tsv)
 
@@ -361,14 +632,14 @@ chmod +x test-loadbalancer.sh
 ```bash
 # Check backend pool status
 az network lb show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name lb-web-servers \
   --query "backendAddressPools[0].backendIpConfigurations[].{Id:id}" \
   --output table
 
 # Check health probe status
 az network lb probe show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name health-probe-http \
   --query "{Name:name, Protocol:protocol, Port:port, IntervalInSeconds:intervalInSeconds, NumberOfProbes:numberOfProbes}"
@@ -379,7 +650,7 @@ az network lb probe show \
 ```bash
 # Get load balancer metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-loadbalancer-demo/providers/Microsoft.Network/loadBalancers/lb-web-servers \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/lb-web-servers \
   --metric "ByteCount" "PacketCount" \
   --interval PT1M \
   --start-time 2024-01-01T00:00:00Z \
@@ -387,7 +658,7 @@ az monitor metrics list \
 
 # Check data path availability
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-loadbalancer-demo/providers/Microsoft.Network/loadBalancers/lb-web-servers \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/loadBalancers/lb-web-servers \
   --metric "DipAvailability" \
   --interval PT1M
 ```
@@ -401,7 +672,7 @@ az monitor metrics list \
 ```bash
 # Create NAT rule for VM1 SSH
 az network lb inbound-nat-rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name nat-rule-vm1-ssh \
   --protocol Tcp \
@@ -411,7 +682,7 @@ az network lb inbound-nat-rule create \
 
 # Create NAT rule for VM2 SSH
 az network lb inbound-nat-rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name nat-rule-vm2-ssh \
   --protocol Tcp \
@@ -421,14 +692,14 @@ az network lb inbound-nat-rule create \
 
 # Associate NAT rules with VMs
 az network nic ip-config inbound-nat-rule add \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-web-01VMNic \
   --ip-config-name ipconfigvm-web-01 \
   --lb-name lb-web-servers \
   --inbound-nat-rule nat-rule-vm1-ssh
 
 az network nic ip-config inbound-nat-rule add \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-web-02VMNic \
   --ip-config-name ipconfigvm-web-02 \
   --lb-name lb-web-servers \
@@ -450,7 +721,7 @@ ssh -i ~/.ssh/azure-lb-key azureuser@$LB_PUBLIC_IP -p 2202
 ```bash
 # Update load balancing rule for session persistence
 az network lb rule update \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name lb-rule-http \
   --load-distribution SourceIP
@@ -465,7 +736,7 @@ az network lb rule update \
 ```bash
 # Stop nginx on VM1 to simulate failure
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --command-id RunShellScript \
   --scripts "sudo systemctl stop nginx"
@@ -482,7 +753,7 @@ done
 ```bash
 # Start nginx on VM1
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --command-id RunShellScript \
   --scripts "sudo systemctl start nginx"
@@ -504,13 +775,13 @@ done
 # Note: Basic SKU has limited diagnostic capabilities
 # Check load balancer status
 az network lb show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name lb-web-servers \
   --query "{Name:name, Sku:sku.name, ProvisioningState:provisioningState}"
 
 # Monitor backend pool health manually
 az network lb probe show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name health-probe-http
 ```
@@ -521,7 +792,7 @@ az network lb probe show \
 # Basic health check script
 cat > check-lb-health.sh << 'EOF'
 #!/bin/bash
-LB_IP=$(az network public-ip show --resource-group rg-loadbalancer-demo --name pip-loadbalancer --query ipAddress -o tsv)
+LB_IP=$(az network public-ip show --resource-group sa1_test_eic_SudarshanDarade --name pip-loadbalancer --query ipAddress -o tsv)
 echo "Testing load balancer health at $LB_IP"
 for i in {1..5}; do
   if curl -s --connect-timeout 5 http://$LB_IP > /dev/null; then
@@ -573,7 +844,7 @@ server {
 
 # Apply configuration to VM1
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --command-id RunShellScript \
   --scripts "
@@ -583,7 +854,7 @@ az vm run-command invoke \
 
 # Apply configuration to VM2
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-02 \
   --command-id RunShellScript \
   --scripts "
@@ -597,7 +868,7 @@ az vm run-command invoke \
 ```bash
 # Update health probe to use dedicated endpoint
 az network lb probe update \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name health-probe-http \
   --path /health \
@@ -614,7 +885,7 @@ az network lb probe update \
 ```bash
 # Update NSG to restrict SSH access
 az network nsg rule update \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-web-servers \
   --name allow-ssh \
   --source-address-prefixes '203.0.113.0/24'  # Replace with your IP range
@@ -625,7 +896,7 @@ az network nsg rule update \
 ```bash
 # Create self-signed certificates on VMs
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --command-id RunShellScript \
   --scripts "
@@ -637,7 +908,7 @@ az vm run-command invoke \
 
 # Add HTTPS load balancing rule
 az network lb rule create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name lb-rule-https \
   --protocol Tcp \
@@ -657,20 +928,20 @@ az network lb rule create \
 ```bash
 # Check backend pool members
 az network lb address-pool show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name backend-pool \
   --query "backendIpConfigurations[].{Id:id, PrivateIpAddress:privateIpAddress}"
 
 # Verify health probe status
 az network lb probe show \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --lb-name lb-web-servers \
   --name health-probe-http
 
 # Check NSG rules
 az network nsg rule list \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-web-servers \
   --output table
 ```
@@ -679,12 +950,12 @@ az network nsg rule list \
 
 ```bash
 # Test individual VM connectivity
-VM1_PRIVATE_IP=$(az vm show -d --resource-group rg-loadbalancer-demo --name vm-web-01 --query privateIps -o tsv)
-VM2_PRIVATE_IP=$(az vm show -d --resource-group rg-loadbalancer-demo --name vm-web-02 --query privateIps -o tsv)
+VM1_PRIVATE_IP=$(az vm show -d --resource-group sa1_test_eic_SudarshanDarade --name vm-web-01 --query privateIps -o tsv)
+VM2_PRIVATE_IP=$(az vm show -d --resource-group sa1_test_eic_SudarshanDarade --name vm-web-02 --query privateIps -o tsv)
 
 # Create a test VM in the same subnet for internal testing
 az vm create \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-test \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -696,7 +967,7 @@ az vm create \
 
 # Test internal connectivity from test VM
 az vm run-command invoke \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-test \
   --command-id RunShellScript \
   --scripts "
@@ -712,28 +983,28 @@ az vm run-command invoke \
 ```bash
 # Delete load balancer
 az network lb delete \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name lb-web-servers
 
 # Delete public IP
 az network public-ip delete \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name pip-loadbalancer
 
 # Delete VMs
 az vm delete \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-01 \
   --yes
 
 az vm delete \
-  --resource-group rg-loadbalancer-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web-02 \
   --yes
 
 # Delete resource group
 az group delete \
-  --name rg-loadbalancer-demo \
+  --name sa1_test_eic_SudarshanDarade \
   --yes --no-wait
 ```
 

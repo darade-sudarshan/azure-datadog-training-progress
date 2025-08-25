@@ -49,16 +49,17 @@ This guide covers Azure Network Watcher and its comprehensive features for netwo
 
 ### 1. Enable Network Watcher
 
+#### Azure CLI
 ```bash
 # Create resource group
 az group create \
-  --name rg-network-watcher \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 
 # Enable Network Watcher in region
 az network watcher configure \
-  --resource-group rg-network-watcher \
-  --locations eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --locations southeastasia \
   --enabled true
 
 # Verify Network Watcher status
@@ -66,12 +67,26 @@ az network watcher list \
   --output table
 ```
 
+#### Azure Portal
+1. **Navigate to Network Watcher**:
+   - Search for "Network Watcher" in Azure portal
+   - Select "Network Watcher" service
+
+2. **Enable Network Watcher**:
+   - Click "Overview" in left menu
+   - Select your subscription
+   - Find "Southeast Asia" region
+   - Click "Enable" if not already enabled
+
+3. **Verify Status**:
+   - Check that status shows "Enabled" for the region
+
 ### 2. Create Test Environment
 
 ```bash
 # Create virtual network
 az network vnet create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-test \
   --address-prefix 10.0.0.0/16 \
   --subnet-name subnet-web \
@@ -79,20 +94,20 @@ az network vnet create \
 
 # Create additional subnet
 az network vnet subnet create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-test \
   --name subnet-app \
   --address-prefix 10.0.2.0/24
 
 # Create NSG
 az network nsg create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nsg-test \
-  --location eastus
+  --location southeastasia
 
 # Create test VMs
 az vm create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-web \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -103,7 +118,7 @@ az vm create \
   --size Standard_B1s
 
 az vm create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-app \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -120,25 +135,38 @@ az vm create \
 
 ### 1. View Network Topology
 
+#### Azure CLI
 ```bash
 # Get network topology
 az network watcher show-topology \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --output json > network-topology.json
 
 # View topology in table format
 az network watcher show-topology \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --query "resources[].{Name:name, Type:type, Location:location}" \
   --output table
 ```
+
+#### Azure Portal
+1. **Access Topology**:
+   - Go to Network Watcher → Monitoring → Topology
+   - Select subscription and resource group
+   - Choose "sa1_test_eic_SudarshanDarade"
+
+2. **View Network Diagram**:
+   - Interactive visual representation appears
+   - Click on resources for details
+   - Use zoom and pan controls
+   - Export diagram as needed
 
 ### 2. Topology Visualization
 
 ```bash
 # Get detailed topology with relationships
 az network watcher show-topology \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --query "resources[].{Name:name, Type:type, Associations:associations[].name}" \
   --output table
 ```
@@ -149,10 +177,11 @@ az network watcher show-topology \
 
 ### 1. Test Traffic Flow
 
+#### Azure CLI
 ```bash
 # Test inbound traffic to VM
 az network watcher test-ip-flow \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --direction Inbound \
   --protocol TCP \
@@ -161,7 +190,7 @@ az network watcher test-ip-flow \
 
 # Test outbound traffic from VM
 az network watcher test-ip-flow \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --direction Outbound \
   --protocol TCP \
@@ -170,13 +199,33 @@ az network watcher test-ip-flow \
 
 # Test inter-subnet communication
 az network watcher test-ip-flow \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --direction Outbound \
   --protocol TCP \
   --local 10.0.1.4:22 \
   --remote 10.0.2.4:22
 ```
+
+#### Azure Portal
+1. **Access IP Flow Verify**:
+   - Go to Network Watcher → Network diagnostic tools → IP flow verify
+
+2. **Configure Test Parameters**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Virtual machine**: vm-web
+   - **Network interface**: vm-webVMNic
+   - **Protocol**: TCP/UDP
+   - **Direction**: Inbound/Outbound
+   - **Local IP address**: 10.0.1.4
+   - **Local port**: 80
+   - **Remote IP address**: 203.0.113.1
+   - **Remote port**: 12345
+
+3. **Run Test**:
+   - Click "Check" button
+   - Review results showing Allow/Deny with rule name
 
 ### 2. Batch IP Flow Testing
 
@@ -194,7 +243,7 @@ for scenario in "${SCENARIOS[@]}"; do
   read direction protocol local remote <<< "$scenario"
   echo "Testing: $scenario"
   az network watcher test-ip-flow \
-    --resource-group rg-network-watcher \
+    --resource-group sa1_test_eic_SudarshanDarade \
     --vm vm-web \
     --direction $direction \
     --protocol $protocol \
@@ -211,41 +260,59 @@ done
 
 ### 1. Determine Next Hop
 
+#### Azure CLI
 ```bash
 # Check next hop for internet traffic
 az network watcher show-next-hop \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --source-ip 10.0.1.4 \
   --dest-ip 8.8.8.8
 
 # Check next hop for internal traffic
 az network watcher show-next-hop \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --source-ip 10.0.1.4 \
   --dest-ip 10.0.2.4
 
 # Check next hop for on-premises traffic (if VPN exists)
 az network watcher show-next-hop \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --source-ip 10.0.1.4 \
   --dest-ip 192.168.1.1
 ```
+
+#### Azure Portal
+1. **Access Next Hop**:
+   - Go to Network Watcher → Network diagnostic tools → Next hop
+
+2. **Configure Parameters**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Virtual machine**: vm-web
+   - **Network interface**: vm-webVMNic
+   - **Source IP address**: 10.0.1.4
+   - **Destination IP address**: 8.8.8.8
+
+3. **Analyze Results**:
+   - Click "Next hop" button
+   - Review next hop type and IP address
+   - Check route table ID if applicable
 
 ### 2. Route Analysis
 
 ```bash
 # Get effective routes for VM
 az network nic show-effective-route-table \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic \
   --output table
 
 # Analyze specific route
 az network nic show-effective-route-table \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic \
   --query "[?addressPrefix[0]=='0.0.0.0/0']" \
   --output table
@@ -257,33 +324,49 @@ az network nic show-effective-route-table \
 
 ### 1. View Effective Security Rules
 
+#### Azure CLI
 ```bash
 # Get effective security rules for VM
 az network nic list-effective-nsg \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic
 
 # View specific rule details
 az network nic list-effective-nsg \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic \
   --query "value[0].securityRules[?direction=='Inbound']" \
   --output table
 ```
+
+#### Azure Portal
+1. **Access Security Group View**:
+   - Go to Network Watcher → Network diagnostic tools → Security group view
+
+2. **Select Target**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Virtual machine**: vm-web
+
+3. **View Security Rules**:
+   - Click "View" button
+   - Review effective security rules
+   - Check both inbound and outbound rules
+   - See rule priorities and sources
 
 ### 2. Security Rule Analysis
 
 ```bash
 # Analyze inbound rules
 az network nic list-effective-nsg \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic \
   --query "value[0].securityRules[?direction=='Inbound'].{Priority:priority, Name:name, Access:access, Protocol:protocol, SourcePort:sourcePortRange, DestPort:destinationPortRange}" \
   --output table
 
 # Analyze outbound rules
 az network nic list-effective-nsg \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-webVMNic \
   --query "value[0].securityRules[?direction=='Outbound'].{Priority:priority, Name:name, Access:access, Protocol:protocol, SourcePort:sourcePortRange, DestPort:destinationPortRange}" \
   --output table
@@ -295,10 +378,11 @@ az network nic list-effective-nsg \
 
 ### 1. Create Connection Monitor
 
+#### Azure CLI
 ```bash
 # Create connection monitor between VMs
 az network watcher connection-monitor create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-app \
   --source-resource vm-web \
   --dest-resource vm-app \
@@ -307,7 +391,7 @@ az network watcher connection-monitor create \
 
 # Create connection monitor to external endpoint
 az network watcher connection-monitor create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-internet \
   --source-resource vm-web \
   --dest-address 8.8.8.8 \
@@ -315,22 +399,46 @@ az network watcher connection-monitor create \
   --monitoring-interval 60
 ```
 
+#### Azure Portal
+1. **Create Connection Monitor**:
+   - Go to Network Watcher → Monitoring → Connection monitor
+   - Click "+ Create"
+
+2. **Basic Configuration**:
+   - **Name**: connection-monitor-web-app
+   - **Subscription**: Select your subscription
+   - **Region**: Southeast Asia
+   - **Workspace configuration**: Create new or use existing
+
+3. **Add Test Group**:
+   - Click "Add test group"
+   - **Test group name**: web-to-app-test
+   - **Sources**: Add vm-web
+   - **Destinations**: Add vm-app or external endpoint
+   - **Test configurations**: HTTP/TCP/ICMP
+   - **Protocol**: TCP, **Port**: 80
+   - **Test frequency**: 30 seconds
+
+4. **Review and Create**:
+   - Review configuration
+   - Click "Create"
+
 ### 2. Monitor Connection Status
 
 ```bash
 # List connection monitors
 az network watcher connection-monitor list \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --output table
 
 # Get connection monitor status
 az network watcher connection-monitor show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-app
 
 # Query connection monitor results
 az network watcher connection-monitor query \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-app
 ```
 
@@ -343,11 +451,11 @@ cat > connection-monitor-config.json << 'EOF'
   "endpoints": [
     {
       "name": "vm-web-endpoint",
-      "resourceId": "/subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.Compute/virtualMachines/vm-web"
+      "resourceId": "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-web"
     },
     {
       "name": "vm-app-endpoint", 
-      "resourceId": "/subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.Compute/virtualMachines/vm-app"
+      "resourceId": "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-app"
     },
     {
       "name": "external-endpoint",
@@ -381,7 +489,7 @@ EOF
 
 # Create advanced connection monitor
 az network watcher connection-monitor create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name advanced-connection-monitor \
   --config-file connection-monitor-config.json
 ```
@@ -392,23 +500,24 @@ az network watcher connection-monitor create \
 
 ### 1. Create Packet Capture
 
+#### Azure CLI
 ```bash
 # Create storage account for packet capture
 az storage account create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name stpacketcapture$(date +%s) \
   --sku Standard_LRS \
-  --location eastus
+  --location southeastasia
 
 # Get storage account key
 STORAGE_KEY=$(az storage account keys list \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --account-name stpacketcapture* \
   --query "[0].value" -o tsv)
 
 # Create packet capture
 az network watcher packet-capture create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-web \
   --storage-account stpacketcapture* \
@@ -418,12 +527,39 @@ az network watcher packet-capture create \
   --total-bytes-per-session 1073741824
 ```
 
+#### Azure Portal
+1. **Start Packet Capture**:
+   - Go to Network Watcher → Network diagnostic tools → Packet capture
+   - Click "+ Add"
+
+2. **Configure Capture**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Target virtual machine**: vm-web
+   - **Packet capture name**: packet-capture-web
+   - **Capture location**: Storage account
+   - **Storage account**: Select or create storage account
+   - **Maximum bytes per packet**: 0 (unlimited)
+   - **Maximum bytes per session**: 1073741824 (1GB)
+   - **Time limit**: 300 seconds
+
+3. **Add Filters** (Optional):
+   - **Protocol**: TCP/UDP/Any
+   - **Local IP address**: 10.0.1.4
+   - **Local port**: 80
+   - **Remote IP address**: Any
+   - **Remote port**: Any
+
+4. **Start Capture**:
+   - Click "OK" to start
+   - Monitor status in packet capture list
+
 ### 2. Packet Capture with Filters
 
 ```bash
 # Create packet capture with filters
 az network watcher packet-capture create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-filtered \
   --storage-account stpacketcapture* \
@@ -445,24 +581,24 @@ az network watcher packet-capture create \
 ```bash
 # List packet captures
 az network watcher packet-capture list \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --output table
 
 # Get packet capture status
 az network watcher packet-capture show-status \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-web
 
 # Stop packet capture
 az network watcher packet-capture stop \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-web
 
 # Delete packet capture
 az network watcher packet-capture delete \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-web
 ```
@@ -473,17 +609,18 @@ az network watcher packet-capture delete \
 
 ### 1. Enable NSG Flow Logs
 
+#### Azure CLI
 ```bash
 # Create storage account for flow logs
 az storage account create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name stflowlogs$(date +%s) \
   --sku Standard_LRS \
-  --location eastus
+  --location southeastasia
 
 # Enable NSG flow logs
 az network watcher flow-log create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test \
   --nsg nsg-test \
   --storage-account stflowlogs* \
@@ -493,18 +630,42 @@ az network watcher flow-log create \
   --log-version 2
 ```
 
+#### Azure Portal
+1. **Access NSG Flow Logs**:
+   - Go to Network Watcher → Logs → Flow logs
+   - Click "+ Create"
+
+2. **Select NSG**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Network security group**: nsg-test
+   - Click "Next: Configuration"
+
+3. **Configure Flow Logs**:
+   - **Flow logs status**: Enabled
+   - **Flow logs version**: Version 2
+   - **Storage account**: Select or create storage account
+   - **Retention (days)**: 30
+   - **Traffic Analytics status**: Enabled (optional)
+   - **Log Analytics workspace**: Select workspace
+   - **Traffic Analytics processing interval**: 10 minutes
+
+4. **Review and Create**:
+   - Review settings
+   - Click "Create"
+
 ### 2. Configure Advanced Flow Logs
 
 ```bash
 # Create Log Analytics workspace
 az monitor log-analytics workspace create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --workspace-name network-analytics \
-  --location eastus
+  --location southeastasia
 
 # Enable flow logs with Traffic Analytics
 az network watcher flow-log create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-advanced \
   --nsg nsg-test \
   --storage-account stflowlogs* \
@@ -513,7 +674,7 @@ az network watcher flow-log create \
   --format JSON \
   --log-version 2 \
   --traffic-analytics true \
-  --workspace /subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.OperationalInsights/workspaces/network-analytics
+  --workspace /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.OperationalInsights/workspaces/network-analytics
 ```
 
 ### 3. Manage Flow Logs
@@ -521,24 +682,24 @@ az network watcher flow-log create \
 ```bash
 # List flow logs
 az network watcher flow-log list \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --output table
 
 # Show flow log configuration
 az network watcher flow-log show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test
 
 # Update flow log settings
 az network watcher flow-log update \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test \
   --retention 60 \
   --enabled true
 
 # Disable flow logs
 az network watcher flow-log update \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test \
   --enabled false
 ```
@@ -552,21 +713,21 @@ az network watcher flow-log update \
 ```bash
 # Create gateway subnet
 az network vnet subnet create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-test \
   --name GatewaySubnet \
   --address-prefix 10.0.100.0/27
 
 # Create public IP for VPN gateway
 az network public-ip create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name pip-vpn-gateway \
   --sku Standard \
   --allocation-method Static
 
 # Create VPN gateway
 az network vnet-gateway create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vpn-gateway-test \
   --public-ip-address pip-vpn-gateway \
   --vnet vnet-test \
@@ -581,18 +742,18 @@ az network vnet-gateway create \
 ```bash
 # Start VPN diagnostics
 az network vnet-gateway vpn-connection packet-capture start \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vpn-connection-test
 
 # Get VPN gateway diagnostics
 az network vnet-gateway show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vpn-gateway-test \
   --query "{Name:name, ProvisioningState:provisioningState, GatewayType:gatewayType}"
 
 # Check VPN connection status
 az network vpn-connection show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vpn-connection-test \
   --query "{Name:name, ConnectionStatus:connectionStatus, ProvisioningState:provisioningState}"
 ```
@@ -606,10 +767,10 @@ az network vpn-connection show \
 ```bash
 # Enable Traffic Analytics on existing flow log
 az network watcher flow-log update \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test \
   --traffic-analytics true \
-  --workspace /subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.OperationalInsights/workspaces/network-analytics \
+  --workspace /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.OperationalInsights/workspaces/network-analytics \
   --interval 10
 ```
 
@@ -650,36 +811,59 @@ EOF
 
 ### 1. Test Connectivity
 
+#### Azure CLI
 ```bash
 # Test connectivity between VMs
 az network watcher test-connectivity \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --source-resource vm-web \
   --dest-resource vm-app \
   --dest-port 80
 
 # Test connectivity to external endpoint
 az network watcher test-connectivity \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --source-resource vm-web \
   --dest-address www.google.com \
   --dest-port 443
 
 # Test connectivity with protocol specification
 az network watcher test-connectivity \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --source-resource vm-web \
   --dest-address 8.8.8.8 \
   --dest-port 53 \
   --protocol UDP
 ```
 
+#### Azure Portal
+1. **Access Connection Troubleshoot**:
+   - Go to Network Watcher → Network diagnostic tools → Connection troubleshoot
+
+2. **Configure Source**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: sa1_test_eic_SudarshanDarade
+   - **Source type**: Virtual machine
+   - **Virtual machine**: vm-web
+
+3. **Configure Destination**:
+   - **Destination type**: Virtual machine / URI / IP address
+   - **Virtual machine**: vm-app (or specify IP/URI)
+   - **Protocol**: TCP/UDP/ICMP
+   - **Destination port**: 80
+
+4. **Run Test**:
+   - Click "Check" button
+   - Review connectivity results
+   - Analyze hop-by-hop details
+   - Check for issues and recommendations
+
 ### 2. Troubleshoot Connectivity Issues
 
 ```bash
 # Comprehensive connectivity test
 az network watcher test-connectivity \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --source-resource vm-web \
   --dest-resource vm-app \
   --dest-port 22 \
@@ -696,7 +880,7 @@ az network watcher test-connectivity \
 ```bash
 # Get network performance metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.Network/networkInterfaces/vm-webVMNic \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkInterfaces/vm-webVMNic \
   --metric "BytesReceivedRate" "BytesSentRate" \
   --interval PT1M \
   --start-time 2024-01-01T00:00:00Z \
@@ -704,7 +888,7 @@ az monitor metrics list \
 
 # Monitor connection success rate
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.Network/connectionMonitors/connection-monitor-web-app \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/connectionMonitors/connection-monitor-web-app \
   --metric "ProbesFailedPercent" \
   --interval PT5M
 ```
@@ -714,7 +898,7 @@ az monitor metrics list \
 ```bash
 # Create latency monitoring
 az network watcher connection-monitor create \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name latency-monitor \
   --source-resource vm-web \
   --dest-address 8.8.8.8 \
@@ -733,7 +917,7 @@ az network watcher connection-monitor create \
 #!/bin/bash
 # Network health check script
 
-RESOURCE_GROUP="rg-network-watcher"
+RESOURCE_GROUP="sa1_test_eic_SudarshanDarade"
 VM_NAME="vm-web"
 
 echo "=== Network Health Check Report ==="
@@ -785,7 +969,7 @@ az network watcher show-next-hop \
 # Flow log analysis script
 
 STORAGE_ACCOUNT="stflowlogs*"
-RESOURCE_GROUP="rg-network-watcher"
+RESOURCE_GROUP="sa1_test_eic_SudarshanDarade"
 
 # Download recent flow logs
 az storage blob download-batch \
@@ -817,8 +1001,8 @@ find ./flow-logs -name "*.json" -exec cat {} \; | \
 # Example alert creation
 az monitor metrics alert create \
   --name "Connection Monitor Alert" \
-  --resource-group rg-network-watcher \
-  --scopes /subscriptions/{subscription-id}/resourceGroups/rg-network-watcher/providers/Microsoft.Network/connectionMonitors/connection-monitor-web-app \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --scopes /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/connectionMonitors/connection-monitor-web-app \
   --condition "avg ProbesFailedPercent > 10" \
   --description "Alert when connection success rate drops below 90%" \
   --evaluation-frequency 5m \
@@ -837,7 +1021,7 @@ az monitor metrics alert create \
 
 # Update flow log retention
 az network watcher flow-log update \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test \
   --retention 7  # Reduce retention for cost savings
 ```
@@ -853,7 +1037,7 @@ az network watcher flow-log update \
 az network watcher list --query "[].{Name:name, Location:location, ProvisioningState:provisioningState}" --output table
 
 # Enable Network Watcher if not available
-az network watcher configure --locations eastus --enabled true
+az network watcher configure --locations southeastasia --enabled true
 ```
 
 ### 2. Flow Logs Not Working
@@ -861,12 +1045,12 @@ az network watcher configure --locations eastus --enabled true
 ```bash
 # Verify flow log configuration
 az network watcher flow-log show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test
 
 # Check storage account permissions
 az storage account show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name stflowlogs* \
   --query "{Name:name, ProvisioningState:provisioningState, AccessTier:accessTier}"
 ```
@@ -876,13 +1060,13 @@ az storage account show \
 ```bash
 # Check connection monitor status
 az network watcher connection-monitor show \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-app \
   --query "{Name:name, ProvisioningState:provisioningState, MonitoringStatus:monitoringStatus}"
 
 # Verify source VM has Network Watcher extension
 az vm extension list \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm-name vm-web \
   --query "[?name=='NetworkWatcherAgentLinux']" \
   --output table
@@ -895,23 +1079,23 @@ az vm extension list \
 ```bash
 # Stop and delete connection monitors
 az network watcher connection-monitor delete \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-web-app
 
 # Disable flow logs
 az network watcher flow-log delete \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-nsg-test
 
 # Delete packet captures
 az network watcher packet-capture delete \
-  --resource-group rg-network-watcher \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-web \
   --name packet-capture-web
 
 # Delete resource group
 az group delete \
-  --name rg-network-watcher \
+  --name sa1_test_eic_SudarshanDarade \
   --yes --no-wait
 ```
 

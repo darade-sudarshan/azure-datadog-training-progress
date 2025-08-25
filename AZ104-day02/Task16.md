@@ -19,6 +19,262 @@ This guide covers creating two 3-tier virtual networks (dev and staging) with VN
 
 ---
 
+## Manual VNet Peering Creation via Azure Portal
+
+### 1. Create Resource Group and Dev VNet via Portal
+
+#### Create Resource Group
+1. Navigate to **Resource groups** in Azure Portal
+2. Click **Create**
+3. **Basics tab**:
+   - **Subscription**: Select your subscription
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Region**: `Southeast Asia`
+4. Click **Review + create** > **Create**
+
+#### Create Development VNet
+1. Navigate to **Virtual networks**
+2. Click **Create**
+3. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `vnet-dev`
+   - **Region**: `Southeast Asia`
+4. **IP Addresses tab**:
+   - **IPv4 address space**: `10.10.0.0/16`
+   - Click **Add subnet**:
+     - **Subnet name**: `subnet-dev-public-1`
+     - **Subnet address range**: `10.10.1.0/24`
+   - Add additional subnets:
+     - `subnet-dev-public-2`: `10.10.2.0/24`
+     - `subnet-dev-private-1`: `10.10.10.0/24`
+     - `subnet-dev-private-2`: `10.10.11.0/24`
+     - `subnet-dev-db-1`: `10.10.20.0/24`
+     - `subnet-dev-db-2`: `10.10.21.0/24`
+5. **Security tab**: Configure as needed
+6. Click **Review + create** > **Create**
+
+#### Create Staging VNet
+1. Navigate to **Virtual networks** > **Create**
+2. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `vnet-staging`
+   - **Region**: `Southeast Asia`
+3. **IP Addresses tab**:
+   - **IPv4 address space**: `10.20.0.0/16`
+   - Add subnets:
+     - `subnet-staging-public-1`: `10.20.1.0/24`
+     - `subnet-staging-public-2`: `10.20.2.0/24`
+     - `subnet-staging-private-1`: `10.20.10.0/24`
+     - `subnet-staging-private-2`: `10.20.11.0/24`
+     - `subnet-staging-db-1`: `10.20.20.0/24`
+     - `subnet-staging-db-2`: `10.20.21.0/24`
+4. Click **Review + create** > **Create**
+
+### 2. Create Linux VMs via Portal
+
+#### Create VM in Dev Environment
+1. Navigate to **Virtual machines** > **Create**
+2. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Virtual machine name**: `vm-dev-private`
+   - **Region**: `Southeast Asia`
+   - **Image**: `Ubuntu Server 22.04 LTS`
+   - **Size**: `Standard_B1s`
+   - **Authentication type**: `SSH public key`
+   - **Username**: `azureuser`
+   - **SSH public key source**: `Generate new key pair` or `Use existing`
+3. **Networking tab**:
+   - **Virtual network**: `vnet-dev`
+   - **Subnet**: `subnet-dev-private-1`
+   - **Public IP**: `None`
+   - **Private IP**: `Static` - `10.10.10.10`
+4. Click **Review + create** > **Create**
+
+#### Create VM in Staging Environment
+1. Repeat VM creation process with:
+   - **Virtual machine name**: `vm-staging-private`
+   - **Virtual network**: `vnet-staging`
+   - **Subnet**: `subnet-staging-private-1`
+   - **Private IP**: `Static` - `10.20.10.10`
+
+### 3. Create VNet Peering via Portal
+
+#### Create Dev to Staging Peering
+1. Navigate to **Virtual networks** > `vnet-dev`
+2. Click **Peerings** in left menu
+3. Click **Add**
+4. **This virtual network**:
+   - **Peering link name**: `dev-to-staging`
+   - **Traffic to remote virtual network**: `Allow`
+   - **Traffic forwarded from remote virtual network**: `Allow`
+   - **Virtual network gateway or Route Server**: `None`
+5. **Remote virtual network**:
+   - **Peering link name**: `staging-to-dev`
+   - **Virtual network deployment model**: `Resource manager`
+   - **Subscription**: Select your subscription
+   - **Virtual network**: `vnet-staging`
+   - **Traffic to remote virtual network**: `Allow`
+   - **Traffic forwarded from remote virtual network**: `Allow`
+   - **Virtual network gateway or Route Server**: `None`
+6. Click **Add**
+
+#### Verify Peering Status
+1. Navigate to **Virtual networks** > `vnet-dev` > **Peerings**
+2. Verify peering status shows **Connected**
+3. Check `vnet-staging` > **Peerings** for reciprocal connection
+
+### 4. Create Network Security Groups via Portal
+
+#### Create NSG for Dev Environment
+1. Navigate to **Network security groups** > **Create**
+2. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `nsg-dev-private`
+   - **Region**: `Southeast Asia`
+3. Click **Review + create** > **Create**
+4. Navigate to created NSG > **Inbound security rules**
+5. Click **Add** to create rules:
+   - **Rule 1**: Allow SSH from staging
+     - **Source**: `IP Addresses`
+     - **Source IP addresses/CIDR ranges**: `10.20.0.0/16`
+     - **Destination port ranges**: `22`
+     - **Protocol**: `TCP`
+     - **Action**: `Allow`
+     - **Priority**: `100`
+     - **Name**: `allow-ssh-from-staging`
+   - **Rule 2**: Allow internal dev communication
+     - **Source**: `IP Addresses`
+     - **Source IP addresses/CIDR ranges**: `10.10.0.0/16`
+     - **Destination port ranges**: `*`
+     - **Protocol**: `Any`
+     - **Action**: `Allow`
+     - **Priority**: `110`
+     - **Name**: `allow-internal-dev`
+
+#### Associate NSG with Subnet
+1. Navigate to **Virtual networks** > `vnet-dev` > **Subnets**
+2. Click `subnet-dev-private-1`
+3. **Network security group**: Select `nsg-dev-private`
+4. Click **Save**
+
+#### Create NSG for Staging Environment
+1. Repeat NSG creation process for staging:
+   - **Name**: `nsg-staging-private`
+   - Create similar rules for staging environment
+   - Associate with `subnet-staging-private-1`
+
+### 5. Create Azure Bastion via Portal
+
+#### Add Bastion Subnet
+1. Navigate to **Virtual networks** > `vnet-dev` > **Subnets**
+2. Click **+ Subnet**
+3. **Name**: `AzureBastionSubnet` (exact name required)
+4. **Subnet address range**: `10.10.100.0/26`
+5. Click **Save**
+
+#### Create Bastion Host
+1. Navigate to **Bastions** > **Create**
+2. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `bastion-dev`
+   - **Region**: `Southeast Asia`
+   - **Tier**: `Basic`
+   - **Virtual network**: `vnet-dev`
+   - **Subnet**: `AzureBastionSubnet` (auto-selected)
+3. **Public IP address**: `Create new`
+   - **Public IP name**: `pip-bastion-dev`
+4. Click **Review + create** > **Create**
+
+### 6. Test Connectivity via Portal
+
+#### Connect to VM via Bastion
+1. Navigate to **Virtual machines** > `vm-dev-private`
+2. Click **Connect** > **Bastion**
+3. **Authentication Type**: `SSH Private Key from Local File`
+4. **Username**: `azureuser`
+5. **Local File**: Upload your private key file
+6. Click **Connect**
+
+#### Test Cross-Environment Connectivity
+1. From Bastion session to dev VM:
+   ```bash
+   # Test ping to staging VM
+   ping 10.20.10.10
+   
+   # Test SSH to staging VM
+   ssh azureuser@10.20.10.10
+   ```
+
+### 7. Create Application Security Groups via Portal
+
+#### Create ASGs
+1. Navigate to **Application security groups** > **Create**
+2. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `asg-dev-app-servers`
+   - **Region**: `Southeast Asia`
+3. Repeat for `asg-staging-app-servers`
+
+#### Associate VMs with ASGs
+1. Navigate to **Virtual machines** > `vm-dev-private` > **Networking**
+2. Click **Application security groups**
+3. Click **Configure the application security groups**
+4. Select `asg-dev-app-servers`
+5. Click **Save**
+6. Repeat for staging VM
+
+### 8. Monitor Peering via Portal
+
+#### View Peering Metrics
+1. Navigate to **Virtual networks** > `vnet-dev` > **Peerings**
+2. Click on peering name to view details
+3. Check **Peering state**: Should show `Connected`
+4. View **Provisioning state**: Should show `Succeeded`
+
+#### Network Watcher Integration
+1. Navigate to **Network Watcher**
+2. Use **Connection troubleshoot** to test VM-to-VM connectivity
+3. Configure **Connection monitor** for ongoing monitoring
+
+### PowerShell Portal Automation
+
+```powershell
+# PowerShell script to automate portal-like operations
+
+# Create Resource Group
+New-AzResourceGroup -Name "sa1_test_eic_SudarshanDarade" -Location "Southeast Asia"
+
+# Create Dev VNet with subnets
+$devSubnets = @(
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-dev-public-1" -AddressPrefix "10.10.1.0/24"
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-dev-private-1" -AddressPrefix "10.10.10.0/24"
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-dev-db-1" -AddressPrefix "10.10.20.0/24"
+)
+$devVNet = New-AzVirtualNetwork -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "Southeast Asia" -Name "vnet-dev" -AddressPrefix "10.10.0.0/16" -Subnet $devSubnets
+
+# Create Staging VNet with subnets
+$stagingSubnets = @(
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-staging-public-1" -AddressPrefix "10.20.1.0/24"
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-staging-private-1" -AddressPrefix "10.20.10.0/24"
+    New-AzVirtualNetworkSubnetConfig -Name "subnet-staging-db-1" -AddressPrefix "10.20.20.0/24"
+)
+$stagingVNet = New-AzVirtualNetwork -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "Southeast Asia" -Name "vnet-staging" -AddressPrefix "10.20.0.0/16" -Subnet $stagingSubnets
+
+# Create VNet Peering
+Add-AzVirtualNetworkPeering -Name "dev-to-staging" -VirtualNetwork $devVNet -RemoteVirtualNetworkId $stagingVNet.Id -AllowForwardedTraffic
+Add-AzVirtualNetworkPeering -Name "staging-to-dev" -VirtualNetwork $stagingVNet -RemoteVirtualNetworkId $devVNet.Id -AllowForwardedTraffic
+
+# Create NSG with rules
+$nsgRule1 = New-AzNetworkSecurityRuleConfig -Name "allow-ssh-from-staging" -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix "10.20.0.0/16" -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 22 -Access Allow
+$nsg = New-AzNetworkSecurityGroup -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Location "Southeast Asia" -Name "nsg-dev-private" -SecurityRules $nsgRule1
+
+# Create Application Security Groups
+New-AzApplicationSecurityGroup -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "asg-dev-app-servers" -Location "Southeast Asia"
+New-AzApplicationSecurityGroup -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "asg-staging-app-servers" -Location "Southeast Asia"
+```
+
+---
+
 ## Prerequisites
 
 - Active Microsoft Azure account
@@ -35,15 +291,15 @@ This guide covers creating two 3-tier virtual networks (dev and staging) with VN
 ```bash
 # Create resource group
 az group create \
-  --name rg-3tier-environments \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 
 # Create development VNet
 az network vnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-dev \
   --address-prefix 10.10.0.0/16 \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 2. Create Dev Subnets
@@ -51,39 +307,39 @@ az network vnet create \
 ```bash
 # Create public subnets for dev
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-public-1 \
   --address-prefix 10.10.1.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-public-2 \
   --address-prefix 10.10.2.0/24
 
 # Create private subnets for dev
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-private-1 \
   --address-prefix 10.10.10.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-private-2 \
   --address-prefix 10.10.11.0/24
 
 # Create database subnets for dev
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-db-1 \
   --address-prefix 10.10.20.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-db-2 \
   --address-prefix 10.10.21.0/24
@@ -98,10 +354,10 @@ az network vnet subnet create \
 ```bash
 # Create staging VNet
 az network vnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vnet-staging \
   --address-prefix 10.20.0.0/16 \
-  --location eastus
+  --location southeastasia
 ```
 
 ### 2. Create Staging Subnets
@@ -109,39 +365,39 @@ az network vnet create \
 ```bash
 # Create public subnets for staging
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-public-1 \
   --address-prefix 10.20.1.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-public-2 \
   --address-prefix 10.20.2.0/24
 
 # Create private subnets for staging
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-private-1 \
   --address-prefix 10.20.10.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-private-2 \
   --address-prefix 10.20.11.0/24
 
 # Create database subnets for staging
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-db-1 \
   --address-prefix 10.20.20.0/24
 
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-db-2 \
   --address-prefix 10.20.21.0/24
@@ -163,7 +419,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/azure-3tier-key -N ""
 ```bash
 # Create Linux VM in dev private subnet
 az vm create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-private \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -181,7 +437,7 @@ az vm create \
 ```bash
 # Create Linux VM in staging private subnet
 az vm create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-staging-private \
   --image Ubuntu2204 \
   --admin-username azureuser \
@@ -203,7 +459,7 @@ az vm create \
 ```bash
 # Create peering from dev to staging
 az network vnet peering create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name dev-to-staging \
   --vnet-name vnet-dev \
   --remote-vnet vnet-staging \
@@ -216,7 +472,7 @@ az network vnet peering create \
 ```bash
 # Create peering from staging to dev
 az network vnet peering create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name staging-to-dev \
   --vnet-name vnet-staging \
   --remote-vnet vnet-dev \
@@ -229,14 +485,14 @@ az network vnet peering create \
 ```bash
 # Check dev to staging peering
 az network vnet peering show \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name dev-to-staging \
   --query "{Name:name, PeeringState:peeringState, ProvisioningState:provisioningState}"
 
 # Check staging to dev peering
 az network vnet peering show \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name staging-to-dev \
   --query "{Name:name, PeeringState:peeringState, ProvisioningState:provisioningState}"
@@ -251,13 +507,13 @@ az network vnet peering show \
 ```bash
 # Create NSG for dev private subnet
 az network nsg create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nsg-dev-private \
-  --location eastus
+  --location southeastasia
 
 # Allow SSH from staging environment
 az network nsg rule create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-dev-private \
   --name allow-ssh-from-staging \
   --priority 100 \
@@ -270,7 +526,7 @@ az network nsg rule create \
 
 # Allow internal dev communication
 az network nsg rule create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-dev-private \
   --name allow-internal-dev \
   --priority 110 \
@@ -283,7 +539,7 @@ az network nsg rule create \
 
 # Associate NSG with dev private subnet
 az network vnet subnet update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name subnet-dev-private-1 \
   --network-security-group nsg-dev-private
@@ -294,13 +550,13 @@ az network vnet subnet update \
 ```bash
 # Create NSG for staging private subnet
 az network nsg create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nsg-staging-private \
-  --location eastus
+  --location southeastasia
 
 # Allow SSH from dev environment
 az network nsg rule create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-staging-private \
   --name allow-ssh-from-dev \
   --priority 100 \
@@ -313,7 +569,7 @@ az network nsg rule create \
 
 # Allow internal staging communication
 az network nsg rule create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-staging-private \
   --name allow-internal-staging \
   --priority 110 \
@@ -326,7 +582,7 @@ az network nsg rule create \
 
 # Associate NSG with staging private subnet
 az network vnet subnet update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name subnet-staging-private-1 \
   --network-security-group nsg-staging-private
@@ -341,26 +597,26 @@ az network vnet subnet update \
 ```bash
 # Create AzureBastionSubnet in dev VNet
 az network vnet subnet create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name AzureBastionSubnet \
   --address-prefix 10.10.100.0/26
 
 # Create public IP for Bastion
 az network public-ip create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name pip-bastion-dev \
   --sku Standard \
   --allocation-method Static \
-  --location eastus
+  --location southeastasia
 
 # Create Azure Bastion
 az network bastion create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name bastion-dev \
   --public-ip-address pip-bastion-dev \
   --vnet-name vnet-dev \
-  --location eastus \
+  --location southeastasia \
   --sku Basic
 ```
 
@@ -374,8 +630,8 @@ az network bastion create \
 # Connect to dev VM using Bastion
 az network bastion ssh \
   --name bastion-dev \
-  --resource-group rg-3tier-environments \
-  --target-resource-id /subscriptions/{subscription-id}/resourceGroups/rg-3tier-environments/providers/Microsoft.Compute/virtualMachines/vm-dev-private \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --target-resource-id /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-dev-private \
   --auth-type ssh-key \
   --username azureuser \
   --ssh-key ~/.ssh/azure-3tier-key
@@ -402,13 +658,13 @@ nc -zv 10.20.10.10 22
 ```bash
 # Check effective routes on dev VM NIC
 az network nic show-effective-route-table \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-privateVMNic \
   --output table
 
 # Check effective routes on staging VM NIC
 az network nic show-effective-route-table \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-staging-privateVMNic \
   --output table
 ```
@@ -422,7 +678,7 @@ az network nic show-effective-route-table \
 ```bash
 # Connect to dev VM and install nginx
 az vm run-command invoke \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-private \
   --command-id RunShellScript \
   --scripts "
@@ -439,7 +695,7 @@ az vm run-command invoke \
 ```bash
 # Connect to staging VM and install nginx
 az vm run-command invoke \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-staging-private \
   --command-id RunShellScript \
   --scripts "
@@ -471,13 +727,13 @@ curl http://10.10.10.10
 ```bash
 # Create route table for custom routing
 az network route-table create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name rt-cross-environment \
-  --location eastus
+  --location southeastasia
 
 # Add route for dev to staging communication
 az network route-table route create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --route-table-name rt-cross-environment \
   --name route-dev-to-staging \
   --address-prefix 10.20.0.0/16 \
@@ -485,7 +741,7 @@ az network route-table route create \
 
 # Add route for staging to dev communication
 az network route-table route create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --route-table-name rt-cross-environment \
   --name route-staging-to-dev \
   --address-prefix 10.10.0.0/16 \
@@ -501,13 +757,13 @@ az network route-table route create \
 ```bash
 # Enable Network Watcher
 az network watcher configure \
-  --resource-group rg-3tier-environments \
-  --locations eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --locations southeastasia \
   --enabled true
 
 # Test connectivity between VMs
 az network watcher test-connectivity \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --source-resource vm-dev-private \
   --dest-resource vm-staging-private \
   --dest-port 22
@@ -518,7 +774,7 @@ az network watcher test-connectivity \
 ```bash
 # Create connection monitor
 az network watcher connection-monitor create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name connection-monitor-cross-env \
   --source-resource vm-dev-private \
   --dest-resource vm-staging-private \
@@ -531,14 +787,14 @@ az network watcher connection-monitor create \
 ```bash
 # Create storage account for flow logs
 az storage account create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name stflowlogs$(date +%s) \
   --sku Standard_LRS \
-  --location eastus
+  --location southeastasia
 
 # Enable NSG flow logs for dev environment
 az network watcher flow-log create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name flowlog-dev-private \
   --nsg nsg-dev-private \
   --storage-account stflowlogs* \
@@ -557,24 +813,24 @@ az network watcher flow-log create \
 ```bash
 # Create ASGs for better security management
 az network asg create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name asg-dev-app-servers \
-  --location eastus
+  --location southeastasia
 
 az network asg create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name asg-staging-app-servers \
-  --location eastus
+  --location southeastasia
 
 # Associate VMs with ASGs
 az network nic ip-config update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-dev-privateVMNic \
   --name ipconfigvm-dev-private \
   --application-security-groups asg-dev-app-servers
 
 az network nic ip-config update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nic-name vm-staging-privateVMNic \
   --name ipconfigvm-staging-private \
   --application-security-groups asg-staging-app-servers
@@ -585,7 +841,7 @@ az network nic ip-config update \
 ```bash
 # Create rule allowing dev ASG to staging ASG
 az network nsg rule create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name nsg-staging-private \
   --name allow-dev-asg-to-staging \
   --priority 90 \
@@ -605,18 +861,18 @@ az network nsg rule create \
 
 ```bash
 # Create snapshot of dev VM OS disk
-DEV_DISK_ID=$(az vm show --resource-group rg-3tier-environments --name vm-dev-private --query "storageProfile.osDisk.managedDisk.id" -o tsv)
+DEV_DISK_ID=$(az vm show --resource-group sa1_test_eic_SudarshanDarade --name vm-dev-private --query "storageProfile.osDisk.managedDisk.id" -o tsv)
 
 az snapshot create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name snapshot-dev-vm-$(date +%Y%m%d) \
   --source $DEV_DISK_ID
 
 # Create snapshot of staging VM OS disk
-STAGING_DISK_ID=$(az vm show --resource-group rg-3tier-environments --name vm-staging-private --query "storageProfile.osDisk.managedDisk.id" -o tsv)
+STAGING_DISK_ID=$(az vm show --resource-group sa1_test_eic_SudarshanDarade --name vm-staging-private --query "storageProfile.osDisk.managedDisk.id" -o tsv)
 
 az snapshot create \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name snapshot-staging-vm-$(date +%Y%m%d) \
   --source $STAGING_DISK_ID
 ```
@@ -630,13 +886,13 @@ az snapshot create \
 ```bash
 # Update dev VM NIC for accelerated networking
 az network nic update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-privateVMNic \
   --accelerated-networking true
 
 # Update staging VM NIC for accelerated networking
 az network nic update \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-staging-privateVMNic \
   --accelerated-networking true
 ```
@@ -646,12 +902,12 @@ az network nic update \
 ```bash
 # Resize VMs for better performance if needed
 az vm resize \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-private \
   --size Standard_B2s
 
 az vm resize \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-staging-private \
   --size Standard_B2s
 ```
@@ -665,18 +921,18 @@ az vm resize \
 ```bash
 # Check peering status
 az network vnet peering list \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --output table
 
 # Verify NSG effective rules
 az network nic list-effective-nsg \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name vm-dev-privateVMNic
 
 # Test IP flow
 az network watcher test-ip-flow \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vm vm-dev-private \
   --direction Outbound \
   --protocol TCP \
@@ -689,13 +945,13 @@ az network watcher test-ip-flow \
 ```bash
 # Check VM performance metrics
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-3tier-environments/providers/Microsoft.Compute/virtualMachines/vm-dev-private \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Compute/virtualMachines/vm-dev-private \
   --metric "Percentage CPU" \
   --interval PT1M
 
 # Monitor network performance
 az monitor metrics list \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-3tier-environments/providers/Microsoft.Network/networkInterfaces/vm-dev-privateVMNic \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/networkInterfaces/vm-dev-privateVMNic \
   --metric "BytesReceivedRate" \
   --interval PT1M
 ```
@@ -708,22 +964,22 @@ az monitor metrics list \
 # Delete Bastion (takes time)
 az network bastion delete \
   --name bastion-dev \
-  --resource-group rg-3tier-environments
+  --resource-group sa1_test_eic_SudarshanDarade
 
 # Delete VNet peerings
 az network vnet peering delete \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-dev \
   --name dev-to-staging
 
 az network vnet peering delete \
-  --resource-group rg-3tier-environments \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name vnet-staging \
   --name staging-to-dev
 
 # Delete entire resource group
 az group delete \
-  --name rg-3tier-environments \
+  --name sa1_test_eic_SudarshanDarade \
   --yes --no-wait
 ```
 

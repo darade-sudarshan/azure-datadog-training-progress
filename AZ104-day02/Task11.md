@@ -28,6 +28,238 @@ This guide covers creating Azure Container Registry, containerizing applications
 
 ---
 
+## Manual ACR Creation via Azure Portal
+
+### Creating Container Registry via Portal
+
+#### 1. Create Azure Container Registry
+1. Navigate to **Container registries**
+2. Click **Create**
+3. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Registry name**: `acrportaldemounique` (must be globally unique)
+   - **Location**: `Southeast Asia`
+   - **SKU**: Select tier based on needs:
+     - **Basic**: Development and testing
+     - **Standard**: Production workloads
+     - **Premium**: High-scale production, geo-replication
+   - **Admin user**: `Enable` (for simple authentication)
+
+4. **Networking tab** (Premium only):
+   - **Public access**: `All networks` or `Selected networks`
+   - **Private endpoint**: Configure if needed
+
+5. **Encryption tab** (Premium only):
+   - **Customer-managed key**: Configure if needed
+
+6. Click **Review + create** > **Create**
+
+#### 2. Configure Registry Settings
+1. Navigate to your created ACR
+2. **Settings** > **Access keys**:
+   - **Admin user**: Enable/disable admin authentication
+   - **Username**: Registry name
+   - **Password**: Copy primary or secondary password
+
+3. **Settings** > **Repositories**:
+   - View pushed repositories and tags
+   - Manage repository permissions
+
+4. **Settings** > **Webhooks**:
+   - Click **Add**
+   - **Webhook name**: `webhook-deploy`
+   - **Service URI**: `https://myapp.azurewebsites.net/api/webhook`
+   - **Actions**: Select `push`, `delete`, etc.
+   - **Scope**: Specify repository filter
+   - Click **Create**
+
+### Building Images via Portal (ACR Tasks)
+
+#### 1. Quick Build via Portal
+1. Navigate to your ACR
+2. Go to **Services** > **Tasks**
+3. Click **Quick run**
+4. **Quick run** page:
+   - **Source location**: `Upload a tar.gz` or `GitHub repository`
+   - **Dockerfile**: Path to Dockerfile
+   - **Image name**: `myapp:{{.Run.ID}}`
+   - **OS**: `Linux` or `Windows`
+   - **Architecture**: `amd64`, `arm64`
+5. Click **Run**
+
+#### 2. Create ACR Task via Portal
+1. Go to **Services** > **Tasks**
+2. Click **Add** > **Task**
+3. **Create task** page:
+   - **Task name**: `nodejs-build-task`
+   - **Source location**: `GitHub` or `Azure Repos`
+   - **Repository**: Repository URL
+   - **Branch**: `main` or `master`
+   - **Dockerfile**: `Dockerfile`
+   - **Image name**: `nodejs-app:{{.Run.ID}}`
+   - **OS**: `Linux`
+4. **Triggers** tab:
+   - **Source code update**: Enable for automatic builds
+   - **Base image update**: Enable for base image updates
+5. Click **Create**
+
+### Managing Images via Portal
+
+#### 1. View Repositories and Tags
+1. Navigate to ACR
+2. Go to **Services** > **Repositories**
+3. Click on repository name to view:
+   - **Tags**: All image tags
+   - **Manifests**: Image manifests and layers
+   - **Vulnerabilities**: Security scan results (Premium)
+
+#### 2. Delete Images
+1. In **Repositories**, select repository
+2. Select tags to delete
+3. Click **Delete** > **Yes**
+
+#### 3. Repository Permissions
+1. Go to **Settings** > **Repository permissions**
+2. **Add** > **Repository permission**:
+   - **Repository**: Select repository
+   - **Identity**: User or service principal
+   - **Permissions**: `pull`, `push`, `delete`
+3. Click **Save**
+
+### Deployment via Portal
+
+#### 1. Deploy to Container Instances
+1. Navigate to **Container instances**
+2. Click **Create**
+3. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Container name**: `nodejs-aci-portal`
+   - **Region**: `Southeast Asia`
+   - **Image source**: `Azure Container Registry`
+   - **Registry**: Select your ACR
+   - **Image**: Select repository and tag
+   - **Authentication**: Use admin credentials or managed identity
+
+4. **Networking tab**:
+   - **DNS name label**: `nodejs-acr-demo-portal`
+   - **Ports**: Add port `3000`
+
+5. Click **Review + create** > **Create**
+
+#### 2. Deploy to Web App
+1. Navigate to **App Services**
+2. Click **Create**
+3. **Basics tab**:
+   - **Resource group**: `sa1_test_eic_SudarshanDarade`
+   - **Name**: `webapp-acr-portal`
+   - **Publish**: `Docker Container`
+   - **Operating System**: `Linux`
+   - **Region**: `Southeast Asia`
+   - **App Service Plan**: Create new Linux plan
+
+4. **Docker tab**:
+   - **Image Source**: `Azure Container Registry`
+   - **Registry**: Select your ACR
+   - **Image**: Select repository
+   - **Tag**: Select tag
+   - **Startup Command**: Optional
+
+5. Click **Review + create** > **Create**
+
+### Monitoring via Portal
+
+#### 1. View Metrics
+1. Navigate to ACR
+2. Go to **Monitoring** > **Metrics**
+3. **Metric**: Select metrics:
+   - `Total Pull Count`
+   - `Total Push Count`
+   - `Storage Used`
+   - `Successful Pull Count`
+4. **Time range**: Select period
+5. **Chart type**: Line, bar, etc.
+
+#### 2. Activity Logs
+1. Go to **Monitoring** > **Activity log**
+2. **Timespan**: Select time range
+3. **Event level**: All, Critical, Error, Warning, Informational
+4. **Resource type**: `Container registries`
+5. View registry operations and changes
+
+#### 3. Diagnostic Settings
+1. Go to **Monitoring** > **Diagnostic settings**
+2. Click **Add diagnostic setting**
+3. **Diagnostic setting name**: `acr-diagnostics`
+4. **Logs**: Select log categories:
+   - `ContainerRegistryRepositoryEvents`
+   - `ContainerRegistryLoginEvents`
+5. **Destination details**: Log Analytics workspace
+6. Click **Save**
+
+### Security Configuration via Portal
+
+#### 1. Network Access
+1. Navigate to ACR
+2. Go to **Settings** > **Networking**
+3. **Public access** tab:
+   - **Allow public access**: `All networks`, `Selected networks`, or `Disabled`
+   - **Firewall**: Add IP address ranges
+4. **Private access** tab:
+   - **Private endpoint connections**: Add private endpoints
+
+#### 2. Content Trust (Premium)
+1. Go to **Settings** > **Content trust**
+2. **Content trust**: `Enabled`
+3. Configure signing keys and policies
+
+#### 3. Security Scanning
+1. Go to **Services** > **Repositories**
+2. Select repository and tag
+3. **Security** tab shows vulnerability scan results
+4. Review and remediate vulnerabilities
+
+### PowerShell Portal Automation
+
+```powershell
+# PowerShell script to automate portal-like operations
+
+# Create Container Registry
+New-AzContainerRegistry -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "acrportalps" -Sku "Standard" -Location "Southeast Asia" -EnableAdminUser
+
+# Get registry credentials
+$registry = Get-AzContainerRegistry -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "acrportalps"
+$creds = Get-AzContainerRegistryCredential -ResourceGroupName "sa1_test_eic_SudarshanDarade" -Name "acrportalps"
+
+# Create webhook
+New-AzContainerRegistryWebhook -ResourceGroupName "sa1_test_eic_SudarshanDarade" -RegistryName "acrportalps" -Name "webhook-deploy" -Uri "https://myapp.azurewebsites.net/api/webhook" -Action "push"
+
+# Create ACR task
+$taskParams = @{
+    ResourceGroupName = "sa1_test_eic_SudarshanDarade"
+    RegistryName = "acrportalps"
+    TaskName = "nodejs-build-task"
+    SourceLocation = "https://github.com/username/nodejs-app.git"
+    DockerFilePath = "Dockerfile"
+    ImageName = "nodejs-app:{{.Run.ID}}"
+    OSType = "Linux"
+}
+New-AzContainerRegistryTask @taskParams
+
+# Deploy to Container Instance
+$containerParams = @{
+    ResourceGroupName = "sa1_test_eic_SudarshanDarade"
+    Name = "nodejs-aci-ps"
+    Image = "$($registry.LoginServer)/nodejs-app:latest"
+    RegistryCredential = $creds
+    DnsNameLabel = "nodejs-acr-ps"
+    Port = 3000
+    Location = "Southeast Asia"
+}
+New-AzContainerGroup @containerParams
+```
+
+---
+
 ## Prerequisites
 
 - Active Microsoft Azure account
@@ -45,8 +277,8 @@ This guide covers creating Azure Container Registry, containerizing applications
 ```bash
 # Create resource group
 az group create \
-  --name rg-acr-demo \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 ```
 
 ### 2. Create Container Registry
@@ -54,14 +286,14 @@ az group create \
 ```bash
 # Create ACR - Basic tier
 az acr create \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name acrdemounique$(date +%s) \
   --sku Basic \
   --admin-enabled true
 
 # Create ACR - Premium tier (with advanced features)
 az acr create \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name acrpremiumdemo$(date +%s) \
   --sku Premium \
   --admin-enabled true
@@ -73,13 +305,13 @@ az acr create \
 # Get ACR details
 az acr show \
   --name acrdemounique* \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --query "{Name:name, LoginServer:loginServer, Sku:sku.name, AdminEnabled:adminUserEnabled}"
 
 # Get login credentials
 az acr credential show \
   --name acrdemounique* \
-  --resource-group rg-acr-demo
+  --resource-group sa1_test_eic_SudarshanDarade
 ```
 
 ---
@@ -279,7 +511,7 @@ docker rm nodejs-test python-test dotnet-test
 az acr login --name acrdemounique*
 
 # Alternative: Login using Docker
-ACR_NAME=$(az acr list --resource-group rg-acr-demo --query "[0].name" -o tsv)
+ACR_NAME=$(az acr list --resource-group sa1_test_eic_SudarshanDarade --query "[0].name" -o tsv)
 ACR_LOGIN_SERVER=$(az acr show --name $ACR_NAME --query loginServer -o tsv)
 ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query "passwords[0].value" -o tsv)
 
@@ -439,7 +671,7 @@ az acr run \
 ```bash
 # Deploy Node.js app to ACI
 az container create \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nodejs-aci \
   --image $ACR_LOGIN_SERVER/nodejs-acr-demo:latest \
   --registry-login-server $ACR_LOGIN_SERVER \
@@ -450,7 +682,7 @@ az container create \
 
 # Get container URL
 az container show \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nodejs-aci \
   --query ipAddress.fqdn \
   --output tsv
@@ -462,13 +694,13 @@ az container show \
 # Create App Service Plan for containers
 az appservice plan create \
   --name plan-container-demo \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --sku B1 \
   --is-linux
 
 # Create Web App with container
 az webapp create \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --plan plan-container-demo \
   --name webapp-nodejs-$(date +%s) \
   --deployment-container-image-name $ACR_LOGIN_SERVER/nodejs-acr-demo:latest
@@ -476,7 +708,7 @@ az webapp create \
 # Configure container settings
 az webapp config container set \
   --name webapp-nodejs-* \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --docker-custom-image-name $ACR_LOGIN_SERVER/nodejs-acr-demo:latest \
   --docker-registry-server-url https://$ACR_LOGIN_SERVER \
   --docker-registry-server-user $ACR_NAME \
@@ -515,13 +747,13 @@ az acr webhook ping \
 # Enable continuous deployment for Web App
 az webapp deployment container config \
   --name webapp-nodejs-* \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --enable-cd true
 
 # Get webhook URL for external CI/CD
 az webapp deployment container show-cd-url \
   --name webapp-nodejs-* \
-  --resource-group rg-acr-demo
+  --resource-group sa1_test_eic_SudarshanDarade
 ```
 
 ---
@@ -551,10 +783,10 @@ docker buildx build \
 ```bash
 # Enable diagnostic logs
 az monitor diagnostic-settings create \
-  --resource /subscriptions/{subscription-id}/resourceGroups/rg-acr-demo/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME \
+  --resource /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME \
   --name acr-diagnostics \
   --logs '[{"category":"ContainerRegistryRepositoryEvents","enabled":true},{"category":"ContainerRegistryLoginEvents","enabled":true}]' \
-  --workspace /subscriptions/{subscription-id}/resourceGroups/rg-acr-demo/providers/Microsoft.OperationalInsights/workspaces/acr-workspace
+  --workspace /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.OperationalInsights/workspaces/acr-workspace
 
 # View recent activities
 az acr task list-runs \
@@ -612,7 +844,7 @@ az acr update \
 # Create service principal for ACR access
 az ad sp create-for-rbac \
   --name acr-service-principal \
-  --scopes /subscriptions/{subscription-id}/resourceGroups/rg-acr-demo/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME \
+  --scopes /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.ContainerRegistry/registries/$ACR_NAME \
   --role acrpull
 ```
 
@@ -671,24 +903,24 @@ echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_NAME --password-stdi
 ```bash
 # Delete container instances
 az container delete \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name nodejs-aci \
   --yes
 
 # Delete web apps
 az webapp delete \
   --name webapp-nodejs-* \
-  --resource-group rg-acr-demo
+  --resource-group sa1_test_eic_SudarshanDarade
 
 # Delete ACR
 az acr delete \
   --name $ACR_NAME \
-  --resource-group rg-acr-demo \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --yes
 
 # Delete resource group
 az group delete \
-  --name rg-acr-demo \
+  --name sa1_test_eic_SudarshanDarade \
   --yes --no-wait
 ```
 

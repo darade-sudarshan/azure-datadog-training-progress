@@ -1,0 +1,10 @@
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.
+cat: invalid option -- 'k'
+Try 'cat --help' for more information.

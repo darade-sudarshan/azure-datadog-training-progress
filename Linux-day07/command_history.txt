@@ -1,0 +1,227 @@
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/Linux-day07$ history
+    1  history
+    2  echo $PATH
+    3  which cal
+    4  which cat
+    5  which echo
+    6  which wchich
+    7  which which
+    8  cal 2025
+    9  cal 10 2025
+   10  date
+   11  date -u
+   12  cal -A 1 12 2025
+   13  cal -A 1 -B 1 2025
+   14  man -k which
+   15  man 1 which 
+   16  man sol
+   17  man which 
+   18  man whch 
+   19  man which 
+   20  which date cal
+   21  man -k "list directory content"
+   22  man ls
+   23  ls
+   24  ls -l
+   25  ls -lh
+   26  man pwd
+   27  pwd -help
+   28  pwd --help
+   29  cat 1> abc.txt
+   30  cat abc.txt 
+   31  cat > abc.txt
+   32  cat abc.txt 
+   33  cat 1>> abc.txt
+   34  cat abc.txt 
+   35  cat >> abc.txt
+   36  cat abc.txt 
+   37  cat -k blah 2> error.txt
+   38  cat error.txt 
+   39  cat -k blah 2>> error.txt
+   40  cat error.txt 
+   41  cat -k blah 1>> abc.txt 2>> error.txt
+   42  cat abc.txt 
+   43  cat error.txt 
+   44  cat > input.txt
+   45  cat 0< input.txt 
+   46  cat < input.txt 
+   47  cat < input.txt >> abc.txt
+   48  cat abc.txt 
+   49  cat < input.txt >> /dev/tty1
+   50  udo cat < input.txt >> /dev/tty1
+   51  sudo cat < input.txt >> /dev/tty1
+   52  sudo cat < input.txt >> /dev/pts0
+   53  sudo cat < input.txt >> /dev/pts/0
+   54  date > date.txt
+   55  cat date.txt 
+   56  cut < date.txt -d " " -f 1
+   57  date | cut -d " " -f 1
+   58  date | cut -d " " -f 2
+   59  date | cut -d " " -f 3
+   60  date | cut -d " " -f 4
+   61  date | cut -d " " -f 5
+   62  date | cut -d " " -f 5 > time.txt
+   63  cat time.txt 
+   64  date | tee fulldate.txt| cut -d " " -f 5
+   65  date | tee fulldate.txt| cut -d " " -f 1
+   66  date | tee fulldate.txt| cut -d " " -f 2
+   67  cat fulldate.txt 
+   68  date | tee fulldate.txt| cut -d " " -f 2 > date.txt
+   69  cat date.txt 
+   70  date | xargs echo 
+   71  date | xargs echo "hello"
+   72  date | xargs echo "hello today is "
+   73  ls -l ~
+   74  ls -la ~
+   75  nano ~.bash_aliases
+   76  getdates
+   77  nano ~.bash_aliases
+   78  getdates
+   79  nano ~.bash_aliases
+   80  vpn
+   81  ls 
+   82  mv \~.bash_aliases ~
+   83  ls -l ~
+   84  mv ~/~.bash_aliases .bash_aliases
+   85  ls -l ~
+   86  vpn
+   87  ls -la ~
+   88  ll
+   89  mv .bash_aliases /home/einfochips/
+   90  ls -la ~
+   91  vpn
+   92  ls /etc/ /run/
+   93  ls /etc/ > file1.txt && ls /run/ > file2.txt
+   94  ls
+   95  cat file1.txt 
+   96  cat file2.txt 
+   97  cat file1.txt file2.txt | tee unsorted.txt | sort -r > reversed.txt
+   98  pwd
+   99  ls
+  100  ls -F
+  101  ls -F /
+  102  ls -F / > list.txt
+  103  cat list.txt 
+  104  ls -l
+  105  ls -lh
+  106  file file1.txt 
+  107  file Section+2+Command+Cheat+Sheet.pdf 
+  108  ls *
+  109  ls
+  110  ls *.txt
+  111  ls file*.txt
+  112  ls file?.txt
+  113  ls ~/D*
+  114  ls ~/Do*
+  115  touch file[123].txt
+  116  ls
+  117  touch file[abc].txt
+  118  ls
+  119  touch file[ABC].txt
+  120  ls
+  121  rm file\[abc\].txt file\[ABC\].txt 
+  122  ll
+  123  touch fileA.txt fileB.txt fileC.txt 
+  124  ls file[0-9ABC].txt
+  125  mkdir linux-practice
+  126  mkdir -p linux-practice/test[0-2]
+  127  ls linux-practice/
+  128  rm -p linux-practice/test[0-2]
+  129  rm -p linux-practice/test[012]
+  130  rm  linux-practice/test\[0-2\]/
+  131  rm  -rlinux-practice/test\[0-2\]/
+  132  rm  -r linux-practice/test\[0-2\]/
+  133  ls
+  134  ls linux-practice/
+  135  mkdir -p linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}
+  136  ls linux-practice/
+  137  mkdir -p linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020..2025}
+  138  touch linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{1..5}.txt
+  139  ls linux-practice/jan_2025
+  140  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{1..5}.txt
+  141  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{1..5}.txt > file_dir.txt
+  142  cat file_dir.txt 
+  143  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  144  touch linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  145  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  146  rm linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  147  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  148  rm linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  149  rm linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{1..5}.txt
+  150  ls linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  151  ls linux-practice/
+  152  ls linux-practice/apr_2025
+  153  rmdir -r {jan..dec}_{2020..2025}
+  154  rmdir  {jan..dec}_{2020..2025}
+  155  rmdir  {jan,feb,mar,apr,may,jun,jul,aug,sep,oct,dec}_{2020..2025}
+  156  ls
+  157  rmdir  linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,dec}_{2020..2025}
+  158  ll
+  159  ls linux-practice/
+  160  rmdir  linux-practice/{nov}_{2020..2025}
+  161  ls linux-practice/
+  162  rmdir  linux-practice/nov_{2020..2025}
+  163  ls linux-practice/
+  164  touch linux-practice/{jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2020,2021,2024,2025}/file{A..C}.txt
+  165  mkdir linux-practice/{2020,2021,2024,2025}/
+  166  rm -ri linux-practice/*
+  167  ls linux-practice/
+  168  cp file*.txt linux-practice/
+  169  ls linux-practice/
+  170  cp linux-practice/file*.txt .
+  171  ll
+  172  ls linux-practice/
+  173  mv linux-practice/file?.txt .
+  174  ll
+  175  ls linux-practice/
+  176  mv linux-practice/file_dir.txt linux-practice/file_directory.txt
+  177  ls linux-practice/
+  178  nano /etc/nanorc 
+  179  locate
+  180  locale linux-practice/
+  181  locale linux-practice
+  182  locale file_directory.txt
+  183  sudo updatedb
+  184  locate file_directory.txt
+  185  locate *.txt
+  186  locate nginx*
+  187  locate hostname*
+  188  locate hostname
+  189  locate -i *.CONF -l 10
+  190  locate -S
+  191  locate -e *.conf -l 20
+  192  locate -e -f *.conf -l 20
+  193  locate -e --following *.conf -l 20
+  194  locate -e *.conf -l 20
+  195  locate -e --follow *.conf -l 20
+  196  find 
+  197  find ..
+  198  find /var
+  199  find /home/einfochips/Desktop/
+  200  find linux-practice/
+  201  find /etc/ -maxdepth 1 
+  202  find /etc/ -maxdepth 2
+  203  find /etc/ -maxdepth 2 -type f
+  204  find /etc/ -maxdepth 2 -type d
+  205  find . -name "file*.txt"
+  206  find . -iname "file*.txt"
+  207  find / -type f -size +100M
+  208  sudo find / -type f -size +100G
+  209  sudo find / -type f -size +100M | wc- l
+  210  sudo find / -type f -size +100M | wc -l
+  211  sudo find / -type f -size +100M -size -5M
+  212  sudo find / -type f -size +100M -size -5M |wc -l
+  213  ls -l linux-practice/
+  214  mkdir -p linux-practice/haystack/folder{1..300}
+  215  touch linux-practice/haystack/folder{1..300}/file{1..100}
+  216  touch linux-practice/haystack/folder$(shuf -i 1-300 -n 1)/needle.txt
+  217  find linux-practice/haystack/ -type f "nnedle.txt"
+  218  find linux-practice/haystack/ -type f "needle.txt"
+  219  find linux-practice/haystack/ -type f -name "needle.txt"
+  220  find linux-practice/haystack/ -type f -name "needle.txt" -exec mv ~/Desktop/;
+  221  find linux-practice/haystack/ -type f -name "needle.txt" -exec mv ~/Desktop \;
+  222  find linux-practice/haystack/ -type f -name "needle.txt" -exec mv ~/Desktop/ \;
+  223  find linux-practice/haystack/ -type f -name "needle.txt" -exec mv {} ~/Desktop \;
+  224  ls ~/Desktop/
+  225  history
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/Linux-day07$ 

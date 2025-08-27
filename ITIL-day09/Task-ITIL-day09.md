@@ -377,6 +377,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Plan
 **Purpose**: Ensure shared understanding of vision, current status, and improvement direction
+
 **Key Activities**:
 - Portfolio decisions for all products and services
 - Architecture and policy definition
@@ -384,6 +385,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Improve
 **Purpose**: Ensure continual improvement of products, services, and practices
+
 **Key Activities**:
 - Improvement initiatives and plans
 - Performance measurement and reporting
@@ -391,6 +393,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Engage
 **Purpose**: Provide good understanding of stakeholder needs and transparency
+
 **Key Activities**:
 - Relationship management
 - Requirements and feedback collection
@@ -398,6 +401,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Design and Transition
 **Purpose**: Ensure products and services meet stakeholder expectations
+
 **Key Activities**:
 - Service and product design
 - Development and testing
@@ -405,6 +409,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Obtain/Build
 **Purpose**: Ensure service components are available when needed
+
 **Key Activities**:
 - Component sourcing and procurement
 - Service component development
@@ -412,6 +417,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Deliver and Support
 **Purpose**: Ensure services are delivered and supported according to specifications
+
 **Key Activities**:
 - Service performance monitoring
 - User support and incident resolution
@@ -425,6 +431,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Architecture Management
 **Purpose**: Provide understanding of all elements that make up organization
+
 **Key Activities**:
 - Architecture governance
 - Architecture design and development
@@ -432,6 +439,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Continual Improvement
 **Purpose**: Align organization's practices and services with changing business needs
+
 **Key Activities**:
 - Improvement identification and logging
 - Improvement assessment and prioritization
@@ -439,6 +447,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Information Security Management
 **Purpose**: Protect information needed by organization to conduct business
+
 **Key Activities**:
 - Information security governance
 - Information security risk management
@@ -446,6 +455,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Knowledge Management
 **Purpose**: Maintain and improve effective use of information and knowledge
+
 **Key Activities**:
 - Knowledge identification and capture
 - Knowledge sharing and utilization
@@ -453,6 +463,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Measurement and Reporting
 **Purpose**: Support good decision-making and improvement
+
 **Key Activities**:
 - Measurement planning and design
 - Data collection and processing
@@ -460,6 +471,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Organizational Change Management
 **Purpose**: Ensure changes in organization are smoothly implemented
+
 **Key Activities**:
 - Change impact assessment
 - Change communication and training
@@ -467,6 +479,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Portfolio Management
 **Purpose**: Ensure organization has right mix of programs and projects
+
 **Key Activities**:
 - Portfolio definition and planning
 - Portfolio optimization
@@ -474,6 +487,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Project Management
 **Purpose**: Ensure all projects are successfully delivered
+
 **Key Activities**:
 - Project initiation and planning
 - Project execution and monitoring
@@ -481,6 +495,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Relationship Management
 **Purpose**: Establish and nurture links between organization and stakeholders
+
 **Key Activities**:
 - Stakeholder identification and analysis
 - Relationship strategy development
@@ -488,6 +503,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Risk Management
 **Purpose**: Ensure organization understands and effectively handles risks
+
 **Key Activities**:
 - Risk identification and assessment
 - Risk treatment and monitoring
@@ -495,6 +511,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Financial Management
 **Purpose**: Support organization's strategies through financial management
+
 **Key Activities**:
 - Financial planning and budgeting
 - Cost accounting and charging
@@ -502,6 +519,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Strategy Management
 **Purpose**: Formulate goals and adopt courses of action
+
 **Key Activities**:
 - Strategic assessment and planning
 - Strategy execution and monitoring
@@ -509,6 +527,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Supplier Management
 **Purpose**: Ensure organization's suppliers and their performance are managed
+
 **Key Activities**:
 - Supplier strategy and policy
 - Supplier evaluation and selection
@@ -516,6 +535,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Workforce and Talent Management
 **Purpose**: Ensure organization has right people with appropriate skills
+
 **Key Activities**:
 - Workforce planning and recruitment
 - Performance management and development
@@ -525,6 +545,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Availability Management
 **Purpose**: Ensure services deliver agreed levels of availability
+
 **Key Activities**:
 - Availability planning and design
 - Availability monitoring and reporting
@@ -538,6 +559,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Business Analysis
 **Purpose**: Analyze business and identify business needs
+
 **Key Activities**:
 - Business situation analysis
 - Feasibility assessment
@@ -545,6 +567,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Capacity and Performance Management
 **Purpose**: Ensure services achieve agreed performance levels
+
 **Key Activities**:
 - Performance monitoring and analysis
 - Capacity planning and optimization
@@ -557,6 +580,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Change Enablement
 **Purpose**: Maximize number of successful service and product changes
+
 **Key Activities**:
 - Change initiation and assessment
 - Change authorization and implementation
@@ -569,6 +593,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Incident Management
 **Purpose**: Minimize negative impact of incidents
+
 **Key Activities**:
 - Incident identification and logging
 - Incident categorization and prioritization
@@ -587,6 +612,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### IT Asset Management
 **Purpose**: Plan and manage full lifecycle of all IT assets
+
 **Key Activities**:
 - Asset identification and registration
 - Asset lifecycle management
@@ -594,6 +620,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Monitoring and Event Management
 **Purpose**: Systematically observe services and service components
+
 **Key Activities**:
 - Event detection and filtering
 - Event correlation and analysis
@@ -606,6 +633,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Problem Management
 **Purpose**: Reduce likelihood and impact of incidents
+
 **Key Activities**:
 - Problem identification and logging
 - Problem investigation and diagnosis
@@ -617,6 +645,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Release Management
 **Purpose**: Make new and changed services available for use
+
 **Key Activities**:
 - Release planning and design
 - Release build and test
@@ -629,6 +658,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Catalogue Management
 **Purpose**: Provide single source of consistent information
+
 **Key Activities**:
 - Service catalogue planning and design
 - Service catalogue population and maintenance
@@ -640,6 +670,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Configuration Management
 **Purpose**: Ensure accurate information about configuration items
+
 **Key Activities**:
 - Configuration identification and control
 - Configuration status accounting
@@ -654,6 +685,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Continuity Management
 **Purpose**: Ensure availability and performance during disasters
+
 **Key Activities**:
 - Business impact analysis
 - Risk assessment and management
@@ -662,6 +694,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Design
 **Purpose**: Design products and services fit for purpose and use
+
 **Key Activities**:
 - Service design planning
 - Solution design and development
@@ -669,6 +702,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Desk
 **Purpose**: Capture demand for incident resolution and service requests
+
 **Key Activities**:
 - User query handling
 - Incident and request management
@@ -682,6 +716,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Level Management
 **Purpose**: Set clear business-based targets for service performance
+
 **Key Activities**:
 - Service level planning and negotiation
 - Service level monitoring and reporting
@@ -694,6 +729,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Request Management
 **Purpose**: Support agreed quality of service by handling requests
+
 **Key Activities**:
 - Request initiation and approval
 - Request fulfillment
@@ -706,6 +742,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Service Validation and Testing
 **Purpose**: Ensure new or changed services meet requirements
+
 **Key Activities**:
 - Test planning and design
 - Test execution and evaluation
@@ -721,6 +758,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Deployment Management
 **Purpose**: Move new or changed components to live environments
+
 **Key Activities**:
 - Deployment planning and preparation
 - Deployment execution and verification
@@ -728,6 +766,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Infrastructure and Platform Management
 **Purpose**: Oversee infrastructure and platforms used by organization
+
 **Key Activities**:
 - Infrastructure strategy and planning
 - Infrastructure provisioning and management
@@ -735,6 +774,7 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 #### Software Development and Management
 **Purpose**: Ensure applications meet stakeholder needs
+
 **Key Activities**:
 - Software development lifecycle management
 - Application portfolio management
@@ -832,11 +872,14 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 ### ITIL 4 Foundation
 **Prerequisites**: None
+
 **Focus**: Basic concepts and terminology
+
 **Duration**: 2-3 days training
 
 ### ITIL 4 Managing Professional (MP)
 **Prerequisites**: ITIL 4 Foundation
+
 **Modules**:
 - Create, Deliver and Support (CDS)
 - Drive Stakeholder Value (DSV)
@@ -845,12 +888,14 @@ The ITIL 4 Service Value System describes how all components and activities work
 
 ### ITIL 4 Strategic Leader (SL)
 **Prerequisites**: ITIL 4 Foundation
+
 **Modules**:
 - Direct, Plan and Improve (DPI)
 - Digital and IT Strategy (DITS)
 
 ### ITIL 4 Master
 **Prerequisites**: ITIL 4 MP or SL designation
+
 **Focus**: Practical application and leadership
 
 ---

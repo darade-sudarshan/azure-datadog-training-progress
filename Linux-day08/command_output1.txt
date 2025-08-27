@@ -1,0 +1,1296 @@
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ mkdir linux_practice
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ mv linux_practice/ linux_practise
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ touch linux_practise/file{1..5}.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls linux_practise/
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ echo hello > linux_practise/file1.txt 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat linux_practise/file
+cat: linux_practise/file: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat linux_practise/file1.txt 
+hello
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ echo there > linux_practise/file2.txt 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ echo we > linux_practise/file3.txt 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ echo are learning > linux_practise/file4.txt 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat linux_practise/file4.txt 
+are learning
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat file[1-5].txt > combined.txt
+cat: 'file[1-5].txt': No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat file{1..5}.txt > combined.txt
+cat: file1.txt: No such file or directory
+cat: file2.txt: No such file or directory
+cat: file3.txt: No such file or directory
+cat: file4.txt: No such file or directory
+cat: file5.txt: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat linux_practise/file[1-5].txt > combined.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls linux_practise/
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat combined.txt 
+hello
+there
+we
+are learning
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tac combined.txt 
+are learning
+we
+there
+hello
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ rev combined.txt 
+olleh
+ereht
+ew
+gninrael era
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ less /etc/cups
+cups/        cupshelpers/ 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ less /etc/cups
+cups/        cupshelpers/ 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ less /etc/cups/
+cups-browsed.conf     cups-files.conf       ppd/                  printers.conf.O       raw.types             ssl/                  subscriptions.conf.O  
+cupsd.conf            interfaces/           printers.conf         raw.convs             snmp.conf             subscriptions.conf    
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ less /etc/cups/
+cups-browsed.conf     cups-files.conf       ppd/                  printers.conf.O       raw.types             ssl/                  subscriptions.conf.O  
+cupsd.conf            interfaces/           printers.conf         raw.convs             snmp.conf             subscriptions.conf    
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ less /etc/cups/cups-browsed.conf 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ more /etc/cups/cups-browsed.conf 
+# All configuration options described here can also be supplied on the
+# command line of cups-browsed via the "-o" option. In case of
+# contradicting settings the setting defined in the configuration file
+# will get used.
+
+# Unknown directives are ignored, also unknown values.
+
+
+# Where should cups-browsed save information about the print queues it had
+# generated when shutting down, like whether one of these queues was the
+# default printer, or default option settings of the queues?
+
+# CacheDir /var/cache/cups
+
+
+# Where should cups-browsed create its debug log file (if "DebugLogging file"
+# is set)?
+
+# LogDir /var/log/cups
+
+
+# How should debug logging be done? Into the file
+# /var/log/cups/cups-browsed_log ('file'), to stderr ('stderr'), or
+# not at all ('none')?
+
+# Note that if cups-browsed is running as a system service (for
+# example via systemd) logging to stderr makes the log output going to
+# the journal or syslog. Only if you run cups-browsed from the command
+# line (for development or debugging) it will actually appear on
+# stderr.
+
+# DebugLogging file
+# DebugLogging stderr
+# DebugLogging file stderr
+# DebugLogging none
+
+
+# Which protocols will we use to discover printers on the network?
+# Can use DNSSD or 'none'.
+
+BrowseRemoteProtocols dnssd
+
+
+# Which protocols will we use to broadcast shared local printers to the network?
+# Can use DNSSD or 'none'.
+# Broadcasting is currently not supported, as DNSSD is done by CUPS itself
+# (we ignore DNSSD in this directive).
+
+# BrowseLocalProtocols none
+
+
+# Settings of this directive apply to both BrowseRemoteProtocols and
+# BrowseLocalProtocols.
+# Can use DNSSD or 'none'.
+
+# BrowseProtocols none
+
+
+# Only browse remote printers (via DNS-SD) from
+# selected servers using the "BrowseAllow", "BrowseDeny", and
+# "BrowseOrder" directives
+
+# This serves for restricting the choice of printers in print dialogs
+# to trusted servers or to reduce the number of listed printers in the
+# print dialogs to a more user-friendly amount in large networks with
+# very many shared printers.
+
+# This only filters the selection of remote printers for which
+# cups-browsed creates local queues. If the print dialog uses other
+# mechanisms to list remote printers as for example direct DNS-SD
+# access, cups-browsed has no influence. cups-browsed also does not
+# prevent the user from manually accessing non-listed printers.
+
+# "BrowseAllow": Accept printers from these hosts or networks. If
+# there are only "BrowseAllow" lines and no "BrowseOrder" and/or
+# "BrowseDeny" lines, only servers matching at last one "BrowseAllow"
+# line are accepted.
+
+# "BrowseDeny": Deny printers from these hosts or networks. If there
+# are only "BrowseDeny" lines and no "BrowseOrder" and/or
+# "BrowseAllow" lines, all servers NOT matching any of the
+# "BrowseDeny" lines are accepted.
+
+# "BrowseOrder": Determine the order in which "BrowseAllow" and
+# "BrowseDeny" lines are applied. With "BrowseOrder Deny,Allow" in the
+# beginning all servers are accepted, then the "BrowseDeny" lines are
+# applied to exclude unwished servers or networks and after that the
+# "BrowseAllow" lines to re-include servers or networks. With
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ more /etc/cups/cups-browsed.conf 
+# All configuration options described here can also be supplied on the
+# command line of cups-browsed via the "-o" option. In case of
+# contradicting settings the setting defined in the configuration file
+# will get used.
+
+# Unknown directives are ignored, also unknown values.
+
+
+# Where should cups-browsed save information about the print queues it had
+# generated when shutting down, like whether one of these queues was the
+# default printer, or default option settings of the queues?
+
+# CacheDir /var/cache/cups
+
+
+# Where should cups-browsed create its debug log file (if "DebugLogging file"
+# is set)?
+
+# LogDir /var/log/cups
+
+
+# How should debug logging be done? Into the file
+# /var/log/cups/cups-browsed_log ('file'), to stderr ('stderr'), or
+# not at all ('none')?
+
+# Note that if cups-browsed is running as a system service (for
+# example via systemd) logging to stderr makes the log output going to
+# the journal or syslog. Only if you run cups-browsed from the command
+# line (for development or debugging) it will actually appear on
+# stderr.
+
+# DebugLogging file
+# DebugLogging stderr
+# DebugLogging file stderr
+# DebugLogging none
+
+
+# Which protocols will we use to discover printers on the network?
+# Can use DNSSD or 'none'.
+
+BrowseRemoteProtocols dnssd
+
+
+# Which protocols will we use to broadcast shared local printers to the network?
+# Can use DNSSD or 'none'.
+# Broadcasting is currently not supported, as DNSSD is done by CUPS itself
+# (we ignore DNSSD in this directive).
+
+# BrowseLocalProtocols none
+
+
+# Settings of this directive apply to both BrowseRemoteProtocols and
+# BrowseLocalProtocols.
+# Can use DNSSD or 'none'.
+
+# BrowseProtocols none
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ find /etc/ | less
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ head combined.txt 
+hello
+there
+we
+are learning
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ head -n 2 combined.txt 
+hello
+there
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tail -n 2 combined.txt 
+we
+are learning
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ find /etc/ | head -n 20
+/etc/
+/etc/magic
+/etc/fstab
+/etc/xattr.conf
+/etc/init
+/etc/init/session-manager-plugin.conf
+/etc/init/whoopsie.conf
+/etc/NetworkManager
+/etc/NetworkManager/NetworkManager.conf
+/etc/NetworkManager/system-connections
+/etc/NetworkManager/system-connections/TP-LINK_CCE2.nmconnection
+/etc/NetworkManager/system-connections/Akin_5G.nmconnection
+/etc/NetworkManager/system-connections/Wired connection 2.nmconnection
+/etc/NetworkManager/system-connections/Wired connection 1.nmconnection
+/etc/NetworkManager/system-connections/iBall-Baton.nmconnection
+/etc/NetworkManager/system-connections/iQOO Z7s 5G.nmconnection
+/etc/NetworkManager/system-connections/Airtel_suda_6853_5G_EXT.nmconnection
+/etc/NetworkManager/system-connections/Arrow-IOT.nmconnection
+/etc/NetworkManager/system-connections/Airtel_suda_6853_5G.nmconnection
+/etc/NetworkManager/system-connections/Sudarshan.nmconnection
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ find /etc/ | less -n 20
+find: ‘/etc/audit’: Permission denied
+find: ‘/etc/polkit-1/localauthority’: Permission denied
+find: ‘/etc/cups/ssl’: Permission denied
+20: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ head -n 20 /etc/cups/cups-browsed.conf | wc-l
+wc-l: command not found
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ head -n 20 /etc/cups/cups-browsed.conf | wc -l
+20
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tail -n 20 /etc/cups/cups-browsed.conf | wc -l
+20
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tail -n 20 /etc/cups/cups-browsed.conf
+
+
+# The AutoShutdownOn directive determines what event cups-browsed
+# considers as inactivity in auto shutdown mode. "NoQueues" (the
+# default) means that auto shutdown is initiated when there are no
+# queues for discovered remote printers generated by cups-browsed any
+# more. "NoJobs" means that all queues generated by cups-browsed are
+# without jobs.
+
+# AutoShutdownOn NoQueues
+# AutoShutdownOn NoJobs
+
+
+# The AutoShutdownTimeout directive specifies after how many seconds
+# without local raw queues set up pointing to any discovered remote
+# printers or jobs on these queues cups-browsed should actually shut
+# down in auto shutdown mode. Default is 30 seconds, 0 means immediate
+# shutdown.
+
+# AutoShutdownTimeout 30
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort linux_practise/words.txt 
+abandoned
+academician's
+agronomist
+almanacs
+beautifiers
+Bennie
+bidder's
+boudoir's
+bullish
+caveat
+chalkboard's
+cheater
+chilliest
+Creighton
+decelerating
+demagoguery
+demotion's
+depths
+derision
+dictionaries
+disagree
+distaste
+district's
+documentation's
+Dresden's
+due
+Ed
+Eddington
+endued
+entropy
+feelers
+filial
+floating
+fragment
+functionary's
+fungal
+Gallegos
+goddam
+gulling
+hardeners
+heedlessly
+hi
+hullabaloo's
+igloo
+impenetrable
+independent's
+inherited
+instrumentalist's
+irresolute
+Jonas
+kneed
+long
+malformed
+miscalculating
+mugging's
+mythic
+nastiness
+NATO's
+Nicosia
+nocturne
+oddball's
+padding's
+prancing
+premeditation's
+propaganda
+purring
+quirk's
+recreate
+refurbish
+rend
+repayable
+resentful
+Rufus's
+Rydberg's
+sects
+shampooed
+shlepping
+sidearm's
+smugness
+sole
+Surinam
+swig's
+telecast's
+than
+throve
+timidest
+timidity's
+two's
+typographical
+Ukrainian
+ultraconservative
+unavailing
+utopias
+vaunting
+Velcro's
+web
+whippets
+worsen
+Xochipilli
+Yong
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat linux_practise/words.txt 
+web
+than
+cheater
+fungal
+due
+typographical
+gulling
+bullish
+Xochipilli
+demotion's
+resentful
+fragment
+Rydberg's
+kneed
+district's
+demagoguery
+throve
+smugness
+refurbish
+endued
+irresolute
+agronomist
+filial
+disagree
+worsen
+Yong
+documentation's
+timidest
+telecast's
+caveat
+nastiness
+quirk's
+recreate
+sects
+purring
+academician's
+timidity's
+unavailing
+two's
+abandoned
+igloo
+Velcro's
+instrumentalist's
+shampooed
+almanacs
+rend
+functionary's
+hullabaloo's
+Jonas
+repayable
+NATO's
+boudoir's
+entropy
+chilliest
+mugging's
+floating
+dictionaries
+mythic
+long
+whippets
+padding's
+Nicosia
+depths
+derision
+premeditation's
+goddam
+Surinam
+beautifiers
+nocturne
+feelers
+Ukrainian
+decelerating
+swig's
+distaste
+hi
+inherited
+Creighton
+independent's
+heedlessly
+prancing
+oddball's
+impenetrable
+Bennie
+Dresden's
+chalkboard's
+hardeners
+bidder's
+miscalculating
+Gallegos
+ultraconservative
+Rufus's
+malformed
+vaunting
+Eddington
+propaganda
+Ed
+sole
+utopias
+sidearm's
+shlepping
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort linux_practise/words.txt | tac
+Yong
+Xochipilli
+worsen
+whippets
+web
+Velcro's
+vaunting
+utopias
+unavailing
+ultraconservative
+Ukrainian
+typographical
+two's
+timidity's
+timidest
+throve
+than
+telecast's
+swig's
+Surinam
+sole
+smugness
+sidearm's
+shlepping
+shampooed
+sects
+Rydberg's
+Rufus's
+resentful
+repayable
+rend
+refurbish
+recreate
+quirk's
+purring
+propaganda
+premeditation's
+prancing
+padding's
+oddball's
+nocturne
+Nicosia
+NATO's
+nastiness
+mythic
+mugging's
+miscalculating
+malformed
+long
+kneed
+Jonas
+irresolute
+instrumentalist's
+inherited
+independent's
+impenetrable
+igloo
+hullabaloo's
+hi
+heedlessly
+hardeners
+gulling
+goddam
+Gallegos
+fungal
+functionary's
+fragment
+floating
+filial
+feelers
+entropy
+endued
+Eddington
+Ed
+due
+Dresden's
+documentation's
+district's
+distaste
+disagree
+dictionaries
+derision
+depths
+demotion's
+demagoguery
+decelerating
+Creighton
+chilliest
+cheater
+chalkboard's
+caveat
+bullish
+boudoir's
+bidder's
+Bennie
+beautifiers
+almanacs
+agronomist
+academician's
+abandoned
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -r linux_practise/words.txt 
+Yong
+Xochipilli
+worsen
+whippets
+web
+Velcro's
+vaunting
+utopias
+unavailing
+ultraconservative
+Ukrainian
+typographical
+two's
+timidity's
+timidest
+throve
+than
+telecast's
+swig's
+Surinam
+sole
+smugness
+sidearm's
+shlepping
+shampooed
+sects
+Rydberg's
+Rufus's
+resentful
+repayable
+rend
+refurbish
+recreate
+quirk's
+purring
+propaganda
+premeditation's
+prancing
+padding's
+oddball's
+nocturne
+Nicosia
+NATO's
+nastiness
+mythic
+mugging's
+miscalculating
+malformed
+long
+kneed
+Jonas
+irresolute
+instrumentalist's
+inherited
+independent's
+impenetrable
+igloo
+hullabaloo's
+hi
+heedlessly
+hardeners
+gulling
+goddam
+Gallegos
+fungal
+functionary's
+fragment
+floating
+filial
+feelers
+entropy
+endued
+Eddington
+Ed
+due
+Dresden's
+documentation's
+district's
+distaste
+disagree
+dictionaries
+derision
+depths
+demotion's
+demagoguery
+decelerating
+Creighton
+chilliest
+cheater
+chalkboard's
+caveat
+bullish
+boudoir's
+bidder's
+Bennie
+beautifiers
+almanacs
+agronomist
+academician's
+abandoned
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -r linux_practise/numbers
+numbers0-9.txt  numbers.txt     
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -r linux_practise/numbers
+numbers0-9.txt  numbers.txt     
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -r linux_practise/numbers.txt 
+9650
+884
+8432
+6415
+6007
+5803
+5711
+5671
+5524
+5357
+5328
+5094
+4843
+4799
+4230
+4215
+4163
+3657
+3407
+333
+32764
+32652
+32605
+32291
+3193
+31509
+31466
+31297
+30941
+3074
+30639
+30432
+30321
+29958
+29313
+28955
+28876
+28871
+28645
+2853
+28446
+2777
+27360
+27143
+26921
+26751
+26717
+267
+26216
+26007
+25915
+25910
+25816
+2576
+25186
+25005
+23753
+23145
+23027
+2292
+22910
+22816
+22276
+22211
+22153
+21504
+21039
+20738
+20615
+19940
+19811
+19809
+19667
+19597
+19204
+19117
+18913
+18491
+18256
+18099
+17635
+17399
+1729
+17275
+17189
+16866
+16711
+1641
+16029
+15566
+14543
+12808
+12564
+123
+12249
+11423
+10368
+10322
+1015
+10130
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort linux_practise/numbers.txt | more
+10130
+1015
+10322
+10368
+11423
+12249
+123
+12564
+12808
+14543
+15566
+16029
+1641
+16711
+16866
+17189
+17275
+1729
+17399
+17635
+18099
+18256
+18491
+18913
+19117
+19204
+19597
+19667
+19809
+19811
+19940
+20615
+20738
+21039
+21504
+22153
+22211
+22276
+22816
+22910
+2292
+23027
+23145
+23753
+25005
+25186
+2576
+25816
+25910
+25915
+26007
+26216
+267
+26717
+26751
+26921
+27143
+27360
+2777
+28446
+2853
+28645
+28871
+28876
+28955
+29313
+29958
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort n linux_practise/numbers.txt | more
+sort: cannot read: n: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -n linux_practise/numbers.txt | more
+123
+267
+333
+884
+1015
+1641
+1729
+2292
+2576
+2777
+2853
+3074
+3193
+3407
+3657
+4163
+4215
+4230
+4799
+4843
+5094
+5328
+5357
+5524
+5671
+5711
+5803
+6007
+6415
+8432
+9650
+10130
+10322
+10368
+11423
+12249
+12564
+12808
+14543
+15566
+16029
+16711
+16866
+17189
+17275
+17399
+17635
+18099
+18256
+18491
+18913
+19117
+19204
+19597
+19667
+19809
+19811
+19940
+20615
+20738
+21039
+21504
+22153
+22211
+22276
+22816
+22910
+23027
+23145
+23753
+25005
+25186
+25816
+25910
+25915
+26007
+26216
+26717
+26751
+26921
+27143
+27360
+28446
+28645
+28871
+28876
+28955
+29313
+29958
+30321
+30432
+30639
+30941
+31297
+31466
+31509
+32291
+32605
+32652
+32764
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -n linux_practise/numbers.txt | less
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort ^C linux_practise/numbers.txt | less
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort linux_practise/numbers0-9.txt | less
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -u linux_practise/numbers0-9.txt | less
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -u linux_practise/numbers0-9.txt | more
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ sort -ur linux_practise/numbers0-9.txt | more
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -l /etc/ |head -n 20 | sort -k 5n
+total 1316
+-rw-r--r--  1 root root       51 Jul 22  2024 aliases
+-rw-r--r--  1 root root      401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root      433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root      769 Jan 18  2020 appstream.conf
+-rw-r--r--  1 root root     3028 Mar 16  2023 adduser.conf
+drwxr-x---  3 root root     4096 Apr  4  2024 audisp
+drwxr-x---  3 root root     4096 Apr  4  2024 audit
+drwxr-xr-x  3 root root     4096 Apr  4  2024 avahi
+drwxr-xr-x  3 root root     4096 Jul 30  2024 ansible
+drwxr-xr-x  3 root root     4096 Mar 16  2023 acpi
+drwxr-xr-x  3 root root     4096 Mar 16  2023 alsa
+drwxr-xr-x  3 root root     4096 Sep 25  2024 apparmor
+drwxr-xr-x  4 root root     4096 Aug  6 22:32 apport
+drwxr-xr-x  5 root root     4096 Mar 16  2023 apm
+drwxr-xr-x  8 root root     4096 Apr  9 06:45 apache2
+drwxr-xr-x  8 root root     4096 Aug 12  2024 apt
+drwxr-xr-x  8 root root     4096 Jul 10 06:06 apparmor.d
+drwxr-xr-x  2 root root    12288 Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12288 Jul 22  2024 aliases.db
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -l /etc/ |head -n 20 | sort -k 5nr
+drwxr-xr-x  2 root root    12288 Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12288 Jul 22  2024 aliases.db
+drwxr-x---  3 root root     4096 Apr  4  2024 audisp
+drwxr-x---  3 root root     4096 Apr  4  2024 audit
+drwxr-xr-x  3 root root     4096 Apr  4  2024 avahi
+drwxr-xr-x  3 root root     4096 Jul 30  2024 ansible
+drwxr-xr-x  3 root root     4096 Mar 16  2023 acpi
+drwxr-xr-x  3 root root     4096 Mar 16  2023 alsa
+drwxr-xr-x  3 root root     4096 Sep 25  2024 apparmor
+drwxr-xr-x  4 root root     4096 Aug  6 22:32 apport
+drwxr-xr-x  5 root root     4096 Mar 16  2023 apm
+drwxr-xr-x  8 root root     4096 Apr  9 06:45 apache2
+drwxr-xr-x  8 root root     4096 Aug 12  2024 apt
+drwxr-xr-x  8 root root     4096 Jul 10 06:06 apparmor.d
+-rw-r--r--  1 root root     3028 Mar 16  2023 adduser.conf
+-rw-r--r--  1 root root      769 Jan 18  2020 appstream.conf
+-rw-r--r--  1 root root      433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root      401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root       51 Jul 22  2024 aliases
+total 1316
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -l /etc/ |head -n 20 | sort -k 5nru
+sort: stray character in field spec: invalid field specification ‘5nru’
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -l /etc/ |head -n 20 | sort -k 5nr
+drwxr-xr-x  2 root root    12288 Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12288 Jul 22  2024 aliases.db
+drwxr-x---  3 root root     4096 Apr  4  2024 audisp
+drwxr-x---  3 root root     4096 Apr  4  2024 audit
+drwxr-xr-x  3 root root     4096 Apr  4  2024 avahi
+drwxr-xr-x  3 root root     4096 Jul 30  2024 ansible
+drwxr-xr-x  3 root root     4096 Mar 16  2023 acpi
+drwxr-xr-x  3 root root     4096 Mar 16  2023 alsa
+drwxr-xr-x  3 root root     4096 Sep 25  2024 apparmor
+drwxr-xr-x  4 root root     4096 Aug  6 22:32 apport
+drwxr-xr-x  5 root root     4096 Mar 16  2023 apm
+drwxr-xr-x  8 root root     4096 Apr  9 06:45 apache2
+drwxr-xr-x  8 root root     4096 Aug 12  2024 apt
+drwxr-xr-x  8 root root     4096 Jul 10 06:06 apparmor.d
+-rw-r--r--  1 root root     3028 Mar 16  2023 adduser.conf
+-rw-r--r--  1 root root      769 Jan 18  2020 appstream.conf
+-rw-r--r--  1 root root      433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root      401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root       51 Jul 22  2024 aliases
+total 1316
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 5nr
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+total 1.3M
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 5n
+total 1.3M
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 5h
+total 1.3M
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 6h
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+total 1.3M
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 6m
+sort: stray character in field spec: invalid field specification ‘6m’
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 6M
+total 1.3M
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh /etc/ |head -n 20 | sort -k 2n
+-rw-r--r--  1 root root    12K Jul 22  2024 aliases.db
+-rw-r--r--  1 root root   3.0K Mar 16  2023 adduser.conf
+-rw-r--r--  1 root root    401 Jul 17  2019 anacrontab
+-rw-r--r--  1 root root    433 Oct  2  2017 apg.conf
+-rw-r--r--  1 root root     51 Jul 22  2024 aliases
+-rw-r--r--  1 root root    769 Jan 18  2020 appstream.conf
+total 1.3M
+drwxr-xr-x  2 root root    12K Aug  6 23:32 alternatives
+drwxr-x---  3 root root   4.0K Apr  4  2024 audisp
+drwxr-x---  3 root root   4.0K Apr  4  2024 audit
+drwxr-xr-x  3 root root   4.0K Apr  4  2024 avahi
+drwxr-xr-x  3 root root   4.0K Jul 30  2024 ansible
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 acpi
+drwxr-xr-x  3 root root   4.0K Mar 16  2023 alsa
+drwxr-xr-x  3 root root   4.0K Sep 25  2024 apparmor
+drwxr-xr-x  4 root root   4.0K Aug  6 22:32 apport
+drwxr-xr-x  5 root root   4.0K Mar 16  2023 apm
+drwxr-xr-x  8 root root   4.0K Apr  9 06:45 apache2
+drwxr-xr-x  8 root root   4.0K Aug 12  2024 apt
+drwxr-xr-x  8 root root   4.0K Jul 10 06:06 apparmor.d
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -cvf archive.tar linux_practise/file[1-5].txt
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file archive.tar 
+archive.tar: POSIX tar archive (GNU)
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -tf archive.tar 
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -xvf archive.tar .
+tar: .: Not found in archive
+tar: Exiting with failure status due to previous errors
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -xvf archive.tar 
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -xvf archive.tar 
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -tf archive.tar 
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -cgvf archive.tar linux_practise/file[1-5].txt
+tar: Refusing to write archive contents to terminal (missing -f option?)
+tar: Error is not recoverable: exiting now
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ gzip archive.tar 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar.gz  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file archive.tar.gz 
+archive.tar.gz: gzip compressed data, was "archive.tar", last modified: Wed Aug 27 06:10:16 2025, from Unix, original size modulo 2^32 10240
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ gunzip archive.tar.gz 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ bzip2 archive.tar 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar.bz2  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file archive.tar.bz2 
+archive.tar.bz2: bzip2 compressed data, block size = 900k
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ bunzip2 archive.tar.bz2 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ zip linux_practise/file[1-5].txt
+	zip warning: missing end signature--probably not a zip file (did you
+	zip warning: remember to use binary mode when you transferred it?)
+	zip warning: (if you are trying to read a damaged archive try -F)
+
+zip error: Zip file structure invalid (linux_practise/file1.txt)
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ zip linux_practise/file*.txt
+	zip warning: missing end signature--probably not a zip file (did you
+	zip warning: remember to use binary mode when you transferred it?)
+	zip warning: (if you are trying to read a damaged archive try -F)
+
+zip error: Zip file structure invalid (linux_practise/file1.txt)
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ zip linux_practise/
+
+zip error: Nothing to do! (linux_practise/.zip)
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cd linux_practise/
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise$ ls
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt  how_i_made_them.docx  numbers0-9.txt  numbers.txt  word_generator.sh  words.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise$ cd ..
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ zip archive.zip linux_practise/file*.txt
+  adding: linux_practise/file1.txt (stored 0%)
+  adding: linux_practise/file2.txt (stored 0%)
+  adding: linux_practise/file3.txt (stored 0%)
+  adding: linux_practise/file4.txt (stored 0%)
+  adding: linux_practise/file5.txt (stored 0%)
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ unzip archive.zip 
+Archive:  archive.zip
+replace linux_practise/file1.txt? [y]es, [n]o, [A]ll, [N]one, [r]ename: A
+ extracting: linux_practise/file1.txt  
+ extracting: linux_practise/file2.txt  
+ extracting: linux_practise/file3.txt  
+ extracting: linux_practise/file4.txt  
+ extracting: linux_practise/file5.txt  
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -czvf archive.tar linux_practise/file[1-5].txt
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -czvf archive.tar.gz linux_practise/file[1-5].txt
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.gz  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file archive.tar
+archive.tar: gzip compressed data, from Unix, original size modulo 2^32 10240
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -cjvf archive.tar.bz2 linux_practise/file[1-5].txt
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.bz2  archive.tar.gz  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ tar -xvzf archive.tar.gz  
+linux_practise/file1.txt
+linux_practise/file2.txt
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/file5.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.bz2  archive.tar.gz  archive.zip  combined.txt  linux_practise  Task-Linux-day08.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ 

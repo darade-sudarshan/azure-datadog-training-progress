@@ -1,0 +1,349 @@
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file script1.sh 
+script1.sh: empty
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ file script1.sh 
+script1.sh: Bourne-Again shell script, ASCII text executable
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ chmod +x script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+hello world
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+./script1.sh: line 6: linux_practise/magic.log: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+mkdir: cannot create directory ‘linux_practise/magic’: File exists
+./script1.sh: line 6: linux_practise/magic.log: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh linux_practise/magic/
+total 0
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file1
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file10
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file100
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file11
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file12
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file13
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file14
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file15
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file16
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file17
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file18
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file19
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file2
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file20
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file21
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file22
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file23
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file24
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file25
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file26
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file27
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file28
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file29
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file3
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file30
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file31
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file32
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file33
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file34
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file35
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file36
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file37
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file38
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file39
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file4
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file40
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file41
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file42
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file43
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file44
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file45
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file46
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file47
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file48
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file49
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file5
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file50
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file51
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file52
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file53
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file54
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file55
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file56
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file57
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file58
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file59
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file6
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file60
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file61
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file62
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file63
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file64
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file65
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file66
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file67
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file68
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file69
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file7
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file70
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file71
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file72
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file73
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file74
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file75
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file76
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file77
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file78
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file79
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file8
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file80
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file81
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file82
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file83
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file84
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file85
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file86
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file87
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file88
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file89
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file9
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file90
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file91
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file92
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file93
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file94
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file95
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file96
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file97
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file98
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:36 file99
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls -lh linux_practise/magic/ > magic.log^C
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+mkdir: cannot create directory ‘linux_practise/magic’: File exists
+ls: cannot access 'linux_practise/magic': No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+mkdir: cannot create directory ‘linux_practise/magic’: File exists
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.bz2  archive.tar.gz  archive.zip  combined.txt  command_output1.txt  linux_practise  script1.sh  Task-Linux-day08-01.md  Task-Linux-day08-02.md  Task-Linux-day08-03.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cd linux_practise/
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise$ ls
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt  how_i_made_them.docx  magic  numbers0-9.txt  numbers.txt  word_generator.sh  words.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise$ cd magic/
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise/magic$ ls
+file1    file12  file16  file2   file23  file27  file30  file34  file38  file41  file45  file49  file52  file56  file6   file63  file67  file70  file74  file78  file81  file85  file89  file92  file96  magic.log
+file10   file13  file17  file20  file24  file28  file31  file35  file39  file42  file46  file5   file53  file57  file60  file64  file68  file71  file75  file79  file82  file86  file9   file93  file97
+file100  file14  file18  file21  file25  file29  file32  file36  file4   file43  file47  file50  file54  file58  file61  file65  file69  file72  file76  file8   file83  file87  file90  file94  file98
+file11   file15  file19  file22  file26  file3   file33  file37  file40  file44  file48  file51  file55  file59  file62  file66  file7   file73  file77  file80  file84  file88  file91  file95  file99
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise/magic$ cat magic.log 
+total 0
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file1
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file10
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file100
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file11
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file12
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file13
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file14
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file15
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file16
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file17
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file18
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file19
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file2
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file20
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file21
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file22
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file23
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file24
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file25
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file26
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file27
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file28
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file29
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file3
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file30
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file31
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file32
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file33
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file34
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file35
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file36
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file37
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file38
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file39
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file4
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file40
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file41
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file42
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file43
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file44
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file45
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file46
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file47
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file48
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file49
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file5
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file50
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file51
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file52
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file53
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file54
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file55
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file56
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file57
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file58
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file59
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file6
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file60
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file61
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file62
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file63
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file64
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file65
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file66
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file67
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file68
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file69
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file7
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file70
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file71
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file72
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file73
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file74
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file75
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file76
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file77
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file78
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file79
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file8
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file80
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file81
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file82
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file83
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file84
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file85
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file86
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file87
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file88
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file89
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file9
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file90
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file91
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file92
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file93
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file94
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file95
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file96
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file97
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file98
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 file99
+-rw-rw-r-- 1 einfochips einfochips 0 Aug 27 12:38 magic.log
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise/magic$ cd ..
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08/linux_practise$ cd ..
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.bz2  archive.tar.gz  archive.zip  combined.txt  command_output1.txt  linux_practise  script1.sh  Task-Linux-day08-01.md  Task-Linux-day08-02.md  Task-Linux-day08-03.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano  script1.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script1.sh 
+mkdir: cannot create directory ‘linux_practise/magic’: File exists
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls linux_practise/
+file1.txt  file2.txt  file3.txt  file4.txt  file5.txt  how_i_made_them.docx  numbers0-9.txt  numbers.txt  word_generator.sh  words.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script2.sh
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ chmod +x ./script2.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar  archive.tar.bz2  archive.tar.gz  archive.zip  combined.txt  command_output1.txt  linux_practise  script1.sh  script2.sh  Task-Linux-day08-01.md  Task-Linux-day08-02.md  Task-Linux-day08-03.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script
+bash: ./script: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script2.sh 
+linux_practise/
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/word_generator.sh
+linux_practise/file2.txt
+linux_practise/how_i_made_them.docx
+linux_practise/file5.txt
+linux_practise/numbers0-9.txt
+linux_practise/file1.txt
+linux_practise/numbers.txt
+linux_practise/words.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar      archive.tar.gz  backup.tar.gz  command_output1.txt  script1.sh  Task-Linux-day08-01.md  Task-Linux-day08-03.md
+archive.tar.bz2  archive.zip     combined.txt   linux_practise       script2.sh  Task-Linux-day08-02.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ nano script2.sh 
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script
+bash: ./script: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ./script2.sh 
+linux_practise/
+linux_practise/file3.txt
+linux_practise/file4.txt
+linux_practise/word_generator.sh
+linux_practise/file2.txt
+linux_practise/how_i_made_them.docx
+linux_practise/file5.txt
+linux_practise/numbers0-9.txt
+linux_practise/file1.txt
+linux_practise/numbers.txt
+linux_practise/words.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar      archive.tar.gz  backup.tar.gz  command_output1.txt  script1.sh  Task-Linux-day08-01.md  Task-Linux-day08-03.md
+archive.tar.bz2  archive.zip     combined.txt   linux_practise       script2.sh  Task-Linux-day08-02.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/
+cat: /home/einfochips/Desktop/: Is a directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+cat: /home/einfochips/Desktop/hello.txt: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+cat: /home/einfochips/Desktop/hello.txt: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+cat: /home/einfochips/Desktop/hello.txt: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+cat: /home/einfochips/Desktop/hello.txt: No such file or directory
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ touch ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ ls
+archive.tar      archive.tar.gz  backup.tar.gz  command_output1.txt  script1.sh  Task-Linux-day08-01.md  Task-Linux-day08-03.md
+archive.tar.bz2  archive.zip     combined.txt   linux_practise       script2.sh  Task-Linux-day08-02.md
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ time
+
+real	0m0.000s
+user	0m0.000s
+sys	0m0.000s
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ date
+Wednesday 27 August 2025 01:24:38 PM IST
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ date
+Wednesday 27 August 2025 01:24:40 PM IST
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ date
+Wednesday 27 August 2025 01:24:42 PM IST
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ date
+Wednesday 27 August 2025 01:24:44 PM IST
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ date
+Wednesday 27 August 2025 01:24:48 PM IST
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+hello world
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+hello world
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+hello world
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ cat ~/Desktop/hello.txt
+hello world
+hello world
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e 
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ rm ~/Desktop/hello.txt
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ crontab -e 
+crontab: installing new crontab
+einfochips@PUNELPT0728:~/azure-datadog-training-progress/Linux-day08$ 

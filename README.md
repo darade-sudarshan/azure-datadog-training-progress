@@ -63,11 +63,16 @@ This repository contains comprehensive training materials and hands-on tasks for
 
 ### Linux Administration
 
-#### Day 07-08 - Linux Fundamentals
-**Directories:** `Linux-day07/`, `Linux-day08/`
-- Linux system administration
-- Shell scripting and automation
-- System monitoring and troubleshooting
+#### Day 07 - Linux Command Line Mastery
+**Directory:** `Linux-day07/`
+- [**Task-Linux-day07-01.md**](Linux-day07/Task-Linux-day07-01.md) - Linux Fundamentals: Command Line Operations, File Management, and Text Processing
+- [**Task-Linux-day07-02.md**](Linux-day07/Task-Linux-day07-02.md) - Advanced Text Processing with sed/awk, Process Management, and Network Commands
+
+#### Day 08 - Advanced Linux Operations
+**Directory:** `Linux-day08/`
+- [**Task-Linux-day08-01.md**](Linux-day08/Task-Linux-day08-01.md) - File Operations, Text Processing, and Archive Management
+- [**Task-Linux-day08-02.md**](Linux-day08/Task-Linux-day08-02.md) - Shell Scripting: Variables, Loops, Functions, and Cron Scheduling
+- [**Task-Linux-day08-03.md**](Linux-day08/Task-Linux-day08-03.md) - Package Management and Software Installation
 
 ### ITIL Framework
 
@@ -138,6 +143,17 @@ This repository contains comprehensive training materials and hands-on tasks for
 - Custom dashboards and visualizations
 - Synthetic monitoring and testing
 - Integration with cloud services
+
+### Linux Administration Capabilities
+- **Command Line Mastery**: File operations, text processing, pattern matching
+- **Advanced Text Processing**: sed, awk, cut commands for data manipulation
+- **Process Management**: System monitoring, process control, performance analysis
+- **Network Troubleshooting**: Connectivity testing, DNS resolution, port scanning
+- **Shell Scripting**: Variables, loops, functions, conditionals, error handling
+- **Automation**: Cron scheduling, system maintenance scripts
+- **Package Management**: APT, YUM, DNF, Snap, Flatpak across distributions
+- **Archive Management**: TAR, compression, backup strategies
+- **System Administration**: User management, permissions, system monitoring
 
 ### Supporting Technologies
 - **Linux**: System administration and automation

@@ -79,7 +79,7 @@ This repository contains comprehensive training materials and hands-on tasks for
 #### Day 09 - ITIL Practices
 **Directory:** `ITIL-day09/`
 - [**Task-ITIL-day09.md**](ITIL-day09/Task-ITIL-day09.md) - ITIL Framework and Service Management
-
+- [**ITSM-SRE-Devops.md**](ITIL-day09/ITSM-SRE-Devops.md) - ITSM for SRE and DevOps Integration
 ### Data Factory Training
 
 #### Day 10-12 - Azure Data Factory

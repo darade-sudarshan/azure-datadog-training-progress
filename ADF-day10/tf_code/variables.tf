@@ -35,7 +35,7 @@ variable "Role" {
 variable "location" {
   description = "Azure Region"
   type        = string
-  default     = "Southeast Asia"
+  default     = ""
 
 }
 
@@ -128,13 +128,13 @@ variable "linux_vm_size" {
 variable "linux_username" {
   description = "Admin username for the Linux VM"
   type        = string
-  default     = "azureuser"
+  default     = ""
 }
 variable "linux_password" {
   description = "Admin password for the Linux VM"
   type        = string
   sensitive   = true
-  default     = "Azure@dmin@EIC"
+  default     = ""
 }
 variable "linux_hostname" {
   description = "Hostname for the Linux VM"
@@ -156,13 +156,13 @@ variable "windows_vm_size" {
 variable "windows_username" {
   description = "Admin username for the Windows VM"
   type        = string
-  default     = "azureuser"
+  default     = ""
 }
 variable "windows_password" {
   description = "Admin password for the Windows VM"
   type        = string
   sensitive   = true
-  default     = "Azure@dmin@EIC"
+  default     = ""
 }
 variable "windows_hostname" {
   description = "Hostname for the Windows VM"
@@ -207,7 +207,7 @@ variable "os_type" {
 variable "vm_size" {
   description = "Size of the Virtual Machine"
   type        = string
-  default     = "Standard_B2s"
+  default     = ""
 }
 
 variable "instance_count" {
@@ -219,14 +219,14 @@ variable "instance_count" {
 variable "admin_username" {
   description = "Admin username for the VM"
   type        = string
-  default     = "azureuser"
+  default     = ""
 }
 
 variable "admin_password" {
   description = "Admin password for Windows VM"
   type        = string
   sensitive   = true
-  default     = "Azure@dmin@EIC"
+  default     = ""
 }
 
 variable "admin_ssh_key" {
@@ -306,7 +306,7 @@ variable "acr_admin_enabled" {
 variable "storage_account_name" {
   description = "Name of the storage account"
   type        = string
-  default     = "adfstorage001"
+  default     = ""
 }
 
 variable "storage_account_tier" {
@@ -319,7 +319,7 @@ variable "storage_account_tier" {
 variable "adf_name" {
   description = "Name of the Azure Data Factory"
   type        = string
-  default     = "adf-workspace-001"
+  default     = ""
 }
 
 # Databricks Variables
@@ -339,30 +339,30 @@ variable "databricks_sku" {
 variable "db_server_name" {
   description = "Name of the SQL Server"
   type        = string
-  default     = "sql-server-001"
+  default     = ""
 }
 
 variable "db_name" {
   description = "Name of the SQL Database"
   type        = string
-  default     = "adf-database"
+  default     = ""
 }
 
 variable "db_admin_username" {
   description = "Administrator username for SQL Server"
   type        = string
-  default     = "sqladmin"
+  default     = ""
 }
 
 variable "db_admin_password" {
   description = "Administrator password for SQL Server"
   type        = string
   sensitive   = true
-  default     = "P@ssw0rd123!"
+  default     = ""
 }
 
 variable "db_sku_name" {
   description = "Database SKU name"
   type        = string
-  default     = "S0"
+  default     = ""
 }

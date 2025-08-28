@@ -1,0 +1,19 @@
+{
+	"name": "ls_sql_vinoworld",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-vinoworld-dev.database.windows.net;Initial Catalog=sql-vinoworld-devdb;User ID=vinoworldadmin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_vinworld_kv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "vinoworldadmin"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

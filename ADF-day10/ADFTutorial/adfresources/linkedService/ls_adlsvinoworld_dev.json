@@ -1,0 +1,20 @@
+{
+	"name": "ls_adlsvinoworld_dev",
+	"properties": {
+		"description": "Linked Service to ADLS Gen2 Storage",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://adlsvinoworlddev.dfs.core.windows.net/",
+			"accountKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_vinworld_kv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "adlsvinoworld"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

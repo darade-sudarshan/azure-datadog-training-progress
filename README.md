@@ -84,6 +84,7 @@ This repository contains comprehensive training materials and hands-on tasks for
 
 #### Day 10-12 - Azure Data Factory
 **Directories:** `ADF-day10/`, `ADF-day11/`, `ADF-day12/`
+- [**Task-ADF-01.md**](ADF-day10/Task-ADF-01.md): Azure Data Factory Foundation Setup
 - Data integration and ETL processes
 - Pipeline creation and management
 - Data transformation workflows

@@ -12,7 +12,8 @@ This task covers the creation of essential Azure services for data integration: 
 1. Create Azure Data Lake Storage Gen2 account
 2. Create Azure Data Factory instance
 3. Create Azure SQL Database and server
-4. Verify connectivity between services
+4. Create Azure Key Vault for secure credential storage
+5. Verify connectivity between services
 
 ---
 
@@ -136,15 +137,79 @@ This task covers the creation of essential Azure services for data integration: 
 
 ---
 
-## Step 4: Verification and Testing
+## Step 4: Create Azure Key Vault
 
-### 4.1 Verify Data Lake Storage
+### 4.1 Navigate to Key Vault Creation
+1. In Azure Portal, click **"Create a resource"**
+2. Search for **"Key Vault"**
+3. Click **"Create"**
+
+### 4.2 Configure Basic Settings
+- **Subscription**: Select your subscription
+- **Resource Group**: `sa1_test_eic_SudarshanDarade`
+- **Key vault name**: `kv-vinoworld-dev-1000` (must be globally unique)
+- **Region**: `South East Asia`
+- **Pricing tier**: `Standard`
+
+![alt text](Task_images/kv_basic.png)
+
+### 4.3 Configure Access Policy
+1. Go to **"Access policy"** tab
+2. **Permission model**: `Vault access policy`
+3. Add your user account with full permissions:
+   - **Key permissions**: Get, List, Create, Delete, Update, Recover, Purge
+   - **Secret permissions**: Get, List, Set, Delete, Recover, Purge
+   - **Certificate permissions**: Get, List, Create, Delete, Update, Import, Recover, Purge
+
+![alt text](Task_images/kv_config.png)
+
+### 4.4 Configure Networking
+1. Go to **"Networking"** tab
+2. **Connectivity method**: `Public endpoint (all networks)`
+3. **Allow trusted Microsoft services**: `Yes`
+
+![alt text](Task_images/kv_networking.png)
+
+### 4.5 Complete Creation
+1. Click **"Review + create"**
+2. Click **"Create"**
+3. Wait for deployment completion
+
+![alt text](Task_images/kv-validation.png)
+
+### 4.6 Store Database Credentials
+1. Navigate to your Key Vault
+2. Go to **"Secrets"** under Objects
+3. Click **"+ Generate/Import"**
+4. Create secret:
+   - **Name**: `db-admin-password`
+   - **Value**: Your SQL database password
+   - Click **"Create"**
+
+---
+
+## Step 5: Configure Data Lake Storage Containers
+
+### 5.1 Create Containers
+1. Navigate to your storage account `adlsvinoworld1000`
+2. Go to **"Containers"** under Data storage
+3. Click **"+ Container"**
+4. Create the following containers:
+   - **Name**: `raw-data`, **Public access level**: `Private`
+   - **Name**: `processed-data`, **Public access level**: `Private`
+   - **Name**: `archive-data`, **Public access level**: `Private`
+
+---
+
+## Step 6: Verification and Testing
+
+### 6.1 Verify Data Lake Storage
 1. Navigate to your storage account
 2. Check that hierarchical namespace is enabled
 3. Verify containers are created
 4. Test file upload to `raw-data` container
 
-### 4.2 Verify Data Factory
+### 6.2 Verify Data Factory
 1. Navigate to your Data Factory
 2. Click **"Launch studio"**
 3. Verify the Data Factory Studio opens successfully
@@ -153,13 +218,19 @@ This task covers the creation of essential Azure services for data integration: 
 
 ![alt text](Task_images/adf_portal_homepage.png)
 
-### 4.3 Verify SQL Database
+### 6.3 Verify SQL Database
 1. Navigate to your SQL Database
 2. Click **"Query editor"**
 3. Login with `vinoworldadmin` credentials
 4. Run test query: `SELECT @@VERSION`
 
-### 4.4 Test Connectivity
+### 6.4 Verify Key Vault
+1. Navigate to your Key Vault
+2. Go to **"Secrets"**
+3. Verify `db-admin-password` secret exists
+4. Test secret retrieval permissions
+
+### 6.5 Test Connectivity
 1. In Data Factory Studio, go to **"Manage"** → **"Linked services"**
 2. Create test connections to:
    - Azure Data Lake Storage Gen2
@@ -167,15 +238,15 @@ This task covers the creation of essential Azure services for data integration: 
 
 ---
 
-## Step 5: Security Configuration
+## Step 7: Security Configuration
 
-### 5.1 Configure Storage Account Access
+### 7.1 Configure Storage Account Access
 1. Go to storage account → **"Access Control (IAM)"**
 2. Add role assignment:
    - **Role**: `Storage Blob Data Contributor`
    - **Assign access to**: Data Factory managed identity
 
-### 5.2 Configure SQL Database Firewall
+### 7.2 Configure SQL Database Firewall
 1. Go to SQL Server → **"Networking"**
 2. Verify Azure services access is enabled
 3. Add Data Factory IP ranges if needed
@@ -190,8 +261,9 @@ After completing this task, you should have:
 2. ✅ Three containers: raw-data, processed-data, archive-data
 3. ✅ Azure Data Factory V2 instance
 4. ✅ Azure SQL Database with server
-5. ✅ Proper networking and security configurations
-6. ✅ Verified connectivity between all services
+5. ✅ Azure Key Vault with stored credentials
+6. ✅ Proper networking and security configurations
+7. ✅ Verified connectivity between all services
 
 ## Resource Summary
 
@@ -201,6 +273,7 @@ After completing this task, you should have:
 | Data Factory | vinoworld-dev-adf1000 | sa1_test_eic_SudarshanDarade | South East Asia |
 | SQL Server | vinoworld-dev-sql1000 | sa1_test_eic_SudarshanDarade | South East Asia |
 | SQL Database | vinoworld-dev-sqldb | sa1_test_eic_SudarshanDarade | South East Asia |
+| Key Vault | kv-vinoworld-dev-1000 | sa1_test_eic_SudarshanDarade | South East Asia |
 
 ## Next Steps
 

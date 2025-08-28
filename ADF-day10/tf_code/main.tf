@@ -62,4 +62,13 @@ module "DATABASE" {
   admin_password      = var.db_admin_password
   sku_name            = var.db_sku_name
 }
+module "keyvault" {
+  source              = "./keyvault"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  keyvault_name      = var.keyvault_name
+  db_admin_password  = var.db_admin_password
+  tags               = var.tags
+  
+}
 

@@ -35,8 +35,7 @@ variable "Role" {
 variable "location" {
   description = "Azure Region"
   type        = string
-  default     = ""
-
+  default     = "East US"
 }
 
 variable "address_space" {
@@ -365,4 +364,47 @@ variable "db_sku_name" {
   description = "Database SKU name"
   type        = string
   default     = ""
+}
+
+# Azure Key Vault Variables
+variable "keyvault_name" {
+  description = "Name of the Azure Key Vault"
+  type        = string
+  default     = ""
+}
+
+variable "keyvault_sku" {
+  description = "SKU for the Azure Key Vault"
+  type        = string
+  default     = "standard"
+}
+
+variable "keyvault_enabled_for_disk_encryption" {
+  description = "Enable Key Vault for disk encryption"
+  type        = bool
+  default     = true
+}
+
+variable "keyvault_enabled_for_template_deployment" {
+  description = "Enable Key Vault for template deployment"
+  type        = bool
+  default     = true
+}
+
+variable "keyvault_enabled_for_deployment" {
+  description = "Enable Key Vault for deployment"
+  type        = bool
+  default     = true
+}
+
+variable "keyvault_purge_protection_enabled" {
+  description = "Enable purge protection for Key Vault"
+  type        = bool
+  default     = false
+}
+
+variable "keyvault_soft_delete_retention_days" {
+  description = "Soft delete retention days for Key Vault"
+  type        = number
+  default     = 7
 }

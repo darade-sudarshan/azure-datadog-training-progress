@@ -72,9 +72,9 @@ For each database, the dashboard shows:
 ```bash
 # Enable activity logging
 az monitor activity-log alert create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name "SQL-Server-Activity" \
-  --scopes "/subscriptions/{subscription-id}/resourceGroups/rg-sql-training" \
+  --scopes "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade" \
   --condition category=Administrative \
   --action-groups myActionGroup
 ```
@@ -83,7 +83,7 @@ az monitor activity-log alert create \
 ```bash
 # Configure diagnostic settings
 az monitor diagnostic-settings create \
-  --resource "/subscriptions/{subscription-id}/resourceGroups/rg-sql-training/providers/Microsoft.Sql/servers/sql-server-training" \
+  --resource "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-server-training" \
   --name "SQLDiagnostics" \
   --logs '[{"category":"SQLSecurityAuditEvents","enabled":true}]' \
   --metrics '[{"category":"AllMetrics","enabled":true}]' \
@@ -118,7 +118,7 @@ Access activity logs through:
 ```bash
 # Set Azure AD admin
 az sql server ad-admin create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server-name sql-server-training \
   --display-name "SQL Admin" \
   --object-id "user-object-id"
@@ -173,7 +173,7 @@ ALTER COLUMN FirstName ADD MASKED WITH (FUNCTION = 'partial(1,"XXX",1)');
 ```bash
 # Configure server settings
 az sql server update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-server-training \
   --admin-password "NewP@ssw0rd123!" \
   --minimal-tls-version "1.2"
@@ -193,7 +193,7 @@ ALTER DATABASE TrainingDB SET COMPATIBILITY_LEVEL = 150;
 ```bash
 # Set connection policy
 az sql server conn-policy update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --connection-type Default
 ```
@@ -202,7 +202,7 @@ az sql server conn-policy update \
 ```bash
 # Configure backup retention
 az sql db ltr-policy set \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --database TrainingDB \
   --weekly-retention P4W \
@@ -217,7 +217,7 @@ az sql db ltr-policy set \
 ```bash
 # Import BACPAC file
 az sql db import \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --name ImportedDB \
   --storage-key-type StorageAccessKey \
@@ -228,7 +228,7 @@ az sql db import \
 
 # Export to BACPAC
 az sql db export \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --name TrainingDB \
   --storage-key-type StorageAccessKey \
@@ -242,20 +242,20 @@ az sql db export \
 ```bash
 # Create sync group
 az sql db sync-group create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --database TrainingDB \
   --name "SyncGroup1" \
   --interval -1 \
   --conflict-resolution "HubWin" \
-  --sync-database-id "/subscriptions/{sub-id}/resourceGroups/rg-sql-training/providers/Microsoft.Sql/servers/sql-server-training/databases/SyncDB"
+  --sync-database-id "/subscriptions/{sub-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-server-training/databases/SyncDB"
 ```
 
 ### 3. Elastic Pool Management
 ```bash
 # Create elastic pool
 az sql elastic-pool create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --name "ElasticPool1" \
   --edition Standard \
@@ -265,7 +265,7 @@ az sql elastic-pool create \
 
 # Move database to pool
 az sql db update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --name TrainingDB \
   --elastic-pool ElasticPool1
@@ -277,7 +277,7 @@ az sql db update \
 ```bash
 # Enable Advanced Threat Protection
 az sql server atp-policy update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --state Enabled \
   --storage-account mystorageaccount \
@@ -290,7 +290,7 @@ az sql server atp-policy update \
 ```bash
 # Configure vulnerability assessment
 az sql server va-setting update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --storage-account mystorageaccount \
   --storage-container-path "https://mystorageaccount.blob.core.windows.net/vulnerability-assessment" \
@@ -349,7 +349,7 @@ ENCRYPTED WITH (
 ```bash
 # Enable automatic tuning
 az sql db update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training \
   --name TrainingDB \
   --auto-pause-delay 60 \
@@ -406,8 +406,8 @@ WHERE OBJECTPROPERTY(i.object_id, 'IsUserTable') = 1;
 # Create metric alert
 az monitor metrics alert create \
   --name "High-CPU-Alert" \
-  --resource-group rg-sql-training \
-  --scopes "/subscriptions/{sub-id}/resourceGroups/rg-sql-training/providers/Microsoft.Sql/servers/sql-server-training/databases/TrainingDB" \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --scopes "/subscriptions/{sub-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-server-training/databases/TrainingDB" \
   --condition "avg cpu_percent > 80" \
   --window-size 5m \
   --evaluation-frequency 1m \
@@ -418,14 +418,14 @@ az monitor metrics alert create \
 ```bash
 # Create Log Analytics workspace
 az monitor log-analytics workspace create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --workspace-name "SQLLogAnalytics"
 
 # Configure diagnostic settings
 az monitor diagnostic-settings create \
-  --resource "/subscriptions/{sub-id}/resourceGroups/rg-sql-training/providers/Microsoft.Sql/servers/sql-server-training/databases/TrainingDB" \
+  --resource "/subscriptions/{sub-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-server-training/databases/TrainingDB" \
   --name "SQLDiagnostics" \
-  --workspace "/subscriptions/{sub-id}/resourceGroups/rg-sql-training/providers/Microsoft.OperationalInsights/workspaces/SQLLogAnalytics" \
+  --workspace "/subscriptions/{sub-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.OperationalInsights/workspaces/SQLLogAnalytics" \
   --logs '[{"category":"QueryStoreRuntimeStatistics","enabled":true},{"category":"QueryStoreWaitStatistics","enabled":true}]' \
   --metrics '[{"category":"AllMetrics","enabled":true}]'
 ```

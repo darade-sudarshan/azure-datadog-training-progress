@@ -33,8 +33,8 @@ This task covers creating Azure SQL Database and SQL Server, along with understa
 3. Configure basic settings:
    ```
    Server name: sql-server-training-001
-   Resource group: rg-sql-training
-   Location: East US
+   Resource group: sa1_test_eic_SudarshanDarade
+   Location: SouthEast Asia
    Authentication: SQL authentication
    Server admin login: sqladmin
    Password: P@ssw0rd123!
@@ -67,15 +67,15 @@ az login
 az account set --subscription "your-subscription-id"
 
 # Create resource group
-az group create --name rg-sql-training --location eastus
+az group create --name sa1_test_eic_SudarshanDarade --location southeastasia
 ```
 
 ### Create SQL Server
 ```bash
 az sql server create \
   --name sql-server-training-cli \
-  --resource-group rg-sql-training \
-  --location eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --location southeastasia \
   --admin-user sqladmin \
   --admin-password P@ssw0rd123!
 ```
@@ -84,7 +84,7 @@ az sql server create \
 ```bash
 # Allow Azure services
 az sql server firewall-rule create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name AllowAzureServices \
   --start-ip-address 0.0.0.0 \
@@ -92,7 +92,7 @@ az sql server firewall-rule create \
 
 # Allow current IP
 az sql server firewall-rule create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name AllowMyIP \
   --start-ip-address $(curl -s https://ipinfo.io/ip) \
@@ -102,7 +102,7 @@ az sql server firewall-rule create \
 ### Create SQL Database
 ```bash
 az sql db create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name TrainingDB \
   --service-objective S0 \
@@ -125,14 +125,14 @@ Set-AzContext -SubscriptionId "your-subscription-id"
 
 ### Create Resource Group
 ```powershell
-New-AzResourceGroup -Name "rg-sql-training-ps" -Location "East US"
+New-AzResourceGroup -Name "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia"
 ```
 
 ### Create SQL Server
 ```powershell
 $serverName = "sql-server-training-ps"
-$resourceGroupName = "rg-sql-training-ps"
-$location = "East US"
+$resourceGroupName = "sa1_test_eic_SudarshanDarade-ps"
+$location = "SouthEast Asia"
 $adminLogin = "sqladmin"
 $adminPassword = ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force
 
@@ -243,7 +243,7 @@ GROUP BY Department;
 ### Configure Advanced Threat Protection
 ```bash
 az sql db threat-policy update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --database TrainingDB \
   --state Enabled
@@ -252,7 +252,7 @@ az sql db threat-policy update \
 ### Enable Auditing
 ```bash
 az sql db audit-policy update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --database TrainingDB \
   --state Enabled \
@@ -265,7 +265,7 @@ az sql db audit-policy update \
 ```bash
 az sql db restore \
   --dest-name TrainingDB-Restored \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --source-database TrainingDB \
   --time "2024-01-15T10:00:00"
@@ -274,7 +274,7 @@ az sql db restore \
 ### Export Database (BACPAC)
 ```bash
 az sql db export \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name TrainingDB \
   --storage-key-type StorageAccessKey \
@@ -290,14 +290,14 @@ az sql db export \
 ```bash
 # Scale up to S1
 az sql db update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name TrainingDB \
   --service-objective S1
 
 # Scale to serverless
 az sql db update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-server-training-cli \
   --name TrainingDB \
   --edition GeneralPurpose \
@@ -311,7 +311,7 @@ az sql db update \
 ### Delete Resources
 ```bash
 # Delete resource group (removes all resources)
-az group delete --name rg-sql-training --yes --no-wait
+az group delete --name sa1_test_eic_SudarshanDarade --yes --no-wait
 ```
 
 ## Best Practices
@@ -362,13 +362,13 @@ az group delete --name rg-sql-training --yes --no-wait
 ### Useful Commands:
 ```bash
 # Check server status
-az sql server show --name sql-server-training-cli --resource-group rg-sql-training
+az sql server show --name sql-server-training-cli --resource-group sa1_test_eic_SudarshanDarade
 
 # List databases
-az sql db list --server sql-server-training-cli --resource-group rg-sql-training
+az sql db list --server sql-server-training-cli --resource-group sa1_test_eic_SudarshanDarade
 
 # Check firewall rules
-az sql server firewall-rule list --server sql-server-training-cli --resource-group rg-sql-training
+az sql server firewall-rule list --server sql-server-training-cli --resource-group sa1_test_eic_SudarshanDarade
 ```
 
 ---

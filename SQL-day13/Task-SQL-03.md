@@ -23,16 +23,50 @@ This task covers creating SQL Server on Azure Virtual Machine, configuring firew
 
 ### Step 1: Create Virtual Machine
 1. Navigate to Azure Portal → Create a resource
-2. Search for "SQL Server" → Select "SQL Server 2022 on Windows Server 2022"
+![alt text](Task_VM_images/createSQL_VM.png)
+2. Search for "SQL Server" → Select "SQL Server 2025 on Windows Server 2025"
 3. Configure basic settings:
+
    ```
-   VM Name: sql-vm-training
-   Resource Group: rg-sql-vm-training
-   Region: East US
+   VM Name: trainingsqlvm1000
+   Resource Group: sa1_test_eic_SudarshanDarade
+   Region: SouthEast Asia
    Availability Options: No infrastructure redundancy required
    Image: SQL Server 2022 Developer on Windows Server 2022
-   Size: Standard_D2s_v3 (2 vcpus, 8 GiB memory)
+   Size: Standard_B2as_v2 (2 vcpus, 8 GiB memory)
    ```
+![alt text](Task_VM_images/SQLVM_basic.png)
+
+4. Configure Disks:
+
+![alt text](Task_VM_images/SQLVM_disk.png)
+
+5. Configure Networking :
+
+![alt text](Task_VM_images/SQLVM_networking.png)
+
+6. Configure management options : 
+
+![alt text](Task_VM_images/SQLVM_management.png)
+
+7. Configure Monitoring :
+
+![alt text](Task_VM_images/SQLVM_monitoring.png)
+
+8. Configure Advanced Options:
+
+![alt text](Task_VM_images/SQLVM_advanced.png)
+
+9. Configure SQL Server Settings
+
+![alt text](Task_VM_images/SQLVM_server_settings.png)
+
+10. Review and Create the VM
+
+![alt text](Task_VM_images/SQLVM_validation.png)
+
+![alt text](Task_VM_images/SQLVM_Deployment.png)
+
 
 ### Step 2: Administrator Account
 ```
@@ -56,9 +90,6 @@ Login name: sa
 Password: P@ssw0rd123!
 ```
 
-### Step 5: Review and Create
-- Review all configurations
-- Click "Create" to deploy the VM
 
 ## Task 2: Create SQL Server VM via Azure CLI
 
@@ -69,13 +100,13 @@ az login
 az account set --subscription "your-subscription-id"
 
 # Create resource group
-az group create --name rg-sql-vm-training --location eastus
+az group create --name sa1_test_eic_SudarshanDarade --location southeastasia
 ```
 
 ### Create Virtual Network
 ```bash
 az network vnet create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-vnet \
   --address-prefix 10.0.0.0/16 \
   --subnet-name sql-subnet \
@@ -85,12 +116,12 @@ az network vnet create \
 ### Create Network Security Group
 ```bash
 az network nsg create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-nsg
 
 # Allow RDP
 az network nsg rule create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name sql-vm-nsg \
   --name AllowRDP \
   --protocol Tcp \
@@ -100,7 +131,7 @@ az network nsg rule create \
 
 # Allow SQL Server
 az network nsg rule create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name sql-vm-nsg \
   --name AllowSQL \
   --protocol Tcp \
@@ -112,7 +143,7 @@ az network nsg rule create \
 ### Create Public IP
 ```bash
 az network public-ip create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-public-ip \
   --allocation-method Static \
   --sku Standard
@@ -121,7 +152,7 @@ az network public-ip create \
 ### Create Network Interface
 ```bash
 az network nic create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-nic \
   --vnet-name sql-vm-vnet \
   --subnet sql-subnet \
@@ -132,7 +163,7 @@ az network nic create \
 ### Create SQL Server VM
 ```bash
 az vm create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training \
   --nics sql-vm-nic \
   --image MicrosoftSQLServer:sql2022-ws2022:sqldev-gen2:latest \
@@ -146,7 +177,7 @@ az vm create \
 ### Configure SQL Server Settings
 ```bash
 az sql vm create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training \
   --license-type PAYG \
   --sql-mgmt-type Full \
@@ -169,26 +200,26 @@ Set-AzContext -SubscriptionId "your-subscription-id"
 
 ### Create Resource Group
 ```powershell
-New-AzResourceGroup -Name "rg-sql-vm-training-ps" -Location "East US"
+New-AzResourceGroup -Name "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia"
 ```
 
 ### Create Virtual Network
 ```powershell
 $subnet = New-AzVirtualNetworkSubnetConfig -Name "sql-subnet" -AddressPrefix "10.0.1.0/24"
-$vnet = New-AzVirtualNetwork -ResourceGroupName "rg-sql-vm-training-ps" -Location "East US" -Name "sql-vm-vnet" -AddressPrefix "10.0.0.0/16" -Subnet $subnet
+$vnet = New-AzVirtualNetwork -ResourceGroupName "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia" -Name "sql-vm-vnet" -AddressPrefix "10.0.0.0/16" -Subnet $subnet
 ```
 
 ### Create Network Security Group
 ```powershell
 $rdpRule = New-AzNetworkSecurityRuleConfig -Name "AllowRDP" -Protocol Tcp -Direction Inbound -Priority 1000 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389 -Access Allow
 $sqlRule = New-AzNetworkSecurityRuleConfig -Name "AllowSQL" -Protocol Tcp -Direction Inbound -Priority 1001 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 1433 -Access Allow
-$nsg = New-AzNetworkSecurityGroup -ResourceGroupName "rg-sql-vm-training-ps" -Location "East US" -Name "sql-vm-nsg" -SecurityRules $rdpRule,$sqlRule
+$nsg = New-AzNetworkSecurityGroup -ResourceGroupName "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia" -Name "sql-vm-nsg" -SecurityRules $rdpRule,$sqlRule
 ```
 
 ### Create Public IP and NIC
 ```powershell
-$publicIp = New-AzPublicIpAddress -ResourceGroupName "rg-sql-vm-training-ps" -Location "East US" -Name "sql-vm-public-ip" -AllocationMethod Static -Sku Standard
-$nic = New-AzNetworkInterface -ResourceGroupName "rg-sql-vm-training-ps" -Location "East US" -Name "sql-vm-nic" -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id -NetworkSecurityGroupId $nsg.Id
+$publicIp = New-AzPublicIpAddress -ResourceGroupName "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia" -Name "sql-vm-public-ip" -AllocationMethod Static -Sku Standard
+$nic = New-AzNetworkInterface -ResourceGroupName "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia" -Name "sql-vm-nic" -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id -NetworkSecurityGroupId $nsg.Id
 ```
 
 ### Create VM Configuration
@@ -203,7 +234,7 @@ $vmConfig = Set-AzVMOSDisk -VM $vmConfig -CreateOption FromImage -StorageAccount
 
 ### Create Virtual Machine
 ```powershell
-New-AzVM -ResourceGroupName "rg-sql-vm-training-ps" -Location "East US" -VM $vmConfig
+New-AzVM -ResourceGroupName "sa1_test_eic_SudarshanDarade-ps" -Location "SouthEast Asia" -VM $vmConfig
 ```
 
 ## Task 4: Configure Firewall Rules
@@ -234,7 +265,7 @@ Get-NetFirewallRule -DisplayName "*SQL*"
 ```bash
 # Add custom port if needed
 az network nsg rule create \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name sql-vm-nsg \
   --name AllowCustomPort \
   --protocol Tcp \
@@ -249,7 +280,7 @@ az network nsg rule create \
 ### Get VM Public IP
 ```bash
 az vm show \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training \
   --show-details \
   --query publicIps \
@@ -276,13 +307,13 @@ az vm show \
 ```bash
 # Check VM status
 az vm get-instance-view \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training \
   --query instanceView.statuses
 
 # Check NSG rules
 az network nsg rule list \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --nsg-name sql-vm-nsg \
   --output table
 
@@ -321,6 +352,7 @@ Test-NetConnection -ComputerName VM-Public-IP -Port 3389
    Login: sa
    Password: P@ssw0rd123!
    ```
+![alt text](Task_VM_images/SQLVM_remote.png)
 
 ### SSMS Configuration
 ```sql
@@ -359,6 +391,7 @@ SELECT
    Server group: <Default>
    Name: SQL VM Training
    ```
+
 
 ### Azure Data Studio Features
 1. **Query Editor**: Write and execute SQL queries
@@ -426,6 +459,7 @@ WITH MOVE 'SampleDB' TO 'C:\Data\SampleDB_Restored.mdf',
      MOVE 'SampleDB_Log' TO 'C:\Data\SampleDB_Restored.ldf',
      REPLACE;
 ```
+![alt text](Task_VM_images/SQL_create_table.png)
 
 ## Task 9: Performance Monitoring
 
@@ -588,12 +622,12 @@ ORDER BY avg_cpu_time DESC;
 ```bash
 # Stop VM (deallocate to stop billing)
 az vm deallocate \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training
 
 # Start VM when needed
 az vm start \
-  --resource-group rg-sql-vm-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-vm-training
 ```
 
@@ -601,7 +635,7 @@ az vm start \
 ```bash
 # Delete entire resource group
 az group delete \
-  --name rg-sql-vm-training \
+  --name sa1_test_eic_SudarshanDarade \
   --yes \
   --no-wait
 ```

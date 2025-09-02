@@ -73,8 +73,8 @@ az login
 # Create Azure Migrate project
 az migrate project create \
   --name "SQLMigrationProject" \
-  --resource-group "rg-sql-migration" \
-  --location "East US"
+  --resource-group "sa1_test_eic_SudarshanDarade" \
+  --location "SouthEast Asia"
 ```
 
 ## Task 2: Prepare Azure Target Environment
@@ -83,12 +83,12 @@ az migrate project create \
 ```bash
 # Create resource group
 az group create \
-  --name rg-sql-migration \
-  --location eastus
+  --name sa1_test_eic_SudarshanDarade \
+  --location southeastasia
 
 # Create virtual network for Managed Instance
 az network vnet create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-migration-vnet \
   --address-prefix 10.0.0.0/16 \
   --subnet-name ManagedInstance \
@@ -96,12 +96,12 @@ az network vnet create \
 
 # Create route table for Managed Instance
 az network route-table create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-mi-route-table
 
 # Associate route table with subnet
 az network vnet subnet update \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --vnet-name sql-migration-vnet \
   --name ManagedInstance \
   --route-table sql-mi-route-table
@@ -112,14 +112,14 @@ az network vnet subnet update \
 # Create logical SQL server
 az sql server create \
   --name sql-migration-server \
-  --resource-group rg-sql-migration \
-  --location eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --location southeastasia \
   --admin-user sqladmin \
   --admin-password P@ssw0rd123!
 
 # Create Azure SQL Database
 az sql db create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure \
   --service-objective S2 \
@@ -127,7 +127,7 @@ az sql db create \
 
 # Configure firewall
 az sql server firewall-rule create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AllowOnPremises \
   --start-ip-address YOUR-PUBLIC-IP \
@@ -138,15 +138,15 @@ az sql server firewall-rule create \
 ```bash
 # Create network security group
 az network nsg create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-mi-nsg
 
 # Create Managed Instance (takes 4-6 hours)
 az sql mi create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-managed-instance-001 \
-  --location eastus \
-  --subnet /subscriptions/{subscription-id}/resourceGroups/rg-sql-migration/providers/Microsoft.Network/virtualNetworks/sql-migration-vnet/subnets/ManagedInstance \
+  --location southeastasia \
+  --subnet /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/sql-migration-vnet/subnets/ManagedInstance \
   --admin-user sqladmin \
   --admin-password P@ssw0rd123! \
   --storage-size-in-gb 256 \
@@ -163,13 +163,13 @@ az sql mi create \
 # Create storage account
 az storage account create \
   --name sqlmigrationstg001 \
-  --resource-group rg-sql-migration \
-  --location eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --location southeastasia \
   --sku Standard_LRS
 
 # Get storage key
 STORAGE_KEY=$(az storage account keys list \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --account-name sqlmigrationstg001 \
   --query '[0].value' -o tsv)
 
@@ -203,7 +203,7 @@ az storage blob upload \
 ```bash
 # Import BACPAC to Azure SQL Database
 az sql db import \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksImported \
   --storage-key-type StorageAccessKey \
@@ -219,21 +219,21 @@ az sql db import \
 ```bash
 # Create DMS instance
 az dms create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-dms-service \
-  --location eastus \
+  --location southeastasia \
   --sku-name Premium_4vCores \
-  --subnet /subscriptions/{subscription-id}/resourceGroups/rg-sql-migration/providers/Microsoft.Network/virtualNetworks/sql-migration-vnet/subnets/ManagedInstance
+  --subnet /subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Network/virtualNetworks/sql-migration-vnet/subnets/ManagedInstance
 ```
 
 ### Create Migration Project
 ```bash
 # Create migration project
 az dms project create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --service-name sql-dms-service \
   --name SQLMigrationProject \
-  --location eastus \
+  --location southeastasia \
   --source-platform SQL \
   --target-platform SQLMI
 ```
@@ -264,7 +264,7 @@ az dms project create \
 ```bash
 # Create and start migration task
 az dms project task create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --service-name sql-dms-service \
   --project-name SQLMigrationProject \
   --name MigrateAdventureWorks \
@@ -386,7 +386,7 @@ EXEC sp_addsubscription
 ```bash
 # Start Log Replay Service
 az sql midb log-replay start \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --managed-instance sql-managed-instance-001 \
   --name AdventureWorks2019 \
   --storage-uri "https://sqlmigrationstg001.blob.core.windows.net/backups/" \
@@ -394,7 +394,7 @@ az sql midb log-replay start \
 
 # Monitor progress
 az sql midb log-replay show \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --managed-instance sql-managed-instance-001 \
   --name AdventureWorks2019
 ```
@@ -403,7 +403,7 @@ az sql midb log-replay show \
 ```bash
 # Complete the migration
 az sql midb log-replay complete \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --managed-instance sql-managed-instance-001 \
   --name AdventureWorks2019 \
   --last-backup-name "AdventureWorks2019_Log_Final.trn"
@@ -459,14 +459,14 @@ ALTER COLUMN [EmailAddress] ADD MASKED WITH (FUNCTION = 'email()');
 ```bash
 # Scale up Azure SQL Database
 az sql db update \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure \
   --service-objective S3
 
 # Configure auto-scaling
 az sql db update \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure \
   --edition GeneralPurpose \
@@ -560,14 +560,14 @@ $connectionString = "Server=sql-migration-server.database.windows.net;Database=A
 ```bash
 # Create Log Analytics workspace
 az monitor log-analytics workspace create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --workspace-name sql-migration-logs
 
 # Configure diagnostic settings
 az monitor diagnostic-settings create \
-  --resource "/subscriptions/{subscription-id}/resourceGroups/rg-sql-migration/providers/Microsoft.Sql/servers/sql-migration-server/databases/AdventureWorksAzure" \
+  --resource "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-migration-server/databases/AdventureWorksAzure" \
   --name "SQLDiagnostics" \
-  --workspace "/subscriptions/{subscription-id}/resourceGroups/rg-sql-migration/providers/Microsoft.OperationalInsights/workspaces/sql-migration-logs" \
+  --workspace "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.OperationalInsights/workspaces/sql-migration-logs" \
   --logs '[{"category":"QueryStoreRuntimeStatistics","enabled":true}]' \
   --metrics '[{"category":"AllMetrics","enabled":true}]'
 ```
@@ -577,8 +577,8 @@ az monitor diagnostic-settings create \
 # Create CPU alert
 az monitor metrics alert create \
   --name "High-CPU-Alert" \
-  --resource-group rg-sql-migration \
-  --scopes "/subscriptions/{subscription-id}/resourceGroups/rg-sql-migration/providers/Microsoft.Sql/servers/sql-migration-server/databases/AdventureWorksAzure" \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --scopes "/subscriptions/{subscription-id}/resourceGroups/sa1_test_eic_SudarshanDarade/providers/Microsoft.Sql/servers/sql-migration-server/databases/AdventureWorksAzure" \
   --condition "avg cpu_percent > 80" \
   --window-size 5m \
   --evaluation-frequency 1m
@@ -590,10 +590,10 @@ az monitor metrics alert create \
 ```bash
 # Create secondary database
 az sql db replica create \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure \
-  --partner-resource-group rg-sql-migration-dr \
+  --partner-resource-group sa1_test_eic_SudarshanDarade-dr \
   --partner-server sql-migration-server-dr \
   --service-objective S2
 ```
@@ -602,7 +602,7 @@ az sql db replica create \
 ```bash
 # Configure long-term retention
 az sql db ltr-policy set \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --database AdventureWorksAzure \
   --weekly-retention P4W \
@@ -617,13 +617,13 @@ az sql db ltr-policy set \
 ```bash
 # Check database usage
 az sql db show-usage \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure
 
 # Review pricing tier recommendations
 az sql db show \
-  --resource-group rg-sql-migration \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server sql-migration-server \
   --name AdventureWorksAzure \
   --query "recommendedIndex"

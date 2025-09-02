@@ -18,13 +18,13 @@ This task covers SQL Server password reset procedures for various scenarios and 
 ```bash
 # Reset SQL server admin password
 az sql server update \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-server-training \
   --admin-password "NewP@ssw0rd123!"
 
 # Verify the change
 az sql server show \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-server-training \
   --query "administratorLogin"
 ```
@@ -32,7 +32,7 @@ az sql server show \
 #### Method 3: PowerShell
 ```powershell
 # Reset admin password
-Set-AzSqlServer -ResourceGroupName "rg-sql-training" `
+Set-AzSqlServer -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
   -ServerName "sql-server-training" `
   -SqlAdministratorPassword (ConvertTo-SecureString "NewP@ssw0rd123!" -AsPlainText -Force)
 
@@ -78,13 +78,13 @@ SELECT containment_desc FROM sys.databases WHERE name = 'YourDatabase';
 ```bash
 # Reset Managed Instance admin password
 az sql mi update \
-  --resource-group rg-sql-mi \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-managed-instance-001 \
   --admin-password "NewMIP@ssw0rd123!"
 
 # Check status
 az sql mi show \
-  --resource-group rg-sql-mi \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --name sql-managed-instance-001 \
   --query "state"
 ```
@@ -92,7 +92,7 @@ az sql mi show \
 #### Reset via PowerShell
 ```powershell
 # Reset MI admin password
-Set-AzSqlInstance -ResourceGroupName "rg-sql-mi" `
+Set-AzSqlInstance -ResourceGroupName "sa1_test_eic_SudarshanDarade" `
   -Name "sql-managed-instance-001" `
   -AdministratorPassword (ConvertTo-SecureString "NewMIP@ssw0rd123!" -AsPlainText -Force)
 ```
@@ -148,14 +148,14 @@ DROP LOGIN [DOMAIN\username];
 ```bash
 # Set Azure AD admin for SQL server
 az sql server ad-admin create \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server-name sql-server-training \
   --display-name "SQL Admin" \
   --object-id "user-object-id"
 
 # Connect using Azure AD and reset SQL user
 az sql server ad-admin show \
-  --resource-group rg-sql-training \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server-name sql-server-training
 ```
 
@@ -186,13 +186,13 @@ Azure Synapse Link enables near real-time analytics over operational data withou
 ### Create Azure Synapse Workspace
 ```bash
 # Create resource group
-az group create --name rg-synapse-link --location eastus
+az group create --name sa1_test_eic_SudarshanDarade --location southeastasia
 
 # Create storage account for Synapse
 az storage account create \
   --name synapselinkstg001 \
-  --resource-group rg-synapse-link \
-  --location eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --location southeastasia \
   --sku Standard_LRS \
   --kind StorageV2 \
   --hierarchical-namespace true
@@ -205,12 +205,12 @@ az storage fs create \
 # Create Synapse workspace
 az synapse workspace create \
   --name synapse-workspace-001 \
-  --resource-group rg-synapse-link \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --storage-account synapselinkstg001 \
   --file-system synapse-workspace \
   --sql-admin-login-user synapseadmin \
   --sql-admin-login-password "SynapseP@ssw0rd123!" \
-  --location eastus
+  --location southeastasia
 ```
 
 ### Configure Firewall Rules
@@ -219,7 +219,7 @@ az synapse workspace create \
 az synapse workspace firewall-rule create \
   --name AllowAzureServices \
   --workspace-name synapse-workspace-001 \
-  --resource-group rg-synapse-link \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --start-ip-address 0.0.0.0 \
   --end-ip-address 0.0.0.0
 
@@ -227,7 +227,7 @@ az synapse workspace firewall-rule create \
 az synapse workspace firewall-rule create \
   --name AllowMyIP \
   --workspace-name synapse-workspace-001 \
-  --resource-group rg-synapse-link \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --start-ip-address YOUR-IP-ADDRESS \
   --end-ip-address YOUR-IP-ADDRESS
 ```
@@ -465,7 +465,7 @@ az synapse linked-service create \
 az synapse sql pool create \
   --name DedicatedPool001 \
   --performance-level DW100c \
-  --resource-group rg-synapse-link \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --workspace-name synapse-workspace-001
 ```
 
@@ -711,7 +711,7 @@ az sql db show-connection-string \
 # Check Synapse workspace status
 az synapse workspace show \
   --name synapse-workspace-001 \
-  --resource-group rg-synapse-link \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --query "connectivityEndpoints"
 ```
 

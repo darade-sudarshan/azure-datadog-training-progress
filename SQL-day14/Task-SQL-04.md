@@ -76,19 +76,19 @@ END
 ### Create Azure SQL Database for Stretch
 ```bash
 # Create resource group
-az group create --name rg-stretch-database --location eastus
+az group create --name sa1_test_eic_SudarshanDarade --location southeastasia
 
 # Create SQL Server
 az sql server create \
   --name stretch-sql-server-001 \
-  --resource-group rg-stretch-database \
-  --location eastus \
+  --resource-group sa1_test_eic_SudarshanDarade \
+  --location southeastasia \
   --admin-user stretchadmin \
   --admin-password P@ssw0rd123!
 
 # Configure firewall for Azure services
 az sql server firewall-rule create \
-  --resource-group rg-stretch-database \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server stretch-sql-server-001 \
   --name AllowAzureServices \
   --start-ip-address 0.0.0.0 \
@@ -96,7 +96,7 @@ az sql server firewall-rule create \
 
 # Create database for stretch data
 az sql db create \
-  --resource-group rg-stretch-database \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server stretch-sql-server-001 \
   --name StretchRemoteDB \
   --service-objective S1
@@ -109,7 +109,7 @@ curl -s https://ipinfo.io/ip
 
 # Add firewall rule for on-premises server
 az sql server firewall-rule create \
-  --resource-group rg-stretch-database \
+  --resource-group sa1_test_eic_SudarshanDarade \
   --server stretch-sql-server-001 \
   --name AllowOnPremises \
   --start-ip-address YOUR-PUBLIC-IP \
@@ -617,7 +617,7 @@ DROP MASTER KEY;
 ### Azure Resources Cleanup
 ```bash
 # Delete Azure resources
-az group delete --name rg-stretch-database --yes --no-wait
+az group delete --name sa1_test_eic_SudarshanDarade --yes --no-wait
 az group delete --name rg-sql-multi-instance --yes --no-wait
 ```
 

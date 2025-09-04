@@ -1,4 +1,4 @@
-einfochips@PUNELPT0728:~$ docker run -d --cgroupns host --pid host --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=f2915d145d974949a350e5fe92bbbc5b gcr.io/datadoghq/agent:7
+einfochips@PUNELPT0728:~$ docker run -d --cgroupns host --pid host --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=<Your API KEY> gcr.io/datadoghq/agent:7
 0e3d335ec81949eea794f4fdbacc5b32289ba8ee2679dc9efdc0352ec3c0e46a
 einfochips@PUNELPT0728:~$ docker ps -a
 CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                            PORTS                                                                                                                                  NAMES

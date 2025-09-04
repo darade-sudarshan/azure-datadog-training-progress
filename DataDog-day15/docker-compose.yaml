@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  datadog-agent:
+    image: datadog/agent:latest
+    container_name: datadog-agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=datadoghq.com
+      - DD_HOSTNAME=docker-compose-host
+      - DD_TAGS=env:production,orchestrator:compose
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_CONTAINER_EXCLUDE=name:datadog-agent
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    ports:
+      - "8126:8126"  # APM traces
+    pid: host
+    restart: unless-stopped
+
+  # Sample application to monitor
+  web-app:
+    image: nginx:alpine
+    container_name: sample-web-app
+    ports:
+      - "80:80"
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "nginx", "service": "web-app"}]'
+      com.datadoghq.ad.check_names: '["nginx"]'
+      com.datadoghq.ad.init_configs: '[{}]'
+      com.datadoghq.ad.instances: '[{"nginx_status_url": "http://%%host%%:%%port%%/nginx_status"}]'

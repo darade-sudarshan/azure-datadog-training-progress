@@ -1,0 +1,1239 @@
+einfochips@PUNELPT0728:~$ docker run -d --cgroupns host --pid host --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e DD_API_KEY=f2915d145d974949a350e5fe92bbbc5b gcr.io/datadoghq/agent:7
+0e3d335ec81949eea794f4fdbacc5b32289ba8ee2679dc9efdc0352ec3c0e46a
+einfochips@PUNELPT0728:~$ docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                            PORTS                                                                                                                                  NAMES
+0e3d335ec819   gcr.io/datadoghq/agent:7              "/bin/entrypoint.sh"     7 seconds ago   Up 7 seconds (health: starting)   8125/udp, 8126/tcp                                                                                                                     dd-agent
+194ba3749f6e   gcr.io/k8s-minikube/kicbase:v0.0.44   "/usr/local/bin/entr…"   4 weeks ago     Exited (255) 4 weeks ago          127.0.0.1:32768->22/tcp, 127.0.0.1:32769->2376/tcp, 127.0.0.1:32770->5000/tcp, 127.0.0.1:32771->8443/tcp, 127.0.0.1:32772->32443/tcp   minikube
+einfochips@PUNELPT0728:~$ sudo docker exec -it dd-agent s6-svstat /var/run/s6/services/agent
+[sudo] password for einfochips: 
+up (pid 129711) 46 seconds
+einfochips@PUNELPT0728:~$ sudo docker exec -it dd-agent agent status
+Getting the status from the agent.
+
+===============
+Agent (v7.70.0)
+===============
+  Status date: 2025-09-04 05:03:38.172 UTC (1756962218172)
+  Agent start: 2025-09-04 05:02:34.766 UTC (1756962154766)
+  Pid: 129711
+  Go Version: go1.24.6
+  Python Version: 3.12.11
+  Build arch: amd64
+  Agent flavor: agent
+  FIPS Mode: not available
+  Log Level: info
+
+  Paths
+  =====
+    Config File: /etc/datadog-agent/datadog.yaml
+    conf.d: /etc/datadog-agent/conf.d
+    checks.d: /etc/datadog-agent/checks.d
+
+========
+Hostname
+========
+
+  hostname: PUNELPT0728
+  hostname-resolution-version: 1
+  socket-fqdn: 0e3d335ec819
+  socket-hostname: 0e3d335ec819
+  host tags:
+    gpu_host:true
+  hostname provider: container
+  unused hostname providers:
+    'hostname' configuration/environment: hostname is empty
+    'hostname_file' configuration/environment: 'hostname_file' configuration is not enabled
+    aws: not retrieving hostname from AWS: the host is not an ECS instance and other providers already retrieve non-default hostnames
+    azure: azure_hostname_style is set to 'os'
+    fargate: agent is not runnning on Fargate
+    fqdn: FQDN hostname is not usable
+    gce: unable to retrieve hostname from GCE: GCE metadata API error: Get "http://169.254.169.254/computeMetadata/v1/instance/hostname": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    os: OS hostname is not usable
+
+
+Host Info
+=========
+  bootTime: 2025-09-04 03:20:22 UTC (1756956022000)
+  hostId: f783ff1c-6bc3-ea11-8105-842afd6d28e1
+  kernelArch: x86_64
+  kernelVersion: 5.15.0-139-generic
+  os: linux
+  platform: ubuntu
+  platformFamily: debian
+  platformVersion: 24.04
+  procs: 531
+  uptime: 1h42m14s
+  virtualizationRole: guest
+  virtualizationSystem: docker
+
+
+======
+Clocks
+======
+
+NTP offset: -9.291ms
+
+=================
+HA Agent Metadata
+=================
+
+
+========
+Metadata
+========
+
+  agent_startup_time_ms: 1756962154766
+  agent_version: 7.70.0
+  auto_instrumentation_modes: []
+  config_apm_dd_url: 
+  config_dd_url: 
+  config_eks_fargate: false
+  config_id: 
+  config_logs_dd_url: 
+  config_logs_socks5_proxy_address: 
+  config_no_proxy: [169.254.169.254 100.100.100.200]
+  config_process_dd_url: 
+  config_proxy_http: 
+  config_proxy_https: 
+  config_site: 
+  diagnostics: map[connectivity:[{success Agent package yum  map[endpoint:https://yum.datadoghq.com]} {success Agent installation  map[endpoint:https://install.datadoghq.com]} {success Agent package apt  map[endpoint:https://apt.datadoghq.com]} {success Agent keys  map[endpoint:https://keys.datadoghq.com]} {success APM traces  map[endpoint:https://trace.agent.datadoghq.com./_health]} {failure APM telemetry invalid status code map[endpoint:https://instrumentation-telemetry-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure LLM obs invalid status code map[endpoint:https://llmobs-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Live container/process/USM invalid status code map[endpoint:https://process.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Container image invalid status code map[endpoint:https://contimage-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Network device monitoring metadata invalid status code map[endpoint:https://ndm-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Network device monitoring netflow invalid status code map[endpoint:https://ndmflow-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Network path invalid status code map[endpoint:https://netpath-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Network device monitoring snmp invalid status code map[endpoint:https://snmp-traps-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Orchestrator container lifecycle invalid status code map[endpoint:https://contlcycle-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Orchestrator  invalid status code map[endpoint:https://orchestrator.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Profiling invalid status code map[endpoint:https://intake.profile.datadoghq.com./probe raw_error:invalid status code: 403]} {success Remote configuration  map[endpoint:https://config.datadoghq.com./_health]} {failure Database monitoring metrics invalid status code map[endpoint:https://dbm-metrics-intake.datadoghq.com./probe raw_error:invalid status code: 403]} {success Agent flare  map[endpoint:https://7-70-0-flare.agent.datadoghq.com./support/flare]} {failure Logs invalid status code map[endpoint:https://agent-http-intake.logs.datadoghq.com./probe raw_error:invalid status code: 403]} {failure Metrics/events/agent metadata invalid status code map[endpoint:https://7-70-0-app.agent.datadoghq.com./probe raw_error:invalid status code: 403]}]]
+  feature_apm_enabled: true
+  feature_auto_instrumentation_enabled: false
+  feature_container_images_enabled: true
+  feature_csm_vm_containers_enabled: false
+  feature_csm_vm_hosts_enabled: false
+  feature_cspm_enabled: false
+  feature_cspm_host_benchmarks_enabled: false
+  feature_cws_enabled: false
+  feature_cws_network_enabled: true
+  feature_cws_remote_config_enabled: true
+  feature_cws_security_profiles_enabled: false
+  feature_discovery_enabled: false
+  feature_dynamic_instrumentation_enabled: false
+  feature_gpu_monitoring_enabled: false
+  feature_imdsv2_enabled: false
+  feature_logs_enabled: false
+  feature_networks_enabled: false
+  feature_networks_http_enabled: true
+  feature_networks_https_enabled: true
+  feature_oom_kill_enabled: false
+  feature_otlp_enabled: false
+  feature_process_enabled: false
+  feature_process_language_detection_enabled: false
+  feature_processes_container_enabled: true
+  feature_remote_configuration_enabled: true
+  feature_tcp_queue_length_enabled: false
+  feature_usm_enabled: false
+  feature_usm_go_tls_enabled: true
+  feature_usm_http2_enabled: false
+  feature_usm_istio_enabled: true
+  feature_usm_kafka_enabled: false
+  feature_usm_postgres_enabled: false
+  feature_usm_redis_enabled: false
+  feature_windows_crash_detection_enabled: false
+  fips_mode: false
+  flavor: agent
+  fleet_policies_applied: []
+  hostname_source: container
+  infrastructure_mode: full
+  install_method_installer_version: docker
+  install_method_tool: docker
+  install_method_tool_version: docker
+  system_probe_core_enabled: true
+  system_probe_gateway_lookup_enabled: true
+  system_probe_kernel_headers_download_enabled: false
+  system_probe_max_connections_per_message: 600
+  system_probe_prebuilt_fallback_enabled: false
+  system_probe_protocol_classification_enabled: true
+  system_probe_root_namespace_enabled: true
+  system_probe_runtime_compilation_enabled: false
+  system_probe_telemetry_enabled: false
+  system_probe_track_tcp_4_connections: true
+  system_probe_track_tcp_6_connections: true
+  system_probe_track_udp_4_connections: true
+  system_probe_track_udp_6_connections: true
+
+=========
+Collector
+=========
+
+
+  Running Checks
+  ==============
+
+    container
+    ---------
+      Instance ID: container [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/container.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 27, Total: 108
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 4ms
+      Last Execution Date : 2025-09-04 05:03:27 UTC (1756962207000)
+      Last Successful Execution Date : 2025-09-04 05:03:27 UTC (1756962207000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/container.d/conf.yaml.default
+
+
+    container_image
+    ---------------
+      Instance ID: container_image [OK]
+      Long Running Check: true
+      Configuration Source: file:/etc/datadog-agent/conf.d/container_image.d/conf.yaml.default
+      Total Metric Samples: 0
+      Total Events: 0
+      Total container-images: 1
+      Total Service Checks: 0
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/container_image.d/conf.yaml.default
+
+
+    container_lifecycle
+    -------------------
+      Instance ID: container_lifecycle [OK]
+      Long Running Check: true
+      Configuration Source: file:/etc/datadog-agent/conf.d/container_lifecycle.d/conf.yaml.default
+      Total Metric Samples: 0
+      Total Events: 0
+      Total Service Checks: 0
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/container_lifecycle.d/conf.yaml.default
+
+
+    cpu
+    ---
+      Instance ID: cpu [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/cpu.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 19, Total: 69
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 18ms
+      Last Execution Date : 2025-09-04 05:03:33 UTC (1756962213000)
+      Last Successful Execution Date : 2025-09-04 05:03:33 UTC (1756962213000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/cpu.d/conf.yaml.default
+
+
+    disk (7.1.0)
+    ------------
+      Instance ID: disk:67cc0574430a16ba [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/disk.d/conf.yaml.default
+      Total Runs: 3
+      Metric Samples: Last Run: 576, Total: 1,728
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 43ms
+      Last Execution Date : 2025-09-04 05:03:25 UTC (1756962205000)
+      Last Successful Execution Date : 2025-09-04 05:03:25 UTC (1756962205000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/disk.d/conf.yaml.default
+
+
+    docker
+    ------
+      Instance ID: docker [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/docker.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 8, Total: 32
+      Events: Last Run: 1, Total: 2
+      Service Checks: Last Run: 1, Total: 4
+      Average Execution Time : 5ms
+      Last Execution Date : 2025-09-04 05:03:32 UTC (1756962212000)
+      Last Successful Execution Date : 2025-09-04 05:03:32 UTC (1756962212000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/docker.d/conf.yaml.default
+
+
+    file_handle
+    -----------
+      Instance ID: file_handle [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/file_handle.d/conf.yaml.default
+      Total Runs: 3
+      Metric Samples: Last Run: 5, Total: 15
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 0s
+      Last Execution Date : 2025-09-04 05:03:24 UTC (1756962204000)
+      Last Successful Execution Date : 2025-09-04 05:03:24 UTC (1756962204000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/file_handle.d/conf.yaml.default
+
+
+    io
+    --
+      Instance ID: io [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/io.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 834, Total: 2,760
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 5ms
+      Last Execution Date : 2025-09-04 05:03:31 UTC (1756962211000)
+      Last Successful Execution Date : 2025-09-04 05:03:31 UTC (1756962211000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/io.d/conf.yaml.default
+
+
+    load
+    ----
+      Instance ID: load [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/load.d/conf.yaml.default
+      Total Runs: 3
+      Metric Samples: Last Run: 6, Total: 18
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 0s
+      Last Execution Date : 2025-09-04 05:03:23 UTC (1756962203000)
+      Last Successful Execution Date : 2025-09-04 05:03:23 UTC (1756962203000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/load.d/conf.yaml.default
+
+
+    memory
+    ------
+      Instance ID: memory [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/memory.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 20, Total: 80
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 0s
+      Last Execution Date : 2025-09-04 05:03:30 UTC (1756962210000)
+      Last Successful Execution Date : 2025-09-04 05:03:30 UTC (1756962210000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/memory.d/conf.yaml.default
+
+
+    network (5.3.0)
+    ---------------
+      Instance ID: network:4b0649b7e11f0772 [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/network.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 104, Total: 416
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 156ms
+      Last Execution Date : 2025-09-04 05:03:37 UTC (1756962217000)
+      Last Successful Execution Date : 2025-09-04 05:03:37 UTC (1756962217000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/network.d/conf.yaml.default
+
+
+    ntp
+    ---
+      Instance ID: ntp:3c427a42a70bbf8 [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/ntp.d/conf.yaml.default
+      Total Runs: 1
+      Metric Samples: Last Run: 1, Total: 1
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 1, Total: 1
+      Average Execution Time : 5.457s
+      Last Execution Date : 2025-09-04 05:02:50 UTC (1756962170000)
+      Last Successful Execution Date : 2025-09-04 05:02:50 UTC (1756962170000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/ntp.d/conf.yaml.default
+
+
+    telemetry
+    ---------
+      Instance ID: telemetry [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/telemetry.d/conf.yaml.default
+      Total Runs: 3
+      Metric Samples: Last Run: 8, Total: 24
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 0s
+      Last Execution Date : 2025-09-04 05:03:29 UTC (1756962209000)
+      Last Successful Execution Date : 2025-09-04 05:03:29 UTC (1756962209000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/telemetry.d/conf.yaml.default
+
+
+    uptime
+    ------
+      Instance ID: uptime [OK]
+      Configuration Source: file:/etc/datadog-agent/conf.d/uptime.d/conf.yaml.default
+      Total Runs: 4
+      Metric Samples: Last Run: 1, Total: 4
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 0, Total: 0
+      Average Execution Time : 0s
+      Last Execution Date : 2025-09-04 05:03:36 UTC (1756962216000)
+      Last Successful Execution Date : 2025-09-04 05:03:36 UTC (1756962216000)
+      metadata:
+        config.source: /etc/datadog-agent/conf.d/uptime.d/conf.yaml.default
+
+
+==========
+Aggregator
+==========
+
+  Checks Metric Sample: 5,490
+  Dogstatsd Metric Sample: 452
+  Event: 3
+  Events Flushed: 3
+  Number Of Flushes: 4
+  Series Flushed: 4,108
+  Service Check: 5
+  Service Checks Flushed: 9
+  container-images: 1
+
+=========
+APM Agent
+=========
+
+  Status: Running
+  Pid: 129712
+  Uptime: 63 seconds
+  Mem alloc: 16,697,792 bytes
+  Hostname: PUNELPT0728
+  Receiver: 0.0.0.0:8126
+  Endpoints:
+    https://trace.agent.datadoghq.com.
+
+  Receiver (previous minute)
+  ==========================
+    No traces received in the previous minute.
+
+
+
+  Writer (previous minute)
+  ========================
+    Traces: 0 payloads, 0 traces, 0 events, 0 bytes
+    Stats: 0 payloads, 0 stats buckets, 0 bytes
+
+=============
+Autodiscovery
+=============
+
+  Enabled Features
+  ================
+    docker
+
+=========
+DogStatsD
+=========
+
+  Event Packets: 0
+  Event Parse Errors: 0
+  Metric Packets: 445
+  Metric Parse Errors: 0
+  Service Check Packets: 0
+  Service Check Parse Errors: 0
+  Udp Bytes: 68,790
+  Udp Packet Reading Errors: 0
+  Udp Packets: 212
+  Uds Bytes: 0
+  Uds Origin Detection Errors: 0
+  Uds Packet Reading Errors: 0
+  Uds Packets: 1
+  Unterminated Metric Errors: 0
+
+Tip: For troubleshooting, enable 'dogstatsd_metrics_stats_enable' in the main datadog.yaml file to generate Dogstatsd logs. Once 'dogstatsd_metrics_stats_enable' is enabled, users can also use 'dogstatsd-stats' command to get visibility of the latest collected metrics.
+
+=========
+Endpoints
+=========
+
+  https://app.datadoghq.com. - API Key ending with:
+      - bbc5b
+
+================
+Fleet Automation
+================
+
+
+  Fleet Management is disabled
+
+  Remote Management Status:    Disabled
+  Datadog Installer Status:    Not running
+
+
+=========
+Forwarder
+=========
+
+  Transactions
+  ============
+    Cluster: 0
+    ClusterRole: 0
+    ClusterRoleBinding: 0
+    CronJob: 0
+    CustomResource: 0
+    CustomResourceDefinition: 0
+    DaemonSet: 0
+    Deployment: 0
+    Dropped: 0
+    ECSTask: 0
+    EndpointSlice: 0
+    HighPriorityQueueFull: 0
+    HorizontalPodAutoscaler: 0
+    Ingress: 0
+    Job: 0
+    LimitRange: 0
+    Namespace: 0
+    NetworkPolicy: 0
+    Node: 0
+    OrchestratorManifest: 0
+    PersistentVolume: 0
+    PersistentVolumeClaim: 0
+    Pod: 0
+    PodDisruptionBudget: 0
+    ReplicaSet: 0
+    Requeued: 0
+    Retried: 0
+    RetryQueueSize: 0
+    Role: 0
+    RoleBinding: 0
+    Service: 0
+    ServiceAccount: 0
+    StatefulSet: 0
+    StorageClass: 0
+    VerticalPodAutoscaler: 0
+
+  Transaction Successes
+  =====================
+    Total number: 29
+    Successes By Endpoint:
+      check_run_v1: 4
+      container: 6
+      intake: 5
+      metadata_v1: 6
+      process_discovery: 4
+      series_v2: 4
+
+  On-disk storage
+  ===============
+    On-disk storage is disabled. Configure `forwarder_storage_max_size_in_bytes` to enable it.
+
+  API Keys status
+  ===============
+    API key ending with bbc5b: API Key valid
+
+=========
+JMX Fetch
+=========
+
+  Information
+  ==================
+  Initialized checks
+  ==================
+    no checks
+
+  Failed checks
+  =============
+    no checks
+
+
+==========
+Logs Agent
+==========
+
+  Logs Agent is not running
+
+==========
+OTel Agent
+==========
+
+
+  Status: Not running or unreachable on https://localhost:7777.
+  Error: OTel Agent is not enabled.
+
+====
+OTLP
+====
+
+  Status: Not enabled
+  Collector status: Not running
+
+
+
+=============
+Process Agent
+=============
+
+  Status: Not running or unreachable
+
+=================
+Process Component
+=================
+
+
+  Enabled Checks: [container process_discovery rtcontainer]
+  System Probe Process Module Status: Not running
+  Process Language Detection Enabled: False
+
+  =================
+  Process Endpoints
+  =================
+    https://process.datadoghq.com. - API Key ending with:
+        - bbc5b
+
+  =========
+  Collector
+  =========
+    Last collection time: 2025-09-04 05:03:31
+    Docker socket: /var/run/docker.sock
+    Number of processes: 0
+    Number of containers: 1
+    Process Queue length: 0
+    RTProcess Queue length: 0
+    Connections Queue length: 0
+    Event Queue length: 0
+    Pod Queue length: 0
+    Process Bytes enqueued: 0
+    RTProcess Bytes enqueued: 0
+    Connections Bytes enqueued: 0
+    Event Bytes enqueued: 0
+    Pod Bytes enqueued: 0
+    Drop Check Payloads: []
+    Number of submission errors: 0
+
+  ==========
+  Extractors
+  ==========
+
+    Workloadmeta
+    ============
+      Cache size: 0
+      Stale diffs discarded: 0
+      Diffs dropped: 0
+
+====================
+Remote Configuration
+====================
+
+
+Organization enabled: True
+API Key: Authorized
+Last error: None
+
+
+
+=======
+Secrets
+=======
+No secret_backend_command set: secrets feature is not enabled
+
+===
+SSI
+===
+
+    SSI is not enabled.
+
+
+========================
+Transport Proxy Warnings
+========================
+
+  No Transport Proxy Warnings
+
+einfochips@PUNELPT0728:~$ docker logs datadog-agent
+Error response from daemon: No such container: datadog-agent
+einfochips@PUNELPT0728:~$ docker logs dd-agent 
+[s6-init] making user provided files available at /var/run/s6/etc...exited 0.
+[s6-init] ensuring user provided files have correct perms...exited 0.
+[fix-attrs.d] applying ownership & permissions fixes...
+[fix-attrs.d] done.
+[cont-init.d] executing container initialization scripts...
+[cont-init.d] 01-check-apikey.sh: executing... 
+[cont-init.d] 01-check-apikey.sh: exited 0.
+[cont-init.d] 50-ci.sh: executing... 
+[cont-init.d] 50-ci.sh: exited 0.
+[cont-init.d] 50-ecs.sh: executing... 
+[cont-init.d] 50-ecs.sh: exited 0.
+[cont-init.d] 50-eks.sh: executing... 
+[cont-init.d] 50-eks.sh: exited 0.
+[cont-init.d] 50-kubernetes.sh: executing... 
+[cont-init.d] 50-kubernetes.sh: exited 0.
+[cont-init.d] 50-mesos.sh: executing... 
+[cont-init.d] 50-mesos.sh: exited 0.
+[cont-init.d] 51-docker.sh: executing... 
+[cont-init.d] 51-docker.sh: exited 0.
+[cont-init.d] 59-defaults.sh: executing... 
+[cont-init.d] 59-defaults.sh: exited 0.
+[cont-init.d] 60-network-check.sh: executing... 
+[cont-init.d] 60-network-check.sh: exited 0.
+[cont-init.d] 60-sysprobe-check.sh: executing... 
+[cont-init.d] 60-sysprobe-check.sh: exited 0.
+[cont-init.d] 89-copy-customfiles.sh: executing... 
+[cont-init.d] 89-copy-customfiles.sh: exited 0.
+[cont-init.d] done.
+[services.d] starting services
+starting system-probe
+starting security-agent
+starting agent
+starting process-agent
+starting trace-agent
+[services.d] done.
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:732 in func1) | Loading proxy settings
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to resolve secrets
+2025-09-04 05:02:34 UTC | TRACE | WARN | (pkg/util/log/log.go:777 in func1) | Agent configuration relax permissions constraint on the secret backend cmd, Group can read and exec
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:732 in func1) | Finished resolving secrets
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:737 in func1) | Agent did not find PodResources socket at /var/lib/kubelet/pod-resources/kubelet.sock
+2025-09-04 05:02:34 UTC | TRACE | INFO | (pkg/util/log/log.go:737 in func1) | 1 Features detected from environment: docker
+2025-09-04 05:02:34 UTC | TRACE | INFO | (reflect/value.go:584 in call) | starting to load the IPC auth primitives (timeout: 30s)
+2025-09-04 05:02:34 UTC | TRACE | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:158 in buildIPCComponent) | successfully loaded the IPC auth primitives (fingerprint: 5e077b182193c796)
+2025-09-04 05:02:34 UTC | TRACE | INFO | (reflect/value.go:584 in call) | configsync disabled (agent_ipc.port: 0 | agent_ipc.config_refresh_interval: 0)
+2025-09-04 05:02:34 UTC | TRACE | INFO | (comp/trace/config/setup.go:69 in LoadConfigFile) | Loaded configuration: /etc/datadog-agent/datadog.yaml
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:732 in func1) | Loading proxy settings
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:732 in func1) | Starting to resolve secrets
+2025-09-04 05:02:34 UTC | SECURITY | WARN | (pkg/util/log/log.go:777 in func1) | Agent configuration relax permissions constraint on the secret backend cmd, Group can read and exec
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:732 in func1) | Finished resolving secrets
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:737 in func1) | Agent did not find PodResources socket at /var/lib/kubelet/pod-resources/kubelet.sock
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/util/log/log.go:737 in func1) | 1 Features detected from environment: docker
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:72 in NewReadWriteComponent) | starting to load the IPC auth primitives (timeout: 30s)
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:197 in printAuthSignature) | successfully loaded the IPC auth primitives (fingerprint: 5e077b182193c796)
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (comp/core/configsync/configsyncimpl/module.go:70 in newComponent) | configsync disabled (agent_ipc.port: 0 | agent_ipc.config_refresh_interval: 0)
+2025-09-04 05:02:34 UTC | SECURITY | INFO | (pkg/config/setup/config.go:2187 in LoadCustom) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:737 in func1) | running on platform: ubuntu
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:737 in func1) | running version: 7.70.0
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:732 in func1) | Loading proxy settings
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:732 in func1) | Starting to resolve secrets
+2025-09-04 05:02:34 UTC | PROCESS | WARN | (pkg/util/log/log.go:777 in func1) | Agent configuration relax permissions constraint on the secret backend cmd, Group can read and exec
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:732 in func1) | Finished resolving secrets
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:737 in func1) | Agent did not find PodResources socket at /var/lib/kubelet/pod-resources/kubelet.sock
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/util/log/log.go:737 in func1) | 1 Features detected from environment: docker
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:72 in NewReadWriteComponent) | starting to load the IPC auth primitives (timeout: 30s)
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:197 in printAuthSignature) | successfully loaded the IPC auth primitives (fingerprint: 5e077b182193c796)
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (comp/core/configsync/configsyncimpl/module.go:70 in newComponent) | configsync disabled (agent_ipc.port: 0 | agent_ipc.config_refresh_interval: 0)
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (pkg/config/setup/config.go:2187 in LoadCustom) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | PROCESS | INFO | (comp/rdnsquerier/impl/rdnsquerier.go:83 in NewComponent) | Reverse DNS Enrichment config: (enabled=false workers=0 chan_size=0 cache.enabled=true cache.entry_ttl=0 cache.clean_interval=0 cache.persist_interval=0 cache.max_retries=-1 cache.max_size=0 rate_limiter.enabled=true rate_limiter.limit_per_sec=0 rate_limiter.limit_throttled_per_sec=0 rate_limiter.throttle_error_threshold=0 rate_limiter.recovery_intervals=0 rate_limiter.recovery_interval=0)
+2025-09-04 05:02:34 UTC | PROCESS | WARN | (comp/networkpath/npcollector/npcollectorimpl/config.go:56 in newConfig) | config key "network_path.collector.tcp_method" is unknown
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/util/log/log.go:732 in func1) | Loading proxy settings
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/util/log/log.go:737 in func1) | Agent did not find PodResources socket at /var/lib/kubelet/pod-resources/kubelet.sock
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/util/log/log.go:737 in func1) | 1 Features detected from environment: docker
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:72 in NewReadWriteComponent) | starting to load the IPC auth primitives (timeout: 30s)
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:197 in printAuthSignature) | successfully loaded the IPC auth primitives (fingerprint: 5e077b182193c796)
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/impl/store.go:102 in start) | workloadmeta store initialized successfully
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:389 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:113 in Start) | remote workloadmeta initialized successfully
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/impl/store.go:618 in startCandidates) | workloadmeta collector "remote-workloadmeta" started successfully
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/tagger/impl-remote/remote.go:240 in start) | remote tagger initialized successfully
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (pkg/runtime/runtime.go:28 in func1) | runtime: set GOMAXPROCS to: 12
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (cmd/system-probe/subcommands/run/command.go:355 in startSystemProbe) | starting system-probe v7.70.0
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (cmd/system-probe/subcommands/run/command.go:463 in logUserAndGroupID) | current user id/name: 0/root
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (cmd/system-probe/subcommands/run/command.go:466 in logUserAndGroupID) | current group id/name: 0/root
+2025-09-04 05:02:34 UTC | SYS-PROBE | INFO | (cmd/system-probe/subcommands/run/command.go:360 in startSystemProbe) | system probe not enabled. exiting
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:737 in func1) | Using '/opt/datadog-agent/embedded' as Python home
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:732 in func1) | Loading proxy settings
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:732 in func1) | Starting to resolve secrets
+2025-09-04 05:02:34 UTC | CORE | WARN | (pkg/util/log/log.go:777 in func1) | Agent configuration relax permissions constraint on the secret backend cmd, Group can read and exec
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:732 in func1) | Finished resolving secrets
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:737 in func1) | Agent did not find PodResources socket at /var/lib/kubelet/pod-resources/kubelet.sock
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/util/log/log.go:737 in func1) | 1 Features detected from environment: docker
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/config/setup/config.go:2187 in LoadCustom) | Starting to load the configuration
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/forwarder.go:81 in createOptions) | starting forwarder with 1 endpoints
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/forwarder.go:87 in createOptions) | domain 'https://app.datadoghq.com.' has 1 keys: ***************************bbc5b
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:72 in NewReadWriteComponent) | starting to load the IPC auth primitives (timeout: 30s)
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/core/ipc/impl@v0.70.0/ipc.go:197 in printAuthSignature) | successfully loaded the IPC auth primitives (fingerprint: 5e077b182193c796)
+2025-09-04 05:02:34 UTC | CORE | INFO | (pkg/process/metadata/workloadmeta/extractor.go:85 in NewWorkloadMetaExtractor) | Instantiating a new WorkloadMetaExtractor
+2025-09-04 05:02:34 UTC | CORE | INFO | (comp/core/tagger/impl/tagger.go:110 in NewComponent) | Tagger is created
+2025-09-04 05:02:35 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:35 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:35 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/aggregator/time_sampler.go:56 in NewTimeSampler) | Creating TimeSampler #0
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/runtime/runtime.go:28 in func1) | runtime: set GOMAXPROCS to: 12
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/logs/agent/agentimpl/agent.go:173 in newLogsAgent) | logs-agent disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/rdnsquerier/impl/rdnsquerier.go:83 in NewComponent) | Reverse DNS Enrichment config: (enabled=false workers=0 chan_size=0 cache.enabled=true cache.entry_ttl=0 cache.clean_interval=0 cache.persist_interval=0 cache.max_retries=-1 cache.max_size=0 rate_limiter.enabled=true rate_limiter.limit_per_sec=0 rate_limiter.limit_throttled_per_sec=0 rate_limiter.throttle_error_threshold=0 rate_limiter.recovery_intervals=0 rate_limiter.recovery_interval=0)
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/netflow/server/server.go:63 in newServer) | Reverse DNS Enrichment is disabled for NDM NetFlow
+2025-09-04 05:02:35 UTC | CORE | WARN | (comp/networkpath/npcollector/npcollectorimpl/config.go:56 in newConfig) | config key "network_path.collector.tcp_method" is unknown
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/gui/guiimpl/gui.go:103 in newGui) | GUI server port -1 specified: not starting the GUI.
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/config/remote/service/util.go:102 in func1) | Missing meta bucket
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/config/remote/service/util.go:137 in openCacheDB) | Failed to validate remote configuration database could not get RC metadata: missing bucket
+2025-09-04 05:02:35 UTC | CORE | INFO | (pkg/config/remote/service/util.go:50 in recreate) | Clear remote configuration database
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://7-70-0-app.agent.datadoghq.com." (1 api key(s))
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:102 in start) | workloadmeta store initialized successfully
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "nvml" could not start. error: component workloadmeta-nvml is disabled: Agent does not have NVML library available
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "crio" could not start. error: component workloadmeta-crio is disabled: Crio not detected
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "cloudfoundry-vm" could not start. error: component workloadmeta-cloudfoundry-vm is disabled: Agent is not running on CloudFoundry
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "cloudfoundry-container" could not start. error: component workloadmeta-cloudfoundry-container is disabled: Agent is not running on CloudFoundry
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "containerd" could not start. error: component workloadmeta-containerd is disabled: Agent is not running on containerd
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "kube_metadata" could not start. error: component workloadmeta-kube_metadata is disabled: Agent is not running on Kubernetes
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "kubelet" could not start. error: component workloadmeta-kubelet is disabled: Agent is not running on Kubernetes
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "remote-process-collector" could not start. error: collector remote-process-collector is not enabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "podman" could not start. error: component workloadmeta-podman is disabled: Podman not detected
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "ecs" could not start. error: component workloadmeta-ecs is disabled: Agent is not running on ECS EC2
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/tagger/collectors/workloadmeta_main.go:151 in stream) | workloadmeta tagger collector started
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://orchestrator.datadoghq.com" (1 api key(s))
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "process-language-collector" could not start. error: component workloadmeta-process-language is disabled: language detection or core agent process collection is disabled
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "ecs_fargate" could not start. error: component workloadmeta-ecs_fargate is disabled: Agent is not running on ECS Fargate
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/types.go:84 in Register) | Service listener factory cloudfoundry-bbs does not exist.
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/types.go:84 in Register) | Service listener factory kube_endpoints does not exist.
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/types.go:84 in Register) | Service listener factory kube_services does not exist.
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/autodiscovery/providers/config_reader.go:173 in read) | Searching for configuration files at: /etc/datadog-agent/conf.d
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:618 in startCandidates) | workloadmeta collector "docker" started successfully
+2025-09-04 05:02:35 UTC | CORE | INFO | (comp/core/workloadmeta/impl/store.go:621 in startCandidates) | workloadmeta collector "process-collector" could not start. error: component workloadmeta-process is disabled: wlm process collection disabled
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/providers/config_reader.go:173 in read) | Searching for configuration files at: /opt/datadog-agent/bin/agent/dist/conf.d
+2025-09-04 05:02:36 UTC | CORE | WARN | (comp/core/autodiscovery/providers/config_reader.go:177 in read) | Skipping, open /opt/datadog-agent/bin/agent/dist/conf.d: no such file or directory
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/providers/config_reader.go:173 in read) | Searching for configuration files at: 
+2025-09-04 05:02:36 UTC | CORE | WARN | (comp/core/autodiscovery/providers/config_reader.go:177 in read) | Skipping, open : no such file or directory
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/config/autodiscovery/autodiscovery.go:120 in DiscoverComponentsFromEnv) | Adding KubeContainer provider from environment
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/config/autodiscovery/autodiscovery.go:125 in DiscoverComponentsFromEnv) | Adding Container listener from environment
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:160 in 1) | Workloadmeta collectors are ready, starting autodiscovery scheduler controller
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/scheduler/controller.go:88 in Start) | Autodiscovery scheduler controller started
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:553 in initListenerCandidates) | static config listener successfully started
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:553 in initListenerCandidates) | container listener successfully started
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/workloadmeta.go:126 in Listen) | ad-containerlistener initialized successfully
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:553 in initListenerCandidates) | environment listener successfully started
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/environment.go:60 in createServices) | Listener created docker service from environment
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/autodiscovery/listeners/environment.go:67 in createServices) | Listener created container service from environment
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/core/agenttelemetry/impl/agenttelemetry.go:606 in start) | Starting agent telemetry for 3 schedules and 9 profiles
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/collector/runner/runner.go:100 in ensureMinWorkers) | Runner 1 added 4 workers (total: 4)
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/process/subscribers/gpu_subscriber.go:40 in Run) | Starting GPU subscriber
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://process-events.datadoghq.com." (1 api key(s))
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://process.datadoghq.com." (1 api key(s))
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://process.datadoghq.com." (1 api key(s))
+2025-09-04 05:02:36 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:428 in Start) | Forwarder started, sending to 1 endpoint(s) with 1 worker(s) each: "https://process.datadoghq.com." (1 api key(s))
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/process/runner/submitter.go:193 in printStartMessage) | Starting CheckSubmitter for host=PUNELPT0728, endpoints=[https://process.datadoghq.com.], events endpoints=[https://process-events.datadoghq.com.]
+2025-09-04 05:02:36 UTC | CORE | INFO | (pkg/process/runner/runner.go:277 in Run) | Starting process-agent with enabled checks=[container process_discovery rtcontainer]
+2025-09-04 05:02:36 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:36 UTC | TRACE | INFO | (comp/trace/config/hostname.go:34 in hostname) | Could not get hostname via gRPC: context deadline exceeded. Falling back to other methods.
+2025-09-04 05:02:36 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:37 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:37 UTC | TRACE | INFO | (comp/trace/config/hostname.go:97 in acquireHostnameFallback) | Acquired hostname from core agent (/opt/datadog-agent/bin/agent/agent): "PUNELPT0728".
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/runtime/runtime.go:28 in func1) | runtime: set GOMAXPROCS to: 12
+2025-09-04 05:02:37 UTC | TRACE | INFO | (comp/trace/agent/impl/agent.go:174 in prepGoRuntime) | Trace Agent final GOMAXPROCS: 12
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/runtime/gomemlimit_linux.go:44 in SetGoMemLimit) | Cgroup memory limit not found, doing nothing
+2025-09-04 05:02:37 UTC | TRACE | INFO | (comp/trace/agent/impl/agent.go:192 in prepGoRuntime) | GOMEMLIMIT unconstrained.
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/agent/agent.go:156 in NewAgent) | Starting Agent with processor trace buffer of size 0
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/api/api.go:145 in NewHTTPReceiver) | Receiver configured with 6 decoders and a timeout of 1000ms
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/writer/trace.go:132 in NewTraceWriter) | Trace writer initialized (climt=5 qsize=1 compression=zstd)
+2025-09-04 05:02:37 UTC | TRACE | INFO | (comp/core/tagger/impl-remote/remote.go:124 in func1) | remote tagger initialized successfully
+2025-09-04 05:02:37 UTC | TRACE | INFO | (comp/trace/agent/impl/run.go:101 in runAgentSidekicks) | Trace agent running on host PUNELPT0728
+2025-09-04 05:02:37 UTC | TRACE | WARN | (comp/trace/agent/impl/run.go:74 in func2) | The /config/set endpoint on this port is deprecated and will be removed. The same endpoint is available on the debug server at 127.0.0.1:5012
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/api/listener.go:41 in NewMeasuredListener) | Listener started with 1000 maximum connections.
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/api/api.go:281 in Start) | Listening for traces at http://0.0.0.0:8126
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/api/listener.go:41 in NewMeasuredListener) | Listener started with 1000 maximum connections.
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/api/api.go:300 in Start) | Listening for traces at unix:///var/run/datadog/apm.socket
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/trace/agent/agent.go:219 in Run) | Processing Pipeline configured with 12 workers
+2025-09-04 05:02:37 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:389 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:37 UTC | CORE | INFO | (pkg/util/containers/metrics/provider/registry.go:102 in collectorDiscovery) | Container metrics provider discovery process finished
+2025-09-04 05:02:38 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:38 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:38 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:39 UTC | SYS-PROBE | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:152 in func1) | unable to establish stream, will possibly retry: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp :5001: connect: connection refused"
+2025-09-04 05:02:39 UTC | SYS-PROBE | WARN | (comp/core/tagger/impl-remote/remote.go:464 in run) | error received trying to start stream with target ":5001": tagger stream not started
+2025-09-04 05:02:39 UTC | SYS-PROBE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:39 UTC | SYS-PROBE | INFO | (comp/core/tagger/impl-remote/remote.go:264 in stop) | remote tagger stopped successfully
+system-probe exited with code 0, disabling
+2025-09-04 05:02:39 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:40 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/core/agenttelemetry/impl/agenttelemetry.go:508 in run) | Starting agent telemetry run
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/process/checks/container.go:74 in Init) | no network ID detected: failed to get network ID after 4 attempts: no network ID detected and system-probe client not available: could not detect network ID: EC2: GetNetworkID failed to get mac addresses: could not fetch token from IMDSv2: Put "http://169.254.169.254/latest/api/token": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/dogstatsd/listeners/uds_datagram.go:75 in NewUDSDatagramListener) | dogstatsd-uds: /var/run/datadog/dsd.socket successfully initialized
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/dogstatsd/listeners/uds_datagram.go:89 in listen) | dogstatsd-uds: starting to listen on /var/run/datadog/dsd.socket
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/dogstatsd/listeners/udp.go:128 in listen) | dogstatsd-udp: starting to listen on 127.0.0.1:8125
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:204 in getDogStatsDWorkerAndPipelineCount) | Dogstatsd workers and pipelines count:  10  workers,  1  pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/aggregator/demultiplexer.go:153 in GetDogStatsDWorkerAndPipelineCount) | Dogstatsd configured to run with 10 workers and 1 pipelines
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/remote-config/rcservice/rcserviceimpl/rcservice.go:117 in func1) | remote config service started
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/config/remote/client/client.go:389 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/api/api/apiimpl/server.go:32 in startServer) | Started HTTP server 'CMD API Server' on 127.0.0.1:5001
+2025-09-04 05:02:41 UTC | CORE | INFO | (cmd/agent/subcommands/run/command.go:582 in startAgent) | Starting Datadog Agent v7.70.0
+2025-09-04 05:02:41 UTC | CORE | INFO | (cmd/agent/subcommands/run/command.go:608 in startAgent) | Hostname is: PUNELPT0728
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/util/installinfo/install_info.go:190 in logVersionHistoryToFile) | Cannot read file: /opt/datadog-agent/run/version-history.json, will create a new one. open /opt/datadog-agent/run/version-history.json: no such file or directory
+2025-09-04 05:02:41 UTC | CORE | WARN | (pkg/collector/python/check_context.go:54 in initializeCheckContext) | Log receiver not provided. Logs from integrations will not be collected.
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/config_poller.go:171 in collectOnce) | file provider: collected 65 new configurations, removed 0
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check container with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:437 in LoadAndRun) | Started config provider "file"
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:437 in LoadAndRun) | Started config provider "kubernetes-container-allinone"
+2025-09-04 05:02:41 UTC | CORE | INFO | (comp/core/autodiscovery/autodiscoveryimpl/autoconfig.go:437 in LoadAndRun) | Started config provider "dsm-live-messages"
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check container_image with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check container_lifecycle with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check cpu with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/python/init.go:326 in resolvePythonHome) | Using '/opt/datadog-agent/embedded' as Python home
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/python/init.go:394 in Initialize) | Initializing rtloader with Python 3 /opt/datadog-agent/embedded
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/process/runner/runner.go:234 in logCheckDuration) | Finished container check #1 in 35.505187ms
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/process/runner/runner.go:234 in logCheckDuration) | Finished process_discovery check #1 in 44.398599ms
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/python/embed_python.go:21 in InitPython) | Embedding Python 3.12.11 (main, Sep  2 2025, 07:07:09) [GCC 11.4.0]
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check disk:67cc0574430a16ba with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check docker with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check file_handle with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check io with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check load with an interval of 15s
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check memory with an interval of 15s
+2025-09-04 05:02:41 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:41 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check network:4b0649b7e11f0772 with an interval of 15s
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (pkg/security/utils/hostnameutils/hostname.go:61 in GetHostnameWithContextAndFallback) | Hostname is: PUNELPT0728
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (pkg/security/agent/start.go:29 in StartRuntimeSecurity) | Datadog runtime security agent disabled by config
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (pkg/security/utils/hostnameutils/hostname.go:61 in GetHostnameWithContextAndFallback) | Hostname is: PUNELPT0728
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (comp/core/workloadmeta/impl/store.go:102 in start) | workloadmeta store initialized successfully
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:113 in Start) | remote workloadmeta initialized successfully
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (comp/core/workloadmeta/impl/store.go:618 in startCandidates) | workloadmeta collector "remote-workloadmeta" started successfully
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (pkg/runtime/runtime.go:28 in func1) | runtime: set GOMAXPROCS to: 12
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (subcommands/start/command.go:262 in RunAgent) | All security-agent components are deactivated, exiting
+2025-09-04 05:02:41 UTC | SECURITY | INFO | (comp/core/workloadmeta/collectors/internal/remote/generic.go:156 in func1) | workloadmeta stream established successfully
+2025-09-04 05:02:42 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container | Running check...
+2025-09-04 05:02:42 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container | Done running check
+2025-09-04 05:02:42 UTC | CORE | INFO | (pkg/config/remote/service/service.go:685 in pollOrgStatus) | [Remote Config] Remote Configuration is enabled for this organization and agent.
+2025-09-04 05:02:42 UTC | CORE | INFO | (comp/forwarder/defaultforwarder/transaction/transaction.go:458 in internalProcess) | Successfully posted payload to "https://process.datadoghq.com./api/v1/container" (202 Accepted), the agent will only log transaction success every 500 transactions
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (pkg/process/metadata/workloadmeta/extractor.go:85 in NewWorkloadMetaExtractor) | Instantiating a new WorkloadMetaExtractor
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/forwarder/defaultforwarder/default_forwarder.go:282 in NewDefaultForwarder) | Retry queue storage on disk is disabled
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/process/agent/agent_linux.go:65 in enabledHelper) | The process checks will run in the core agent
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (comp/process/apiserver/apiserver.go:53 in newApiServer) | API server listening on localhost:6162
+2025-09-04 05:02:42 UTC | PROCESS | INFO | (command/main_common.go:230 in runApp) | process-agent is not enabled, exiting...
+process-agent exited with code 0, disabling
+2025-09-04 05:02:42 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:02:42 UTC | TRACE | INFO | (pkg/config/remote/client/client.go:423 in pollLoop) | retrying the first update of remote-config state (rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp [::1]:5001: connect: connection refused")
+2025-09-04 05:02:43 UTC | CORE | INFO | (comp/metadata/host/hostimpl/hosttags/tags.go:175 in Get) | Unable to get host tags from source: gce - using cached host tags
+2025-09-04 05:02:43 UTC | CORE | INFO | (comp/metadata/host/hostimpl/hosttags/tags.go:175 in Get) | Unable to get host tags from source: docker - using cached host tags
+2025-09-04 05:02:43 UTC | CORE | INFO | (pkg/config/remote/service/service.go:790 in refresh) | [Remote Config] Overriding agent's base refresh interval to 50s due to backend recommendation
+2025-09-04 05:02:44 UTC | CORE | INFO | (comp/core/tagger/server/server.go:165 in TaggerStreamEntities) | cluster tagger has just finished initialization for subscription "streaming-client-71fdb2a4-c988-4cd3-8260-23b235e6abef" at time 1756962164
+2025-09-04 05:02:44 UTC | TRACE | INFO | (comp/core/tagger/impl-remote/remote.go:246 in func2) | tagger stream successfully initialized
+2025-09-04 05:02:44 UTC | CORE | INFO | (pkg/collector/corechecks/net/ntp/ntp.go:146 in parse) | Using NTP servers: [ 0.datadog.pool.ntp.org, 1.datadog.pool.ntp.org, 2.datadog.pool.ntp.org, 3.datadog.pool.ntp.org ]
+2025-09-04 05:02:44 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check ntp:3c427a42a70bbf8 with an interval of 15m0s
+2025-09-04 05:02:44 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check telemetry with an interval of 15s
+2025-09-04 05:02:44 UTC | CORE | INFO | (pkg/collector/scheduler/scheduler.go:93 in Enter) | Scheduling check uptime with an interval of 15s
+2025-09-04 05:02:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:memory | Running check...
+2025-09-04 05:02:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:memory | Done running check
+2025-09-04 05:02:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:ntp | Running check...
+2025-09-04 05:02:46 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:io | Running check...
+2025-09-04 05:02:46 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:io | Done running check
+2025-09-04 05:02:46 UTC | SECURITY | WARN | (subcommands/start/command.go:324 in StopAgent) | Some components were unhealthy: [workloadmeta-store workloadmeta-puller]
+2025-09-04 05:02:46 UTC | SECURITY | INFO | (subcommands/start/command.go:341 in StopAgent) | See ya!
+security-agent exited with code 0, disabling
+2025-09-04 05:02:47 UTC | CORE | INFO | (pkg/util/cloudproviders/cloudproviders.go:174 in GetHostCCRID) | No Host CCRID found
+2025-09-04 05:02:47 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:docker | Running check...
+2025-09-04 05:02:47 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:docker | Done running check
+2025-09-04 05:02:48 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:cpu | Running check...
+2025-09-04 05:02:48 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:cpu | Done running check
+2025-09-04 05:02:49 UTC | CORE | INFO | (comp/metadata/host/hostimpl/hosttags/tags.go:175 in Get) | Unable to get host tags from source: gce - using cached host tags
+2025-09-04 05:02:49 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_image | Running check...
+2025-09-04 05:02:49 UTC | CORE | INFO | (pkg/collector/corechecks/containerimage/check.go:136 in Run) | Starting long-running check "container_image"
+2025-09-04 05:02:49 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_image | Done running check
+2025-09-04 05:02:50 UTC | CORE | INFO | (comp/metadata/host/hostimpl/utils/host.go:108 in getNetworkMeta) | could not get network metadata: could not detect network ID: EC2: GetNetworkID failed to get mac addresses: could not fetch token from IMDSv2: Put "http://169.254.169.254/latest/api/token": dial tcp 169.254.169.254:80: connect: no route to host
+2025-09-04 05:02:50 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:ntp | Done running check
+2025-09-04 05:02:51 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:uptime | Running check...
+2025-09-04 05:02:51 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:uptime | Done running check
+2025-09-04 05:02:51 UTC | CORE | INFO | (pkg/process/runner/runner.go:234 in logCheckDuration) | Finished container check #2 in 803.916µs
+2025-09-04 05:02:52 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:network | Running check...
+2025-09-04 05:02:52 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:network | Done running check
+2025-09-04 05:02:53 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:load | Running check...
+2025-09-04 05:02:53 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:load | Done running check
+2025-09-04 05:02:54 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:file_handle | Running check...
+2025-09-04 05:02:54 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:file_handle | Done running check
+2025-09-04 05:02:55 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:disk | Running check...
+2025-09-04 05:02:55 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:disk | Done running check
+2025-09-04 05:02:56 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_lifecycle | Running check...
+2025-09-04 05:02:56 UTC | CORE | INFO | (pkg/collector/corechecks/containerlifecycle/check.go:92 in Run) | Starting long-running check "container_lifecycle"
+2025-09-04 05:02:56 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_lifecycle | Done running check
+2025-09-04 05:02:57 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container | Running check...
+2025-09-04 05:02:57 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container | Done running check
+2025-09-04 05:02:59 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:telemetry | Running check...
+2025-09-04 05:02:59 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:telemetry | Done running check
+2025-09-04 05:03:00 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:memory | Running check...
+2025-09-04 05:03:00 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:memory | Done running check
+2025-09-04 05:03:01 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:io | Running check...
+2025-09-04 05:03:01 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:io | Done running check
+2025-09-04 05:03:01 UTC | CORE | INFO | (pkg/process/runner/runner.go:234 in logCheckDuration) | Finished container check #3 in 683.814µs
+2025-09-04 05:03:02 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:docker | Running check...
+2025-09-04 05:03:02 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:docker | Done running check
+2025-09-04 05:03:03 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:cpu | Running check...
+2025-09-04 05:03:03 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:cpu | Done running check
+2025-09-04 05:03:04 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_image | Running check...
+2025-09-04 05:03:04 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_image | Done running check
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:82 in buildEndpoints) | config key "" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key ".api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "service_discovery.forwarder.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "container_image.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "process_config.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "network_devices.metadata.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "network_devices.netflow.forwarder.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "network_devices.snmp_traps.forwarder.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "network_path.forwarder.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "container_lifecycle.forwarder.api_key" is unknown
+2025-09-04 05:03:05 UTC | CORE | WARN | (pkg/diagnose/connectivity/inventoryendpoint.go:120 in getAPIKey) | config key "database_monitoring.samples.api_key" is unknown
+2025-09-04 05:03:06 UTC | CORE | INFO | (comp/core/agenttelemetry/impl/agenttelemetry.go:508 in run) | Starting agent telemetry run
+2025-09-04 05:03:06 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:uptime | Running check...
+2025-09-04 05:03:06 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:uptime | Done running check
+2025-09-04 05:03:07 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:network | Running check...
+2025-09-04 05:03:07 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:network | Done running check
+2025-09-04 05:03:08 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:load | Running check...
+2025-09-04 05:03:08 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:load | Done running check
+2025-09-04 05:03:09 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:file_handle | Running check...
+2025-09-04 05:03:09 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:file_handle | Done running check
+2025-09-04 05:03:10 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:disk | Running check...
+2025-09-04 05:03:10 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:disk | Done running check
+2025-09-04 05:03:11 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_lifecycle | Running check...
+2025-09-04 05:03:11 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_lifecycle | Done running check
+2025-09-04 05:03:11 UTC | CORE | INFO | (pkg/process/runner/runner.go:234 in logCheckDuration) | Finished container check #4 in 2.502005ms
+2025-09-04 05:03:12 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container | Running check...
+2025-09-04 05:03:12 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container | Done running check
+2025-09-04 05:03:14 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:telemetry | Running check...
+2025-09-04 05:03:14 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:telemetry | Done running check
+2025-09-04 05:03:15 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:memory | Running check...
+2025-09-04 05:03:15 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:memory | Done running check
+2025-09-04 05:03:16 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:io | Running check...
+2025-09-04 05:03:16 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:io | Done running check
+2025-09-04 05:03:17 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:docker | Running check...
+2025-09-04 05:03:17 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:docker | Done running check
+2025-09-04 05:03:18 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:cpu | Running check...
+2025-09-04 05:03:18 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:cpu | Done running check
+2025-09-04 05:03:19 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_image | Running check...
+2025-09-04 05:03:19 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_image | Done running check
+2025-09-04 05:03:21 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:uptime | Running check...
+2025-09-04 05:03:21 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:uptime | Done running check
+2025-09-04 05:03:21 UTC | CORE | INFO | (pkg/process/runner/runner.go:236 in logCheckDuration) | Finished container check #5 in 2.83346ms. First 5 check runs finished, next runs will be logged every 20 runs.
+2025-09-04 05:03:22 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:network | Running check...
+2025-09-04 05:03:22 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:network | Done running check
+2025-09-04 05:03:23 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:load | Running check...
+2025-09-04 05:03:23 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:load | Done running check
+2025-09-04 05:03:24 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:file_handle | Running check...
+2025-09-04 05:03:24 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:file_handle | Done running check
+2025-09-04 05:03:25 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:disk | Running check...
+2025-09-04 05:03:25 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:disk | Done running check
+2025-09-04 05:03:26 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_lifecycle | Running check...
+2025-09-04 05:03:26 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_lifecycle | Done running check
+2025-09-04 05:03:27 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container | Running check...
+2025-09-04 05:03:27 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container | Done running check
+2025-09-04 05:03:29 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:telemetry | Running check...
+2025-09-04 05:03:29 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:telemetry | Done running check
+2025-09-04 05:03:30 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:memory | Running check...
+2025-09-04 05:03:30 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:memory | Done running check
+2025-09-04 05:03:31 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:io | Running check...
+2025-09-04 05:03:31 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:io | Done running check
+2025-09-04 05:03:32 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:docker | Running check...
+2025-09-04 05:03:32 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:docker | Done running check
+2025-09-04 05:03:33 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:cpu | Running check...
+2025-09-04 05:03:33 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:cpu | Done running check
+2025-09-04 05:03:34 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_image | Running check...
+2025-09-04 05:03:34 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_image | Done running check
+2025-09-04 05:03:35 UTC | CORE | INFO | (comp/metadata/haagent/impl/haagentimpl.go:62 in refreshMetadata) | HA Agent Metadata unavailable as HA Agent is disabled
+2025-09-04 05:03:35 UTC | CORE | INFO | (comp/metadata/inventoryotel/inventoryotelimpl/inventoryotel.go:181 in fetchOtelAgentMetadata) | OTel Metadata unavailable as OTel collector is disabled
+2025-09-04 05:03:36 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:uptime | Running check...
+2025-09-04 05:03:36 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:uptime | Done running check
+2025-09-04 05:03:37 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:network | Running check...
+2025-09-04 05:03:37 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:network | Done running check
+2025-09-04 05:03:38 UTC | CORE | INFO | (comp/core/status/statusimpl/status_api_endpoints.go:29 in getStatus) | Got a request for the status. Making status.
+2025-09-04 05:03:38 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:load | Running check...
+2025-09-04 05:03:38 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:load | Done running check
+2025-09-04 05:03:39 UTC | CORE | INFO | (pkg/util/cloudproviders/cloudproviders.go:67 in DetectCloudProvider) | No cloud provider detected
+2025-09-04 05:03:39 UTC | CORE | INFO | (pkg/util/cloudproviders/cloudproviders.go:174 in GetHostCCRID) | No Host CCRID found
+2025-09-04 05:03:39 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:file_handle | Running check...
+2025-09-04 05:03:39 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:file_handle | Done running check
+2025-09-04 05:03:40 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:disk | Running check...
+2025-09-04 05:03:40 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:disk | Done running check
+2025-09-04 05:03:41 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_lifecycle | Running check...
+2025-09-04 05:03:41 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_lifecycle | Done running check
+2025-09-04 05:03:42 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container | Running check...
+2025-09-04 05:03:42 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:44 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:telemetry | Running check...
+2025-09-04 05:03:44 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:telemetry | Done running check
+2025-09-04 05:03:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:memory | Running check...
+2025-09-04 05:03:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:memory | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:46 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:io | Running check...
+2025-09-04 05:03:46 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:io | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:47 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:docker | Running check...
+2025-09-04 05:03:47 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:docker | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:47 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:03:48 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:cpu | Running check...
+2025-09-04 05:03:48 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:cpu | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:49 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_image | Running check...
+2025-09-04 05:03:49 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_image | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:51 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:uptime | Running check...
+2025-09-04 05:03:51 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:uptime | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:52 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:network | Running check...
+2025-09-04 05:03:52 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:network | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:53 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:load | Running check...
+2025-09-04 05:03:53 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:load | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:54 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:file_handle | Running check...
+2025-09-04 05:03:54 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:file_handle | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:55 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:disk | Running check...
+2025-09-04 05:03:55 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:disk | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:56 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:container_lifecycle | Running check...
+2025-09-04 05:03:56 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:container_lifecycle | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:03:59 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:telemetry | Running check...
+2025-09-04 05:03:59 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:telemetry | Done running check, next runs will be logged every 500 runs
+2025-09-04 05:04:47 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:05:51 UTC | CORE | INFO | (pkg/process/runner/runner.go:238 in logCheckDuration) | Finish container check #20 in 2.321589ms
+2025-09-04 05:05:52 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:06:57 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:08:02 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:09:02 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:09:11 UTC | CORE | INFO | (pkg/process/runner/runner.go:238 in logCheckDuration) | Finish container check #40 in 2.221526ms
+2025-09-04 05:10:07 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:11:07 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:12:07 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:12:31 UTC | CORE | INFO | (pkg/process/runner/runner.go:238 in logCheckDuration) | Finish container check #60 in 1.970703ms
+2025-09-04 05:12:36 UTC | CORE | INFO | (comp/core/agenttelemetry/impl/agenttelemetry.go:508 in run) | Starting agent telemetry run
+2025-09-04 05:13:12 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:13:35 UTC | CORE | INFO | (comp/metadata/haagent/impl/haagentimpl.go:62 in refreshMetadata) | HA Agent Metadata unavailable as HA Agent is disabled
+2025-09-04 05:13:35 UTC | CORE | INFO | (comp/metadata/inventoryotel/inventoryotelimpl/inventoryotel.go:181 in fetchOtelAgentMetadata) | OTel Metadata unavailable as OTel collector is disabled
+2025-09-04 05:13:42 UTC | CORE | INFO | (pkg/util/cloudproviders/cloudproviders.go:67 in DetectCloudProvider) | No cloud provider detected
+2025-09-04 05:13:42 UTC | CORE | INFO | (pkg/util/cloudproviders/cloudproviders.go:174 in GetHostCCRID) | No Host CCRID found
+2025-09-04 05:14:17 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:15:22 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:15:51 UTC | CORE | INFO | (pkg/process/runner/runner.go:238 in logCheckDuration) | Finish container check #80 in 2.368752ms
+2025-09-04 05:16:22 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:17:27 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+2025-09-04 05:17:45 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:40 in CheckStarted) | check:ntp | Running check...
+2025-09-04 05:17:55 UTC | CORE | INFO | (pkg/collector/worker/check_logger.go:59 in CheckFinished) | check:ntp | Done running check
+2025-09-04 05:18:06 UTC | CORE | INFO | (comp/core/agenttelemetry/impl/agenttelemetry.go:508 in run) | Starting agent telemetry run
+2025-09-04 05:18:32 UTC | TRACE | INFO | (pkg/trace/info/stats.go:91 in LogAndResetStats) | No data received
+einfochips@PUNELPT0728:~$ docker exec datadog-agent agent configcheck
+Error response from daemon: No such container: datadog-agent
+einfochips@PUNELPT0728:~$ docker exec dd-agent agent configcheck
+
+=== container check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/container.d/conf.yaml.default
+Config for instance ID: container:7f588b05dc024c96
+{}
+~
+Auto-discovery IDs:
+* _container
+===
+
+=== container_image check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/container_image.d/conf.yaml.default
+Config for instance ID: container_image:2ac6bde1700038e4
+{}
+~
+Auto-discovery IDs:
+* _container_image
+===
+
+=== container_lifecycle check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/container_lifecycle.d/conf.yaml.default
+Config for instance ID: container_lifecycle:b628cf9ded5c9324
+{}
+~
+Auto-discovery IDs:
+* _container_lifecycle
+===
+
+=== cpu check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/cpu.d/conf.yaml.default
+Config for instance ID: cpu:e331d61ed1323219
+{}
+~
+===
+
+=== disk check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/disk.d/conf.yaml.default
+Config for instance ID: disk:67cc0574430a16ba
+use_mount: false
+~
+===
+
+=== docker check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/docker.d/conf.yaml.default
+Config for instance ID: docker:7d92bf85898aecd4
+collected_event_types:
+  - oom
+  - kill
+~
+Auto-discovery IDs:
+* _docker
+===
+
+=== file_handle check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/file_handle.d/conf.yaml.default
+Config for instance ID: file_handle:381b8b6ca58d37b0
+{}
+~
+===
+
+=== io check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/io.d/conf.yaml.default
+Config for instance ID: io:541b60d158de04a7
+{}
+~
+===
+
+=== load check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/load.d/conf.yaml.default
+Config for instance ID: load:bf7cea93fb3aa780
+{}
+~
+===
+
+=== memory check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/memory.d/conf.yaml.default
+Config for instance ID: memory:3f1f6288b95b9979
+{}
+~
+===
+
+=== network check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/network.d/conf.yaml.default
+Config for instance ID: network:4b0649b7e11f0772
+{}
+~
+===
+
+=== ntp check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/ntp.d/conf.yaml.default
+Config for instance ID: ntp:3c427a42a70bbf8
+{}
+~
+===
+
+=== telemetry check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/telemetry.d/conf.yaml.default
+Config for instance ID: telemetry:4d459fc318a47aa4
+{}
+~
+===
+
+=== uptime check ===
+Configuration provider: file
+Configuration source: file:/etc/datadog-agent/conf.d/uptime.d/conf.yaml.default
+Config for instance ID: uptime:c72f390abdefdf1a
+{}
+~
+===
+
+einfochips@PUNELPT0728:~$ 

@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: structured-logs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: structured-logs-app
+  template:
+    metadata:
+      labels:
+        app: structured-logs-app
+      annotations:
+        ad.datadoghq.com/structured-logs-app.logs: |
+          [{
+            "source": "python",
+            "service": "structured-logs-app",
+            "log_processing_rules": [{
+              "type": "multi_line",
+              "name": "log_start_with_date",
+              "pattern": "\\d{4}-\\d{2}-\\d{2}"
+            }]
+          }]
+    spec:
+      containers:
+      - name: structured-logs-app
+        image: python:3.9-slim
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            pip install structlog
+            cat > log_app.py << 'EOF'
+            import structlog
+            import time
+            import random
+            
+            structlog.configure(
+                processors=[
+                    structlog.stdlib.filter_by_level,
+                    structlog.stdlib.add_logger_name,
+                    structlog.stdlib.add_log_level,
+                    structlog.stdlib.PositionalArgumentsFormatter(),
+                    structlog.processors.TimeStamper(fmt="iso"),
+                    structlog.processors.StackInfoRenderer(),
+                    structlog.processors.format_exc_info,
+                    structlog.processors.JSONRenderer()
+                ],
+                context_class=dict,
+                logger_factory=structlog.stdlib.LoggerFactory(),
+                wrapper_class=structlog.stdlib.BoundLogger,
+                cache_logger_on_first_use=True,
+            )
+            
+            logger = structlog.get_logger()
+            
+            while True:
+                logger.info("Application running", 
+                           user_id=random.randint(1, 1000),
+                           action="page_view",
+                           response_time=random.uniform(0.1, 2.0))
+                
+                if random.random() < 0.1:
+                    logger.error("Database connection failed",
+                                error_code="DB_CONN_001",
+                                retry_count=3)
+                
+                time.sleep(5)
+            EOF
+            python log_app.py

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datadog-log-config
+  namespace: datadog
+data:
+  log_processing_rules: |
+    - type: exclude_at_match
+      name: exclude_debug_logs
+      pattern: "DEBUG"
+    
+    - type: include_at_match
+      name: include_error_logs
+      pattern: "ERROR|FATAL"
+    
+    - type: mask_sequences
+      name: mask_credit_cards
+      pattern: '\d{4}-\d{4}-\d{4}-\d{4}'
+      replace_placeholder: "[MASKED_CC]"

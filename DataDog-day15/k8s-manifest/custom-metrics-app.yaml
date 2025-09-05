@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-metrics-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: custom-metrics-app
+  template:
+    metadata:
+      labels:
+        app: custom-metrics-app
+      annotations:
+        ad.datadoghq.com/custom-metrics-app.logs: '[{"source": "python", "service": "custom-metrics-app"}]'
+    spec:
+      containers:
+      - name: custom-metrics-app
+        image: python:3.9-slim
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            pip install datadog requests flask
+            cat > app.py << 'EOF'
+            from datadog import initialize, statsd
+            from flask import Flask
+            import time
+            import random
+            
+            options = {
+                'statsd_host': '127.0.0.1',
+                'statsd_port': 8125,
+            }
+            initialize(**options)
+            
+            app = Flask(__name__)
+            
+            @app.route('/')
+            def hello():
+                # Custom metrics
+                statsd.increment('custom.requests.count', tags=['endpoint:home'])
+                statsd.histogram('custom.request.duration', random.uniform(0.1, 2.0))
+                statsd.gauge('custom.active.users', random.randint(10, 100))
+                return 'Hello from Custom Metrics App!'
+            
+            @app.route('/health')
+            def health():
+                statsd.increment('custom.health.checks')
+                return 'OK'
+            
+            if __name__ == '__main__':
+                app.run(host='0.0.0.0', port=5000)
+            EOF
+            python app.py
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP

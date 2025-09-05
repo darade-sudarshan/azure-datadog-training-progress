@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datadog-custom-checks
+  namespace: datadog
+data:
+  kubernetes_state.yaml: |
+    init_config:
+    instances:
+      - kube_state_url: http://kube-state-metrics:8080/metrics
+        tags:
+          - cluster:my-cluster
+  
+  custom_service_check.yaml: |
+    init_config:
+    instances:
+      - url: http://sample-web-app-service/health
+        name: sample_app_health
+        timeout: 5
+        tags:
+          - service:sample-web-app

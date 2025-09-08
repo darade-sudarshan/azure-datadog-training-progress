@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Voting Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; margin: 0; padding: 50px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; }
+        .results { display: flex; justify-content: space-around; margin: 40px 0; }
+        .result { padding: 30px; border-radius: 10px; min-width: 200px; }
+        .cats { background: #ff6b6b; color: white; }
+        .dogs { background: #4ecdc4; color: white; }
+        .count { font-size: 48px; font-weight: bold; margin: 10px 0; }
+        .label { font-size: 24px; }
+        .refresh { margin-top: 30px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Voting Results</h1>
+        <div class="results">
+            <div class="result cats">
+                <div class="count" id="cats-count">0</div>
+                <div class="label">🐱 Cats</div>
+            </div>
+            <div class="result dogs">
+                <div class="count" id="dogs-count">0</div>
+                <div class="label">🐶 Dogs</div>
+            </div>
+        </div>
+        <button class="refresh" onclick="loadResults()">Refresh Results</button>
+    </div>
+
+    <script>
+        function loadResults() {
+            fetch('/votes')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cats-count').textContent = data.Cats || 0;
+                    document.getElementById('dogs-count').textContent = data.Dogs || 0;
+                });
+        }
+        
+        // Load results on page load and refresh every 5 seconds
+        loadResults();
+        setInterval(loadResults, 5000);
+    </script>
+</body>
+</html>

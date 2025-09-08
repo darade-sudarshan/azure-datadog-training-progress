@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Voting web interface
+  vote:
+    build: ./vote
+    ports:
+      - "5000:80"
+    depends_on:
+      - redis
+    networks:
+      - front-tier
+      - back-tier
+    restart: unless-stopped
+
+  # Results web interface  
+  result:
+    build: ./result
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+    networks:
+      - front-tier
+      - back-tier
+    restart: unless-stopped
+
+  # Background worker
+  worker:
+    build: ./worker
+    depends_on:
+      - redis
+      - db
+    networks:
+      - back-tier
+    restart: unless-stopped
+
+  # Redis for vote storage
+  redis:
+    image: redis:7-alpine
+    networks:
+      - back-tier
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  # PostgreSQL database
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: votes
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - back-tier
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:

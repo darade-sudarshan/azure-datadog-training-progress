@@ -405,9 +405,9 @@ brew install azure-cli
 #### Basic AKS Cluster
 ```bash
 # Set variables
-RESOURCE_GROUP="rg-aks-cluster"
-CLUSTER_NAME="aks-cluster-01"
-LOCATION="eastus"
+RESOURCE_GROUP="sa1_test_eic_SudarshanDarade"
+CLUSTER_NAME="aks-cluster-demo"
+LOCATION="southeastasia"
 
 # Create resource group
 az group create --name $RESOURCE_GROUP --location $LOCATION

@@ -1,0 +1,234 @@
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube version
+minikube version: v1.34.0
+commit: 210b148df93a80eb872ecbeb7e35281b3c582c61
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl version
+Client Version: v1.34.0
+Kustomize Version: v5.7.1
+Unable to connect to the server: dial tcp 192.168.49.2:8443: connect: no route to host
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube start --cpus=4 --memory=8192
+😄  minikube v1.34.0 on Ubuntu 20.04
+✨  Using the docker driver based on existing profile
+❗  You cannot change the memory size for an existing minikube cluster. Please first delete the cluster.
+❗  You cannot change the CPUs for an existing minikube cluster. Please first delete the cluster.
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.45 ...
+🎉  minikube 1.36.0 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.36.0
+💡  To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+🤷  docker "minikube" container is missing, will recreate.
+🔥  Creating docker container (CPUs=2, Memory=4096MB) ...
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+
+❗  /usr/bin/kubectl is version 1.34.0, which may have incompatibilities with Kubernetes 1.31.0.
+    ▪ Want kubectl v1.31.0? Try 'minikube kubectl -- get pods -A'
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube delete
+🔥  Deleting "minikube" in docker ...
+🔥  Deleting container "minikube" ...
+🔥  Removing /home/einfochips/.minikube/machines/minikube ...
+💀  Removed all traces of the "minikube" cluster.
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube start --cpus=4 --memory=8192
+😄  minikube v1.34.0 on Ubuntu 20.04
+✨  Automatically selected the docker driver
+📌  Using Docker driver with root privileges
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.45 ...
+🔥  Creating docker container (CPUs=4, Memory=8192MB) ...
+🐳  Preparing Kubernetes v1.31.0 on Docker 27.2.0 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+
+❗  /usr/bin/kubectl is version 1.34.0, which may have incompatibilities with Kubernetes 1.31.0.
+    ▪ Want kubectl v1.31.0? Try 'minikube kubectl -- get pods -A'
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pods
+No resources found in default namespace.
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pods _A
+Error from server (NotFound): pods "_A" not found
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pods -A
+NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE
+kube-system   coredns-6f6b679f8f-zrmj2           0/1     Running   0          25s
+kube-system   etcd-minikube                      1/1     Running   0          30s
+kube-system   kube-apiserver-minikube            1/1     Running   0          30s
+kube-system   kube-controller-manager-minikube   1/1     Running   0          30s
+kube-system   kube-proxy-r2bjg                   1/1     Running   0          26s
+kube-system   kube-scheduler-minikube            1/1     Running   0          30s
+kube-system   storage-provisioner                1/1     Running   0          29s
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube addons enable ingress
+💡  ingress is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+    ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.3
+    ▪ Using image registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.3
+    ▪ Using image registry.k8s.io/ingress-nginx/controller:v1.11.2
+🔎  Verifying ingress addon...
+🌟  The 'ingress' addon is enabled
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube addons enable metrics-server
+💡  metrics-server is an addon maintained by Kubernetes. For any concerns contact minikube on GitHub.
+You can view the list of minikube maintainers at: https://github.com/kubernetes/minikube/blob/master/OWNERS
+    ▪ Using image registry.k8s.io/metrics-server/metrics-server:v0.7.2
+🌟  The 'metrics-server' addon is enabled
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube addons yakd
+addons modifies minikube addons files using subcommands like "minikube addons enable dashboard"
+
+Available Commands:
+  configure     Configures the addon w/ADDON_NAME within minikube (example: minikube addons configure registry-creds).
+For a list of available addons use: minikube addons list
+  disable       Disables the addon w/ADDON_NAME within minikube (example: minikube addons disable dashboard). For a list
+of available addons use: minikube addons list 
+  enable        Enables the addon w/ADDON_NAME within minikube. For a list of available addons use: minikube addons list
+  images        List image names the addon w/ADDON_NAME used. For a list of available addons use: minikube addons list
+  list          Lists all available minikube addons as well as their current statuses (enabled/disabled)
+  open          Opens the addon w/ADDON_NAME within minikube (example: minikube addons open dashboard). For a list of
+available addons use: minikube addons list 
+
+Usage:
+  minikube addons SUBCOMMAND [flags] [options]
+
+Use "minikube addons <command> --help" for more information about a given command.
+Use "minikube options" for a list of global command-line options (applies to all commands).
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube addons list
+|-----------------------------|----------|--------------|--------------------------------|
+|         ADDON NAME          | PROFILE  |    STATUS    |           MAINTAINER           |
+|-----------------------------|----------|--------------|--------------------------------|
+| ambassador                  | minikube | disabled     | 3rd party (Ambassador)         |
+| auto-pause                  | minikube | disabled     | minikube                       |
+| cloud-spanner               | minikube | disabled     | Google                         |
+| csi-hostpath-driver         | minikube | disabled     | Kubernetes                     |
+| dashboard                   | minikube | disabled     | Kubernetes                     |
+| default-storageclass        | minikube | enabled ✅   | Kubernetes                     |
+| efk                         | minikube | disabled     | 3rd party (Elastic)            |
+| freshpod                    | minikube | disabled     | Google                         |
+| gcp-auth                    | minikube | disabled     | Google                         |
+| gvisor                      | minikube | disabled     | minikube                       |
+| headlamp                    | minikube | disabled     | 3rd party (kinvolk.io)         |
+| helm-tiller                 | minikube | disabled     | 3rd party (Helm)               |
+| inaccel                     | minikube | disabled     | 3rd party (InAccel             |
+|                             |          |              | [info@inaccel.com])            |
+| ingress                     | minikube | enabled ✅   | Kubernetes                     |
+| ingress-dns                 | minikube | disabled     | minikube                       |
+| inspektor-gadget            | minikube | disabled     | 3rd party                      |
+|                             |          |              | (inspektor-gadget.io)          |
+| istio                       | minikube | disabled     | 3rd party (Istio)              |
+| istio-provisioner           | minikube | disabled     | 3rd party (Istio)              |
+| kong                        | minikube | disabled     | 3rd party (Kong HQ)            |
+| kubeflow                    | minikube | disabled     | 3rd party                      |
+| kubevirt                    | minikube | disabled     | 3rd party (KubeVirt)           |
+| logviewer                   | minikube | disabled     | 3rd party (unknown)            |
+| metallb                     | minikube | disabled     | 3rd party (MetalLB)            |
+| metrics-server              | minikube | enabled ✅   | Kubernetes                     |
+| nvidia-device-plugin        | minikube | disabled     | 3rd party (NVIDIA)             |
+| nvidia-driver-installer     | minikube | disabled     | 3rd party (NVIDIA)             |
+| nvidia-gpu-device-plugin    | minikube | disabled     | 3rd party (NVIDIA)             |
+| olm                         | minikube | disabled     | 3rd party (Operator Framework) |
+| pod-security-policy         | minikube | disabled     | 3rd party (unknown)            |
+| portainer                   | minikube | disabled     | 3rd party (Portainer.io)       |
+| registry                    | minikube | disabled     | minikube                       |
+| registry-aliases            | minikube | disabled     | 3rd party (unknown)            |
+| registry-creds              | minikube | disabled     | 3rd party (UPMC Enterprises)   |
+| storage-provisioner         | minikube | enabled ✅   | minikube                       |
+| storage-provisioner-gluster | minikube | disabled     | 3rd party (Gluster)            |
+| storage-provisioner-rancher | minikube | disabled     | 3rd party (Rancher)            |
+| volcano                     | minikube | disabled     | third-party (volcano)          |
+| volumesnapshots             | minikube | disabled     | Kubernetes                     |
+| yakd                        | minikube | disabled     | 3rd party (marcnuri.com)       |
+|-----------------------------|----------|--------------|--------------------------------|
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube addons enable yakd
+❗  yakd is a 3rd party addon and is not maintained or verified by minikube maintainers, enable at your own risk.
+💡  yakd is maintained by 3rd party (marcnuri.com) for any concerns contact manusa on GitHub.
+    ▪ Using image docker.io/marcnuri/yakd:0.0.5
+💡  To access YAKD - Kubernetes Dashboard, wait for Pod to be ready and run the following command:
+
+	minikube service yakd-dashboard -n yakd-dashboard
+
+🌟  The 'yakd' addon is enabled
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pod -A
+NAMESPACE        NAME                                       READY   STATUS      RESTARTS       AGE
+ingress-nginx    ingress-nginx-admission-create-9h9th       0/1     Completed   0              99s
+ingress-nginx    ingress-nginx-admission-patch-2gm6p        0/1     Completed   0              99s
+ingress-nginx    ingress-nginx-controller-bc57996ff-n7stj   1/1     Running     0              99s
+kube-system      coredns-6f6b679f8f-zrmj2                   1/1     Running     0              2m30s
+kube-system      etcd-minikube                              1/1     Running     0              2m35s
+kube-system      kube-apiserver-minikube                    1/1     Running     0              2m35s
+kube-system      kube-controller-manager-minikube           1/1     Running     0              2m35s
+kube-system      kube-proxy-r2bjg                           1/1     Running     0              2m31s
+kube-system      kube-scheduler-minikube                    1/1     Running     0              2m35s
+kube-system      metrics-server-84c5f94fbc-grlgn            1/1     Running     0              78s
+kube-system      storage-provisioner                        1/1     Running     1 (119s ago)   2m34s
+yakd-dashboard   yakd-dashboard-67d98fc6b-sq45s             0/1     Running     0              18s
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pod -o wide
+No resources found in default namespace.
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pod -o wide -A
+NAMESPACE        NAME                                       READY   STATUS      RESTARTS        AGE     IP             NODE       NOMINATED NODE   READINESS GATES
+ingress-nginx    ingress-nginx-admission-create-9h9th       0/1     Completed   0               6m57s   10.244.0.3     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-admission-patch-2gm6p        0/1     Completed   0               6m57s   10.244.0.4     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-controller-bc57996ff-n7stj   1/1     Running     0               6m57s   10.244.0.5     minikube   <none>           <none>
+kube-system      coredns-6f6b679f8f-zrmj2                   1/1     Running     0               7m48s   10.244.0.2     minikube   <none>           <none>
+kube-system      etcd-minikube                              1/1     Running     0               7m53s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-apiserver-minikube                    1/1     Running     0               7m53s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-controller-manager-minikube           1/1     Running     0               7m53s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-proxy-r2bjg                           1/1     Running     0               7m49s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-scheduler-minikube                    1/1     Running     0               7m53s   192.168.58.2   minikube   <none>           <none>
+kube-system      metrics-server-84c5f94fbc-grlgn            1/1     Running     0               6m36s   10.244.0.6     minikube   <none>           <none>
+kube-system      storage-provisioner                        1/1     Running     1 (7m17s ago)   7m52s   192.168.58.2   minikube   <none>           <none>
+yakd-dashboard   yakd-dashboard-67d98fc6b-sq45s             1/1     Running     0               5m36s   10.244.0.7     minikube   <none>           <none>
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl run nginx --image=nginx
+pod/nginx created
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pod -o wide -A
+NAMESPACE        NAME                                       READY   STATUS              RESTARTS        AGE     IP             NODE       NOMINATED NODE   READINESS GATES
+default          nginx                                      0/1     ContainerCreating   0               3s      <none>         minikube   <none>           <none>
+ingress-nginx    ingress-nginx-admission-create-9h9th       0/1     Completed           0               7m20s   10.244.0.3     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-admission-patch-2gm6p        0/1     Completed           0               7m20s   10.244.0.4     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-controller-bc57996ff-n7stj   1/1     Running             0               7m20s   10.244.0.5     minikube   <none>           <none>
+kube-system      coredns-6f6b679f8f-zrmj2                   1/1     Running             0               8m11s   10.244.0.2     minikube   <none>           <none>
+kube-system      etcd-minikube                              1/1     Running             0               8m16s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-apiserver-minikube                    1/1     Running             0               8m16s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-controller-manager-minikube           1/1     Running             0               8m16s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-proxy-r2bjg                           1/1     Running             0               8m12s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-scheduler-minikube                    1/1     Running             0               8m16s   192.168.58.2   minikube   <none>           <none>
+kube-system      metrics-server-84c5f94fbc-grlgn            1/1     Running             0               6m59s   10.244.0.6     minikube   <none>           <none>
+kube-system      storage-provisioner                        1/1     Running             1 (7m40s ago)   8m15s   192.168.58.2   minikube   <none>           <none>
+yakd-dashboard   yakd-dashboard-67d98fc6b-sq45s             1/1     Running             0               5m59s   10.244.0.7     minikube   <none>           <none>
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ kubectl get pod -o wide -A -w
+NAMESPACE        NAME                                       READY   STATUS              RESTARTS        AGE     IP             NODE       NOMINATED NODE   READINESS GATES
+default          nginx                                      0/1     ContainerCreating   0               8s      <none>         minikube   <none>           <none>
+ingress-nginx    ingress-nginx-admission-create-9h9th       0/1     Completed           0               7m25s   10.244.0.3     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-admission-patch-2gm6p        0/1     Completed           0               7m25s   10.244.0.4     minikube   <none>           <none>
+ingress-nginx    ingress-nginx-controller-bc57996ff-n7stj   1/1     Running             0               7m25s   10.244.0.5     minikube   <none>           <none>
+kube-system      coredns-6f6b679f8f-zrmj2                   1/1     Running             0               8m16s   10.244.0.2     minikube   <none>           <none>
+kube-system      etcd-minikube                              1/1     Running             0               8m21s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-apiserver-minikube                    1/1     Running             0               8m21s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-controller-manager-minikube           1/1     Running             0               8m21s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-proxy-r2bjg                           1/1     Running             0               8m17s   192.168.58.2   minikube   <none>           <none>
+kube-system      kube-scheduler-minikube                    1/1     Running             0               8m21s   192.168.58.2   minikube   <none>           <none>
+kube-system      metrics-server-84c5f94fbc-grlgn            1/1     Running             0               7m4s    10.244.0.6     minikube   <none>           <none>
+kube-system      storage-provisioner                        1/1     Running             1 (7m45s ago)   8m20s   192.168.58.2   minikube   <none>           <none>
+yakd-dashboard   yakd-dashboard-67d98fc6b-sq45s             1/1     Running             0               6m4s    10.244.0.7     minikube   <none>           <none>
+default          nginx                                      1/1     Running             0               15s     10.244.0.8     minikube   <none>           <none>
+^Ceinfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ minikube service yakd-dashboard -n yakd-dashboard
+|----------------|----------------|-------------|---------------------------|
+|   NAMESPACE    |      NAME      | TARGET PORT |            URL            |
+|----------------|----------------|-------------|---------------------------|
+| yakd-dashboard | yakd-dashboard |          80 | http://192.168.58.2:30492 |
+|----------------|----------------|-------------|---------------------------|
+🎉  Opening service yakd-dashboard/yakd-dashboard in default browser...
+einfochips@PUNECPU0561:~/azure-datadog-training-progress/K8s-day18$ 

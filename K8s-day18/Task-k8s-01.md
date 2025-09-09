@@ -432,7 +432,7 @@ az aks create \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --node-count 3 \
-  --node-vm-size Standard_D4s_v3 \
+  --node-vm-size Standard_D2s_v3 \
   --kubernetes-version 1.28.0 \
   --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
   --enable-managed-identity \

@@ -151,17 +151,6 @@ This repository contains comprehensive training materials and hands-on tasks for
 - [**Task-k8s-07.md**](K8s-day19/Task-k8s-07.md) - Security and RBAC
 - [**Task-k8s-08.md**](K8s-day19/Task-k8s-08.md) - Helm Package Management
 
-### Comprehensive Exercises
-
-#### Day 20-25 - Integrated Projects
-**Directories:** `Excercise-day20/` through `Excercise-day25/`
-- [**Excercise-day20.md**](Excercise-day20/Excercise-day20.md) - Multi-Service Azure Architecture
-- [**Excercise-day21.md**](Excercise-day21/Excercise-day21.md) - End-to-End Data Pipeline
-- [**Excercise-day22.md**](Excercise-day22/Excercise-day22.md) - Container Orchestration Project
-- [**Excercise-day23.md**](Excercise-day23/Excercise-day23.md) - Monitoring and Observability Implementation
-- [**Excercise-day24.md**](Excercise-day24/Excercise-day24.md) - DevOps Pipeline Integration
-- [**Excercise-day25.md**](Excercise-day25/Excercise-day25.md) - Real-world Scenario Implementation
-
 
 ## Key Features Covered
 
